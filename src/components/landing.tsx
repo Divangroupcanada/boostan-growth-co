@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   ArrowRight, Play, Instagram, Youtube, Zap, ShieldCheck, Code2,
-  ChevronDown, Sparkles, TrendingUp, Music2, Twitter,
+  ChevronDown, Sparkles, TrendingUp, Music2, Twitter, Sprout,
 } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 
