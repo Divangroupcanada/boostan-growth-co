@@ -1,26 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Landing } from "@/components/landing";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Boostan — Grow your social at the speed of light" },
+      { name: "description", content: "The fastest, most reliable SMM panel of 2026. Real engagement, instant delivery, automated API. Trusted by 2,400+ resellers." },
+      { property: "og:title", content: "Boostan — Premium SMM Panel" },
+      { property: "og:description", content: "Instant delivery, refill guarantee, clean API. Top up $5 and start growing." },
+    ],
+  }),
+  component: Landing,
 });
-
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
-}
