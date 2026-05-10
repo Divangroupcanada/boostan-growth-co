@@ -233,13 +233,22 @@ export const getProviderBalance = createServerFn({ method: "POST" })
   .middleware([attachSupabaseAuth, requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context.userId);
-    const resp = await smmflwCall<{ balance?: string | number; currency?: string; status?: string }>({
+    const resp = await smmflwCall<{ balance?: string | number; currency?: string; status?: string; message?: string }>({
       action: "balance",
     });
     console.log(`[smmflw] balance parsed: ${JSON.stringify(resp)}`);
-    const balance = Number(resp.balance ?? 0);
+
+    if (resp.status !== "success") {
+      throw new Error(resp.message ?? `SMMFLW balance request failed: ${JSON.stringify(resp)}`);
+    }
+
+    const balance = parseFloat(String(resp.balance ?? ""));
+    if (!Number.isFinite(balance)) {
+      throw new Error(`SMMFLW returned invalid balance: ${JSON.stringify(resp)}`);
+    }
+
     return {
-      balance: Number.isFinite(balance) ? balance : 0,
+      balance,
       currency: String(resp.currency ?? "USD"),
       raw: resp,
     };
