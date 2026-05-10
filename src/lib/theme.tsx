@@ -17,24 +17,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("dark");
   const [resolved, setResolved] = useState<"dark" | "light">("dark");
 
+  // Dark-mode-only for now. Ignore stored preference and OS setting.
   useEffect(() => {
-    const stored = (localStorage.getItem(STORAGE_KEY) as Theme | null) ?? "dark";
-    setThemeState(stored);
+    applyTheme("dark");
+    setResolved("dark");
+    setThemeState("dark");
   }, []);
-
-  useEffect(() => {
-    const mql = window.matchMedia("(prefers-color-scheme: light)");
-    const compute = () => {
-      const r = theme === "system" ? (mql.matches ? "light" : "dark") : theme;
-      setResolved(r);
-      applyTheme(r);
-    };
-    compute();
-    if (theme === "system") {
-      mql.addEventListener("change", compute);
-      return () => mql.removeEventListener("change", compute);
-    }
-  }, [theme]);
 
   const setTheme = (t: Theme) => {
     localStorage.setItem(STORAGE_KEY, t);
