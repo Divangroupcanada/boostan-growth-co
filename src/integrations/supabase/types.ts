@@ -312,6 +312,69 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_logs: {
+        Row: {
+          action: string | null
+          amount_credited: number | null
+          created_at: string
+          error: string | null
+          headers: Json | null
+          id: string
+          is_test: boolean
+          method: string | null
+          parsed_payload: Json | null
+          payment_id: string | null
+          payment_status: string | null
+          raw_body: string | null
+          response_status: number | null
+          signature_reason: string | null
+          signature_valid: boolean | null
+          source: string
+          tx_id: string | null
+          tx_lookup_found: boolean | null
+        }
+        Insert: {
+          action?: string | null
+          amount_credited?: number | null
+          created_at?: string
+          error?: string | null
+          headers?: Json | null
+          id?: string
+          is_test?: boolean
+          method?: string | null
+          parsed_payload?: Json | null
+          payment_id?: string | null
+          payment_status?: string | null
+          raw_body?: string | null
+          response_status?: number | null
+          signature_reason?: string | null
+          signature_valid?: boolean | null
+          source?: string
+          tx_id?: string | null
+          tx_lookup_found?: boolean | null
+        }
+        Update: {
+          action?: string | null
+          amount_credited?: number | null
+          created_at?: string
+          error?: string | null
+          headers?: Json | null
+          id?: string
+          is_test?: boolean
+          method?: string | null
+          parsed_payload?: Json | null
+          payment_id?: string | null
+          payment_status?: string | null
+          raw_body?: string | null
+          response_status?: number | null
+          signature_reason?: string | null
+          signature_valid?: boolean | null
+          source?: string
+          tx_id?: string | null
+          tx_lookup_found?: boolean | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
