@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { attachSupabaseAuth } from "./auth-client-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import {
   smmflwCall,
@@ -46,7 +47,7 @@ function applyMarkup(baseRate: number, markupPct: number, fee: number): number {
 // ---------- 1. sync-services (admin) ----------
 
 export const syncServices = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([attachSupabaseAuth, requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context.userId);
     const { markup, fee } = await getSettings();
@@ -110,7 +111,7 @@ const placeOrderSchema = z.object({
 });
 
 export const placeOrder = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([attachSupabaseAuth, requireSupabaseAuth])
   .inputValidator((input: unknown) => placeOrderSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -181,7 +182,7 @@ export const placeOrder = createServerFn({ method: "POST" })
 const checkStatusSchema = z.object({ orderId: z.string().uuid() });
 
 export const checkOrderStatus = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([attachSupabaseAuth, requireSupabaseAuth])
   .inputValidator((input: unknown) => checkStatusSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
@@ -229,7 +230,7 @@ export const checkOrderStatus = createServerFn({ method: "POST" })
 // ---------- 4. get-balance (admin) ----------
 
 export const getProviderBalance = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([attachSupabaseAuth, requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context.userId);
     const resp = await smmflwCall<{ balance?: string | number; currency?: string }>({
