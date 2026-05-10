@@ -43,6 +43,8 @@ export type Database = {
       }
       orders: {
         Row: {
+          charge: number | null
+          cost: number | null
           created_at: string
           id: string
           link: string
@@ -51,12 +53,15 @@ export type Database = {
           quantity: number
           remains: number | null
           service_id: string
+          smmflw_order_id: string | null
           start_count: number | null
           status: Database["public"]["Enums"]["order_status"]
           updated_at: string
           user_id: string
         }
         Insert: {
+          charge?: number | null
+          cost?: number | null
           created_at?: string
           id?: string
           link: string
@@ -65,12 +70,15 @@ export type Database = {
           quantity: number
           remains?: number | null
           service_id: string
+          smmflw_order_id?: string | null
           start_count?: number | null
           status?: Database["public"]["Enums"]["order_status"]
           updated_at?: string
           user_id: string
         }
         Update: {
+          charge?: number | null
+          cost?: number | null
           created_at?: string
           id?: string
           link?: string
@@ -79,6 +87,7 @@ export type Database = {
           quantity?: number
           remains?: number | null
           service_id?: string
+          smmflw_order_id?: string | null
           start_count?: number | null
           status?: Database["public"]["Enums"]["order_status"]
           updated_at?: string
@@ -127,44 +136,65 @@ export type Database = {
       services: {
         Row: {
           active: boolean
+          base_rate: number | null
           category_id: string | null
           created_at: string
           description: string | null
+          display_name: string | null
+          display_tier: string | null
           id: string
+          marked_up_rate: number | null
           max_quantity: number
           min_quantity: number
           name: string
           platform: string
           provider_service_id: string | null
           rate_per_1000: number
+          service_type: string | null
+          smmflw_id: string | null
+          synced_at: string | null
           updated_at: string
         }
         Insert: {
           active?: boolean
+          base_rate?: number | null
           category_id?: string | null
           created_at?: string
           description?: string | null
+          display_name?: string | null
+          display_tier?: string | null
           id?: string
+          marked_up_rate?: number | null
           max_quantity?: number
           min_quantity?: number
           name: string
           platform: string
           provider_service_id?: string | null
           rate_per_1000: number
+          service_type?: string | null
+          smmflw_id?: string | null
+          synced_at?: string | null
           updated_at?: string
         }
         Update: {
           active?: boolean
+          base_rate?: number | null
           category_id?: string | null
           created_at?: string
           description?: string | null
+          display_name?: string | null
+          display_tier?: string | null
           id?: string
+          marked_up_rate?: number | null
           max_quantity?: number
           min_quantity?: number
           name?: string
           platform?: string
           provider_service_id?: string | null
           rate_per_1000?: number
+          service_type?: string | null
+          smmflw_id?: string | null
+          synced_at?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -177,9 +207,37 @@ export type Database = {
           },
         ]
       }
+      settings: {
+        Row: {
+          fixed_fee: number
+          id: boolean
+          last_services_sync: string | null
+          markup_percentage: number
+          min_deposit: number
+          updated_at: string
+        }
+        Insert: {
+          fixed_fee?: number
+          id?: boolean
+          last_services_sync?: string | null
+          markup_percentage?: number
+          min_deposit?: number
+          updated_at?: string
+        }
+        Update: {
+          fixed_fee?: number
+          id?: boolean
+          last_services_sync?: string | null
+          markup_percentage?: number
+          min_deposit?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           amount: number
+          balance_after: number | null
           created_at: string
           description: string | null
           id: string
@@ -190,6 +248,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          balance_after?: number | null
           created_at?: string
           description?: string | null
           id?: string
@@ -200,6 +259,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          balance_after?: number | null
           created_at?: string
           description?: string | null
           id?: string
@@ -243,6 +303,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      place_order_atomic: {
+        Args: {
+          _charge: number
+          _cost: number
+          _link: string
+          _quantity: number
+          _service_id: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "user"
@@ -255,7 +325,7 @@ export type Database = {
         | "canceled"
         | "failed"
       tx_status: "pending" | "completed" | "failed"
-      tx_type: "deposit" | "order" | "refund" | "adjustment"
+      tx_type: "deposit" | "order" | "refund" | "adjustment" | "order_debit"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -394,7 +464,7 @@ export const Constants = {
         "failed",
       ],
       tx_status: ["pending", "completed", "failed"],
-      tx_type: ["deposit", "order", "refund", "adjustment"],
+      tx_type: ["deposit", "order", "refund", "adjustment", "order_debit"],
     },
   },
 } as const
