@@ -1,0 +1,3 @@
+
+REVOKE ALL ON FUNCTION public.place_order_atomic(UUID, TEXT, INTEGER, NUMERIC, NUMERIC) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.place_order_atomic(UUID, TEXT, INTEGER, NUMERIC, NUMERIC) TO authenticated;
