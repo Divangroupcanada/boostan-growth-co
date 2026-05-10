@@ -192,14 +192,7 @@ export const checkOrderStatus = createServerFn({ method: "POST" })
     const providerId = order.smmflw_order_id ?? order.provider_order_id;
     if (!providerId) throw new Error("Order has no provider id");
 
-    // Test orders never hit the API — simulate progression.
-    if (providerId.startsWith("TEST-")) {
-      await supabaseAdmin
-        .from("orders")
-        .update({ status: "completed", remains: 0 })
-        .eq("id", data.orderId);
-      return { status: "completed", remains: 0, start_count: 0, test: true };
-    }
+
 
     const resp = await smmflwCall<{
       status?: string;
