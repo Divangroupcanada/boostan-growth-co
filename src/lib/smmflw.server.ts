@@ -26,10 +26,16 @@ export async function smmflwCall<T = unknown>(payload: SmmAction): Promise<T> {
   console.log(`[smmflw] action=${payload.action} key present: ${!!key && key.length > 0}`);
   if (!key) throw new Error("SMMFLW_API_KEY is not configured");
 
+  const form = new URLSearchParams();
+  form.set("key", key);
+  for (const [k, v] of Object.entries(payload)) {
+    if (v !== undefined && v !== null) form.set(k, String(v));
+  }
+
   const res = await fetch(SMMFLW_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ key, ...payload }),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: form.toString(),
   });
 
   const rawText = await res.text();
