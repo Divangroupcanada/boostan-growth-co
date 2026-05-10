@@ -267,7 +267,7 @@ function WebhookActivity() {
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               );
             })}
           </tbody>
