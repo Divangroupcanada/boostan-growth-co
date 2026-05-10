@@ -5,8 +5,10 @@ import {
 } from "lucide-react";
 import { FaInstagram, FaTiktok, FaYoutube, FaXTwitter } from "react-icons/fa6";
 import { supabase } from "@/integrations/supabase/client";
+import { TryItNow } from "@/components/try-it-now";
+import { ServiceCard, type ServiceCardData } from "@/components/service-card";
+import type { Tier } from "@/lib/service-tier";
 
-// Unsplash Source API was deprecated; use direct image URLs (free, no key).
 const UNSPLASH = {
   hero: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=1920&q=80&auto=format&fit=crop",
   "/assets/trust/creator-1.jpg": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600&q=80&auto=format&fit=crop",
@@ -14,15 +16,7 @@ const UNSPLASH = {
   "/assets/trust/agency-1.jpg":  "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80&auto=format&fit=crop",
 } as const;
 
-type SvcRow = {
-  id: string;
-  platform: string;
-  name: string;
-  marked_up_rate: number;
-  min_quantity: number;
-  max_quantity: number;
-  display_tier: string | null;
-};
+type SvcRow = ServiceCardData;
 
 const PLATFORMS = [
   { key: "Instagram", label: "Instagram", count: 75, Icon: FaInstagram },
