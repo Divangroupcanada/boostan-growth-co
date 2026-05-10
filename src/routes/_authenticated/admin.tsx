@@ -223,7 +223,7 @@ function WebhookActivity() {
             {rows.map((r: any) => {
               const isOpen = !!expanded[r.id];
               return (
-                <>
+                <Fragment key={r.id}>
                   <tr key={r.id} className="border-b border-[var(--border)] last:border-0">
                     <td className="px-2 py-2">
                       <button onClick={() => setExpanded((s) => ({ ...s, [r.id]: !isOpen }))}>
