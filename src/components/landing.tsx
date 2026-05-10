@@ -398,17 +398,17 @@ function WhoItsFor() {
 }
 
 function AudienceCard({ img, title, desc }: { img: string; title: string; desc: string }) {
-  const [ok, setOk] = useState(true);
+  const fallback = (UNSPLASH as Record<string, string>)[img];
+  const [src, setSrc] = useState(img);
   return (
     <div className="overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)]">
       <div className="aspect-[4/3] w-full overflow-hidden bg-[var(--bg-surface-2)]">
-        {ok ? (
-          <img src={img} alt={title} className="h-full w-full object-cover" onError={() => setOk(false)} />
-        ) : (
-          <div className="placeholder-grad flex h-full w-full items-end p-5">
-            <span className="text-sm text-[var(--text-tertiary)]">{title}</span>
-          </div>
-        )}
+        <img
+          src={src}
+          alt={title}
+          className="h-full w-full object-cover"
+          onError={() => { if (fallback && src !== fallback) setSrc(fallback); }}
+        />
       </div>
       <div className="p-6">
         <div className="text-lg font-medium">{title}</div>
