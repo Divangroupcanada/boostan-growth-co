@@ -47,6 +47,7 @@ export type Database = {
           cost: number | null
           created_at: string
           id: string
+          is_test_order: boolean
           link: string
           price: number
           provider_order_id: string | null
@@ -64,6 +65,7 @@ export type Database = {
           cost?: number | null
           created_at?: string
           id?: string
+          is_test_order?: boolean
           link: string
           price: number
           provider_order_id?: string | null
@@ -81,6 +83,7 @@ export type Database = {
           cost?: number | null
           created_at?: string
           id?: string
+          is_test_order?: boolean
           link?: string
           price?: number
           provider_order_id?: string | null
@@ -303,16 +306,28 @@ export type Database = {
         }
         Returns: boolean
       }
-      place_order_atomic: {
-        Args: {
-          _charge: number
-          _cost: number
-          _link: string
-          _quantity: number
-          _service_id: string
-        }
-        Returns: string
-      }
+      place_order_atomic:
+        | {
+            Args: {
+              _charge: number
+              _cost: number
+              _link: string
+              _quantity: number
+              _service_id: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              _charge: number
+              _cost: number
+              _is_test?: boolean
+              _link: string
+              _quantity: number
+              _service_id: string
+            }
+            Returns: string
+          }
     }
     Enums: {
       app_role: "admin" | "user"
