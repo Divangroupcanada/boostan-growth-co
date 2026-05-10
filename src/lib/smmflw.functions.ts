@@ -56,7 +56,7 @@ export const syncServices = createServerFn({ method: "POST" })
 
     let upserts = 0;
     const now = new Date().toISOString();
-    const rows: Array<Record<string, unknown>> = [];
+    const rows: any[] = [];
 
     for (const s of services) {
       const platform = detectPlatform(String(s.category ?? ""));
@@ -148,6 +148,7 @@ export const placeOrder = createServerFn({ method: "POST" })
 
     if (data.testMode) {
       providerOrderId = `TEST-${String(orderId).slice(0, 8)}`;
+      providerStatus = "in_progress";
     } else {
       if (!service.smmflw_id) throw new Error("Service missing provider id");
       const resp = await smmflwCall<{ order?: string | number; error?: string }>({
@@ -167,7 +168,7 @@ export const placeOrder = createServerFn({ method: "POST" })
       .update({
         smmflw_order_id: providerOrderId,
         provider_order_id: providerOrderId,
-        status: providerStatus,
+        status: providerStatus as "in_progress" | "pending",
       })
       .eq("id", orderId as string);
     if (updErr) throw new Error(updErr.message);
@@ -218,7 +219,7 @@ export const checkOrderStatus = createServerFn({ method: "POST" })
 
     const { error: updErr } = await supabaseAdmin
       .from("orders")
-      .update({ status, start_count, remains })
+      .update({ status: status as any, start_count, remains })
       .eq("id", data.orderId);
     if (updErr) throw new Error(updErr.message);
 
