@@ -45,6 +45,9 @@ export async function smmflwCall<T = unknown>(payload: SmmAction): Promise<T> {
   } catch {
     throw new Error(`SMMFLW non-JSON response: ${rawText.slice(0, 200)}`);
   }
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    throw new Error(`SMMFLW unexpected response for ${payload.action}: ${rawText.slice(0, 200)}`);
+  }
   if (data && typeof data === "object" && "error" in data && data.error) {
     throw new Error(`SMMFLW error: ${String(data.error)}`);
   }
