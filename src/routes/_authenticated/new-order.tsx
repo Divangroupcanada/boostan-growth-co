@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { placeOrder } from "@/lib/smmflw.functions";
 import { useAuth } from "@/lib/auth";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Sparkles, FlaskConical, Check, Info } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles, FlaskConical, Info } from "lucide-react";
 import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa6";
 import { toast } from "sonner";
 import {
