@@ -441,4 +441,4 @@ function Chip({
   );
 }
 
-function _check() { return Check; } // keep import warm (unused after refactor)
+
