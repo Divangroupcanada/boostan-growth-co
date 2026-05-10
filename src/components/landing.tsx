@@ -9,9 +9,9 @@ export function Landing() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
       {/* ambient orbs */}
-      <div className="glow-orb animate-float-slow" style={{ top: -160, left: -120, background: "#6B1E5C" }} />
-      <div className="glow-orb animate-float-med" style={{ top: 320, right: -180, background: "#0B6B8C", opacity: 0.35 }} />
-      <div className="glow-orb animate-float-slow" style={{ top: 1100, left: "30%", background: "#B83E94", opacity: 0.28 }} />
+      <div className="glow-orb animate-float-slow" style={{ top: -160, left: -120, background: "#6B1E5C", opacity: 0.55 }} />
+      <div className="glow-orb animate-float-med" style={{ top: 320, right: -180, background: "#0B6B8C", opacity: 0.5 }} />
+      <div className="glow-orb animate-float-slow" style={{ top: 1100, left: "30%", background: "#B83E94", opacity: 0.45 }} />
 
       <div className="relative z-10">
         <SiteNav />
@@ -47,13 +47,13 @@ function Hero() {
       </h1>
 
       <p className="mx-auto mt-6 max-w-2xl text-base text-foreground-muted md:text-lg">
-        The fastest, most reliable SMM panel of 2026. Real engagement, instant
-        delivery, automated API. Trusted by 2,400+ resellers worldwide.
+        The premium SMM panel for serious resellers. Real engagement, instant
+        delivery, automated API. Trusted by agencies worldwide.
       </p>
 
       <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
         <a href="#" className="btn-gradient inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm">
-          Start with $5 <ArrowRight className="h-4 w-4" />
+          Get started — $25 minimum <ArrowRight className="h-4 w-4" />
         </a>
         <a href="#" className="glass inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm text-foreground-muted hover:text-foreground">
           <Play className="h-4 w-4" /> Watch demo
@@ -65,7 +65,7 @@ function Hero() {
 
 const STATS = [
   { v: "2.4M+", l: "Orders done" },
-  { v: "580+", l: "Services" },
+  { v: "200+", l: "Services" },
   { v: "99.8%", l: "Uptime" },
   { v: "<30s", l: "Avg start" },
 ];
@@ -93,7 +93,7 @@ const SERVICES = [
 function PopularServices() {
   return (
     <section id="services" className="mt-32">
-      <SectionHead eyebrow="Catalog" title="Popular services" sub="Hand-picked from 580+ active services across every major platform." />
+      <SectionHead eyebrow="Catalog" title="Popular services" sub="Hand-picked from 200+ active services across every major platform." />
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {SERVICES.map(({ icon: Icon, name, meta, price }) => (
           <div key={name} className="glass group rounded-2xl p-5 transition-all hover:border-strong hover:-translate-y-0.5">
@@ -193,7 +193,7 @@ function PricingTeaser() {
             Most affordable rates <span className="gradient-text">in the industry.</span>
           </h3>
           <p className="mx-auto mt-5 max-w-xl text-foreground-muted">
-            Pay-as-you-go. No subscriptions, no minimums. Top up $5 and start ordering.
+            Pay-as-you-go. No subscriptions. Top up $25 and start ordering.
           </p>
           <a href="#" className="btn-gradient mt-8 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm">
             See full price list <ArrowRight className="h-4 w-4" />
@@ -210,7 +210,7 @@ const FAQS = [
   { q: "Do you have an API?", a: "Yes — a clean v2 REST API mirroring industry standard endpoints. Place orders, sync services, check status, manage balance." },
   { q: "What payment methods do you accept?", a: "Crypto (BTC, ETH, USDT, and 40+ more via NOWPayments), credit cards via Stripe, and PayPal. Crypto deposits are instant." },
   { q: "Can I get a refund?", a: "Unstarted orders are fully refundable to your panel balance. Partial orders are refunded proportionally for the undelivered amount." },
-  { q: "Is there a minimum deposit?", a: "$5. That's it. We want you to test the panel before committing." },
+  { q: "Is there a minimum deposit?", a: "$25. Low enough to test the panel, high enough to keep tire-kickers out." },
 ];
 
 function FAQ() {
@@ -252,7 +252,7 @@ function FinalCTA() {
             Ready to <span className="gradient-text">grow?</span>
           </h3>
           <p className="mx-auto mt-5 max-w-lg text-foreground-muted">
-            Create an account, deposit $5, and place your first order in under 60 seconds.
+            Create an account, deposit $25, and place your first order in under 60 seconds.
           </p>
           <a href="#" className="btn-gradient mt-8 inline-flex items-center gap-2 rounded-xl px-7 py-3.5 text-sm">
             Get started — it's free <ArrowRight className="h-4 w-4" />
