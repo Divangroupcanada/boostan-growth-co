@@ -106,7 +106,7 @@ function OrdersPage() {
                 <tr key={o.id} className="border-b border-[var(--border)] last:border-0 hover:bg-[var(--surface)]">
                   <td className="px-6 py-4 font-mono text-xs text-foreground-subtle">
                     {o.id.slice(0, 8)}
-                    {o.smmflw_order_id?.startsWith("TEST-") && (
+                    {o.is_test_order && (
                       <span className="ml-2 rounded bg-[var(--surface)] px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-foreground-muted">
                         test
                       </span>

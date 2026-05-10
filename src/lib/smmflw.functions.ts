@@ -140,28 +140,22 @@ export const placeOrder = createServerFn({ method: "POST" })
       _quantity: data.quantity,
       _charge: charge,
       _cost: cost,
+      _is_test: data.testMode,
     });
     if (rpcErr) throw new Error(rpcErr.message);
     if (!orderId) throw new Error("Order creation failed");
 
-    let providerOrderId: string;
-    let providerStatus = "pending";
-
-    if (data.testMode) {
-      providerOrderId = `TEST-${String(orderId).slice(0, 8)}`;
-      providerStatus = "in_progress";
-    } else {
-      if (!service.smmflw_id) throw new Error("Service missing provider id");
-      const resp = await smmflwCall<{ order?: string | number; error?: string }>({
-        action: "add",
-        service: service.smmflw_id,
-        link: data.link,
-        quantity: data.quantity,
-      });
-      if (!resp.order) throw new Error("Provider did not return an order id");
-      providerOrderId = String(resp.order);
-      providerStatus = "in_progress";
-    }
+    if (!service.smmflw_id) throw new Error("Service missing provider id");
+    const resp = await smmflwCall<{ order?: string | number; error?: string }>({
+      action: "add",
+      service: service.smmflw_id,
+      link: data.link,
+      quantity: data.quantity,
+      ...(data.testMode ? { is_test: 1 as const } : {}),
+    });
+    if (!resp.order) throw new Error("Provider did not return an order id");
+    const providerOrderId = String(resp.order);
+    const providerStatus = "in_progress";
 
     // Persist provider id (admin client to bypass RLS UPDATE restrictions).
     const { error: updErr } = await supabaseAdmin
@@ -198,14 +192,7 @@ export const checkOrderStatus = createServerFn({ method: "POST" })
     const providerId = order.smmflw_order_id ?? order.provider_order_id;
     if (!providerId) throw new Error("Order has no provider id");
 
-    // Test orders never hit the API — simulate progression.
-    if (providerId.startsWith("TEST-")) {
-      await supabaseAdmin
-        .from("orders")
-        .update({ status: "completed", remains: 0 })
-        .eq("id", data.orderId);
-      return { status: "completed", remains: 0, start_count: 0, test: true };
-    }
+
 
     const resp = await smmflwCall<{
       status?: string;

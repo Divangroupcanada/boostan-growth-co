@@ -6,7 +6,7 @@ const SMMFLW_URL = "https://panel.smmflw.com/api/v2";
 type SmmAction =
   | { action: "services" }
   | { action: "balance" }
-  | { action: "add"; service: string | number; link: string; quantity: number }
+  | { action: "add"; service: string | number; link: string; quantity: number; is_test?: 0 | 1 }
   | { action: "status"; order: string | number };
 
 export type SmmflwService = {
