@@ -23,6 +23,7 @@ export type SmmflwService = {
 
 export async function smmflwCall<T = unknown>(payload: SmmAction): Promise<T> {
   const key = process.env.SMMFLW_API_KEY;
+  console.log(`[smmflw] action=${payload.action} key present: ${!!key && key.length > 0}`);
   if (!key) throw new Error("SMMFLW_API_KEY is not configured");
 
   const res = await fetch(SMMFLW_URL, {
@@ -31,10 +32,19 @@ export async function smmflwCall<T = unknown>(payload: SmmAction): Promise<T> {
     body: JSON.stringify({ key, ...payload }),
   });
 
+  const rawText = await res.text();
+  console.log(`[smmflw] action=${payload.action} status=${res.status} raw=${rawText.slice(0, 500)}`);
+
   if (!res.ok) {
-    throw new Error(`SMMFLW HTTP ${res.status}`);
+    throw new Error(`SMMFLW HTTP ${res.status}: ${rawText.slice(0, 200)}`);
   }
-  const data = (await res.json()) as { error?: string } & T;
+
+  let data: any;
+  try {
+    data = JSON.parse(rawText);
+  } catch {
+    throw new Error(`SMMFLW non-JSON response: ${rawText.slice(0, 200)}`);
+  }
   if (data && typeof data === "object" && "error" in data && data.error) {
     throw new Error(`SMMFLW error: ${String(data.error)}`);
   }
