@@ -11,7 +11,8 @@ export const Route = createFileRoute("/_authenticated/wallet")({
   head: () => ({ meta: [{ title: "Wallet — Boostan" }] }),
 });
 
-const PRESETS = [10, 25, 50, 100];
+const PRESETS = [25, 50, 100, 250];
+const MIN_DEPOSIT = 25;
 
 function WalletPage() {
   const { user } = useAuth();
@@ -42,7 +43,11 @@ function WalletPage() {
   });
 
   const deposit = async () => {
-    if (!user || amount <= 0) return;
+    if (!user) return;
+    if (amount < MIN_DEPOSIT) {
+      toast.error(`Minimum deposit is $${MIN_DEPOSIT}`);
+      return;
+    }
     setLoading(true);
     const newBalance = Number(profile?.balance ?? 0) + amount;
     await supabase.from("profiles").update({ balance: newBalance }).eq("user_id", user.id);
@@ -80,7 +85,7 @@ function WalletPage() {
 
         <div className="glass rounded-2xl p-7 lg:col-span-2">
           <h2 className="text-lg">Top up</h2>
-          <p className="text-xs text-foreground-muted">Pay-as-you-go. Crypto, card, and PayPal accepted on production.</p>
+          <p className="text-xs text-foreground-muted">$25 minimum. Crypto, card, and PayPal accepted on production.</p>
 
           <div className="mt-5 flex flex-wrap gap-2">
             {PRESETS.map((p) => (
@@ -96,7 +101,7 @@ function WalletPage() {
             ))}
             <input
               type="number"
-              min={5}
+              min={MIN_DEPOSIT}
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
               className="w-28 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm outline-none"
@@ -105,12 +110,12 @@ function WalletPage() {
 
           <button
             onClick={deposit}
-            disabled={loading || amount < 1}
+            disabled={loading || amount < MIN_DEPOSIT}
             className="btn-gradient mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm disabled:opacity-50"
           >
             <Plus className="h-4 w-4" /> {loading ? "Processing…" : `Add $${amount.toFixed(2)}`}
           </button>
-          <p className="mt-3 text-xs text-foreground-subtle">Test mode — no real charge. Replace with Stripe/Crypto in production.</p>
+          <p className="mt-3 text-xs text-foreground-subtle">Test mode — no real charge. Minimum deposit $25.</p>
         </div>
       </div>
 
