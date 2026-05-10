@@ -1,293 +1,600 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import {
-  ArrowRight, Play, Instagram, Youtube, Zap, ShieldCheck, Code2,
-  ChevronDown, Sparkles, TrendingUp, Music2, Twitter, Sprout,
+  ArrowRight, ChevronDown, Sprout, Check,
 } from "lucide-react";
-import { SiteNav } from "@/components/site-nav";
+import { FaInstagram, FaTiktok, FaYoutube, FaXTwitter } from "react-icons/fa6";
+import { supabase } from "@/integrations/supabase/client";
+import { ThemeToggle } from "@/components/theme-toggle";
+
+type SvcRow = {
+  id: string;
+  platform: string;
+  name: string;
+  marked_up_rate: number;
+  min_quantity: number;
+  max_quantity: number;
+  display_tier: string | null;
+};
+
+const PLATFORMS = [
+  { key: "Instagram", label: "Instagram", count: 75, Icon: FaInstagram },
+  { key: "TikTok",    label: "TikTok",    count: 21, Icon: FaTiktok },
+  { key: "YouTube",   label: "YouTube",   count: 47, Icon: FaYoutube },
+] as const;
 
 export function Landing() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      {/* ambient orbs */}
-      <div className="glow-orb animate-float-slow" style={{ top: -160, left: -120, background: "#6B1E5C", opacity: 0.55 }} />
-      <div className="glow-orb animate-float-med" style={{ top: 320, right: -180, background: "#0B6B8C", opacity: 0.5 }} />
-      <div className="glow-orb animate-float-slow" style={{ top: 1100, left: "30%", background: "#B83E94", opacity: 0.45 }} />
+    <div className="relative min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)]">
+      <Nav />
+      <main>
+        <Hero />
+        <TrustBar />
+        <Stats />
+        <ServicesPreview />
+        <HowItWorks />
+        <WhoItsFor />
+        <PricingTransparency />
+        <FAQSection />
+        <FinalCTA />
+      </main>
+      <Footer />
+    </div>
+  );
+}
 
-      <div className="relative z-10">
-        <SiteNav />
+/* ---------------- NAV ---------------- */
+function Nav() {
+  const [solid, setSolid] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setSolid(window.scrollY > 80);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-        <main className="mx-auto max-w-[1200px] px-5">
-          <Hero />
-          <Stats />
-          <PopularServices />
-          <Features />
-          <Testimonials />
-          <PricingTeaser />
-          <FAQ />
-          <FinalCTA />
-        </main>
-        <Footer />
+  return (
+    <header
+      className={`sticky top-0 z-50 transition-colors duration-300 ${
+        solid
+          ? "bg-[var(--bg-base)]/95 backdrop-blur border-b border-[var(--border-subtle)]"
+          : "bg-transparent border-b border-transparent"
+      }`}
+    >
+      <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4">
+        <Link to="/" className="flex items-center gap-2 text-base font-medium tracking-tight">
+          <span className="grid h-7 w-7 place-items-center rounded-md bg-[var(--accent)] text-white">
+            <Sprout className="h-4 w-4" />
+          </span>
+          <span>
+            B<span className="text-[var(--accent)]">o</span>ostan
+          </span>
+        </Link>
+        <nav className="hidden items-center gap-8 text-sm text-[var(--text-secondary)] md:flex">
+          <a href="#services" className="hover:text-[var(--text-primary)] transition-colors">Services</a>
+          <a href="#pricing"  className="hover:text-[var(--text-primary)] transition-colors">Pricing</a>
+          <a href="#faq"      className="hover:text-[var(--text-primary)] transition-colors">FAQ</a>
+          <a href="#about"    className="hover:text-[var(--text-primary)] transition-colors">About</a>
+        </nav>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link
+            to="/login"
+            className="hidden rounded-md px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] sm:inline-block"
+          >
+            Sign in
+          </Link>
+          <Link
+            to="/signup"
+            className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
+          >
+            Get started
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* ---------------- HERO ---------------- */
+function Hero() {
+  const [videoOk, setVideoOk] = useState(true);
+
+  return (
+    <section className="relative -mt-[68px] flex min-h-screen items-center overflow-hidden">
+      {/* Video background */}
+      <div className="absolute inset-0 z-0">
+        {videoOk ? (
+          <video
+            className="h-full w-full object-cover"
+            autoPlay muted loop playsInline
+            poster="/assets/hero/hero-poster.jpg"
+            aria-hidden="true"
+            onError={() => setVideoOk(false)}
+          >
+            <source src="/assets/hero/hero-video.mp4" type="video/mp4" />
+          </video>
+        ) : (
+          <div className="hero-fallback h-full w-full" />
+        )}
+        {/* dark gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-base)]/40 via-[var(--bg-base)]/40 to-[var(--bg-base)]" />
+      </div>
+
+      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-6 pt-32 pb-24">
+        <div className="max-w-[720px] space-y-6">
+          <div className="anim-stagger anim-1 text-xs uppercase tracking-[0.25em] text-[var(--text-tertiary)]">
+            بوستان · Boostan
+          </div>
+          <h1 className="anim-stagger anim-2 text-[40px] leading-[1.05] tracking-[-0.03em] sm:text-[56px] md:text-[68px] lg:text-[72px]">
+            Your social presence,<br />
+            <span className="text-[var(--text-primary)]">growing.</span>
+          </h1>
+          <p className="anim-stagger anim-3 max-w-[560px] text-base text-[var(--text-secondary)] sm:text-lg">
+            The premium SMM panel for serious creators, agencies, and businesses.
+            Real engagement, instant delivery, automated API.
+          </p>
+          <div className="anim-stagger anim-4 flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
+            <Link
+              to="/signup"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-[var(--accent)] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
+            >
+              Get started — $25 minimum <ArrowRight className="h-4 w-4" />
+            </Link>
+            <a
+              href="#services"
+              className="inline-flex items-center justify-center gap-2 rounded-md border border-[var(--border-default)] bg-transparent px-5 py-3 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-surface-1)]"
+            >
+              Browse services
+            </a>
+          </div>
+          <div className="anim-stagger anim-5 text-xs text-[var(--text-tertiary)]">
+            No commitments · Cancel anytime · Crypto + e-transfer accepted
+          </div>
+        </div>
+      </div>
+
+      <a
+        href="#trust"
+        aria-label="Scroll"
+        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-[var(--text-tertiary)] anim-bounce"
+      >
+        <ChevronDown className="h-5 w-5" />
+      </a>
+    </section>
+  );
+}
+
+/* ---------------- TRUST BAR ---------------- */
+function TrustBar() {
+  return (
+    <section id="trust" className="border-y border-[var(--border-subtle)] bg-[var(--bg-base)] py-6">
+      <div className="mx-auto max-w-[1200px] px-6 text-center text-sm text-[var(--text-secondary)]">
+        Trusted by 200+ agencies and creators across Toronto, Dubai, NYC, LA
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- STATS ---------------- */
+const STATS = [
+  { value: 143,  suffix: "",    label: "Premium services" },
+  { value: 99.8, suffix: "%",   label: "Uptime guarantee", decimals: 1 },
+  { value: 30,   suffix: "s",   label: "Average start time", prefix: "<" },
+  { value: 24,   suffix: "/7",  label: "Automated delivery" },
+] as const;
+
+function useInView<T extends Element>(opts?: IntersectionObserverInit) {
+  const ref = useRef<T | null>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    if (!ref.current) return;
+    const el = ref.current;
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setInView(true); io.unobserve(el); } },
+      { threshold: 0.2, ...opts },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return { ref, inView };
+}
+
+function CountUp({ to, decimals = 0, prefix = "", suffix = "" }: { to: number; decimals?: number; prefix?: string; suffix?: string }) {
+  const { ref, inView } = useInView<HTMLSpanElement>();
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { setN(to); return; }
+    const dur = 1400;
+    const start = performance.now();
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setN(to * eased);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, to]);
+  return <span ref={ref} className="tabular">{prefix}{n.toFixed(decimals)}{suffix}</span>;
+}
+
+function Stats() {
+  return (
+    <Section>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {STATS.map((s) => (
+          <div key={s.label} className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-8">
+            <div className="text-4xl font-medium tracking-tight text-[var(--text-primary)] md:text-5xl">
+              <CountUp to={s.value} decimals={(s as any).decimals ?? 0} prefix={(s as any).prefix ?? ""} suffix={s.suffix} />
+            </div>
+            <div className="mt-2 text-sm text-[var(--text-secondary)]">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+/* ---------------- SERVICES PREVIEW ---------------- */
+function ServicesPreview() {
+  const [activeP, setActiveP] = useState<typeof PLATFORMS[number]["key"]>("Instagram");
+  const [data, setData] = useState<Record<string, SvcRow[]>>({});
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const out: Record<string, SvcRow[]> = {};
+      for (const p of PLATFORMS) {
+        const { data } = await supabase
+          .from("services")
+          .select("id, platform, display_name, name, marked_up_rate, min_quantity, max_quantity, display_tier")
+          .eq("active", true)
+          .eq("platform", p.key)
+          .order("marked_up_rate", { ascending: true })
+          .limit(3);
+        out[p.key] = (data || []).map((s: any) => ({
+          id: s.id, platform: s.platform,
+          name: s.display_name || s.name,
+          marked_up_rate: Number(s.marked_up_rate),
+          min_quantity: s.min_quantity, max_quantity: s.max_quantity,
+          display_tier: s.display_tier,
+        }));
+      }
+      if (alive) setData(out);
+    })();
+    return () => { alive = false; };
+  }, []);
+
+  const active = PLATFORMS.find(p => p.key === activeP)!;
+  const rows = data[activeP] || [];
+
+  return (
+    <Section id="services">
+      <Eyebrow>Catalog</Eyebrow>
+      <SectionHead
+        title="Services that actually work"
+        sub="143 hand-curated services across Instagram, TikTok, and YouTube. Real engagement, never bots."
+      />
+      <div className="mt-10 flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-4">
+        {PLATFORMS.map((p) => {
+          const isActive = p.key === activeP;
+          return (
+            <button
+              key={p.key}
+              onClick={() => setActiveP(p.key)}
+              className={`inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm transition-colors ${
+                isActive
+                  ? "bg-[var(--bg-surface-2)] text-[var(--text-primary)]"
+                  : "text-[var(--text-secondary)] hover:bg-[var(--bg-surface-1)] hover:text-[var(--text-primary)]"
+              }`}
+            >
+              <p.Icon className="h-4 w-4" />
+              {p.label}
+              <span className="text-xs text-[var(--text-tertiary)]">{p.count}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        {(rows.length ? rows : Array.from({ length: 3 }).map((_, i) => null)).map((s, i) => (
+          <div
+            key={s?.id ?? i}
+            className="group rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-6 transition-all hover:border-[var(--border-default)] hover:bg-[var(--bg-surface-2)]"
+          >
+            <div className="flex items-center justify-between">
+              <span className="grid h-9 w-9 place-items-center rounded-md bg-[var(--bg-surface-2)] text-[var(--text-primary)] group-hover:bg-[var(--bg-surface-3)]">
+                <active.Icon className="h-4 w-4" />
+              </span>
+              {s?.display_tier && (
+                <span className="rounded-md border border-[var(--border-subtle)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[var(--text-tertiary)]">
+                  {s.display_tier}
+                </span>
+              )}
+            </div>
+            <div className="mt-5 line-clamp-2 min-h-[44px] text-sm font-medium text-[var(--text-primary)]">
+              {s?.name ?? "Loading…"}
+            </div>
+            <div className="mt-4 flex items-end justify-between">
+              <div>
+                <div className="text-xs text-[var(--text-tertiary)]">per 1,000</div>
+                <div className="tabular text-2xl text-[var(--text-primary)]">
+                  ${s ? s.marked_up_rate.toFixed(2) : "—"}
+                </div>
+              </div>
+              <div className="text-right text-xs text-[var(--text-tertiary)]">
+                {s ? `${s.min_quantity.toLocaleString()}–${s.max_quantity.toLocaleString()}` : ""}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 text-right text-sm">
+        <Link to="/signup" className="text-[var(--accent)] hover:underline">
+          View all {active.count} {active.label} services →
+        </Link>
+      </div>
+    </Section>
+  );
+}
+
+/* ---------------- HOW IT WORKS ---------------- */
+const STEPS = [
+  { n: "01", t: "Sign up & deposit", d: "Create your free account and add funds via crypto or e-transfer. $25 minimum." },
+  { n: "02", t: "Pick your service", d: "Browse 143 services across Instagram, TikTok, and YouTube. Filter by quality tier and price." },
+  { n: "03", t: "Watch it grow",     d: "Orders start within 30 seconds. Track progress in real-time. Get refilled if anything drops." },
+];
+
+function HowItWorks() {
+  return (
+    <Section>
+      <Eyebrow>How it works</Eyebrow>
+      <SectionHead title="From signup to first order in under 60 seconds." />
+      <Divider />
+      <div className="grid gap-8 md:grid-cols-3">
+        {STEPS.map((s) => (
+          <div key={s.n}>
+            <div className="text-sm tabular text-[var(--accent)]">{s.n}</div>
+            <div className="mt-3 text-xl font-medium tracking-tight">{s.t}</div>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">{s.d}</p>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+/* ---------------- WHO IT'S FOR ---------------- */
+const AUDIENCE = [
+  { img: "/assets/trust/agency-1.jpg",  title: "Agencies",   desc: "Manage growth for multiple clients. API access, bulk orders, white-label invoices." },
+  { img: "/assets/trust/creator-1.jpg", title: "Creators",   desc: "Boost reach without burning hours. Real engagement on real content." },
+  { img: "/assets/trust/creator-2.jpg", title: "Businesses", desc: "Build social proof for restaurants, salons, e-commerce. Trusted by 200+ Toronto businesses." },
+];
+
+function WhoItsFor() {
+  return (
+    <Section id="about">
+      <Eyebrow>Who it's for</Eyebrow>
+      <SectionHead title="Built for the people who take growth seriously." />
+      <div className="grid gap-4 md:grid-cols-3">
+        {AUDIENCE.map((a) => <AudienceCard key={a.title} {...a} />)}
+      </div>
+    </Section>
+  );
+}
+
+function AudienceCard({ img, title, desc }: { img: string; title: string; desc: string }) {
+  const [ok, setOk] = useState(true);
+  return (
+    <div className="overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)]">
+      <div className="aspect-[4/3] w-full overflow-hidden bg-[var(--bg-surface-2)]">
+        {ok ? (
+          <img src={img} alt={title} className="h-full w-full object-cover" onError={() => setOk(false)} />
+        ) : (
+          <div className="placeholder-grad flex h-full w-full items-end p-5">
+            <span className="text-sm text-[var(--text-tertiary)]">{title}</span>
+          </div>
+        )}
+      </div>
+      <div className="p-6">
+        <div className="text-lg font-medium">{title}</div>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">{desc}</p>
+        <a href="#services" className="mt-4 inline-block text-sm text-[var(--accent)] hover:underline">Learn more →</a>
       </div>
     </div>
   );
 }
 
-function Hero() {
+/* ---------------- PRICING ---------------- */
+function PricingTransparency() {
   return (
-    <section className="pt-20 pb-24 text-center md:pt-28 md:pb-32">
-      <div className="glass mx-auto inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs text-foreground-muted">
-        <span className="pulse-dot" />
-        <span className="tabular">2,847 orders processing right now</span>
-      </div>
-
-      <h1 className="mx-auto mt-8 max-w-4xl text-5xl leading-[1.05] tracking-tight md:text-7xl">
-        Grow your social
-        <br />
-        at the <span className="gradient-text">speed of light.</span>
-      </h1>
-
-      <p className="mx-auto mt-6 max-w-2xl text-base text-foreground-muted md:text-lg">
-        The premium SMM panel for serious resellers. Real engagement, instant
-        delivery, automated API. Trusted by agencies worldwide.
-      </p>
-
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-        <a href="#" className="btn-gradient inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm">
-          Get started — $25 minimum <ArrowRight className="h-4 w-4" />
-        </a>
-        <a href="#" className="glass inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm text-foreground-muted hover:text-foreground">
-          <Play className="h-4 w-4" /> Watch demo
-        </a>
-      </div>
-    </section>
-  );
-}
-
-const STATS = [
-  { v: "2.4M+", l: "Orders done" },
-  { v: "200+", l: "Services" },
-  { v: "99.8%", l: "Uptime" },
-  { v: "<30s", l: "Avg start" },
-];
-
-function Stats() {
-  return (
-    <section className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-      {STATS.map((s) => (
-        <div key={s.l} className="glass rounded-2xl p-6">
-          <div className="tabular gradient-text text-3xl md:text-4xl">{s.v}</div>
-          <div className="mt-1 text-sm text-foreground-muted">{s.l}</div>
-        </div>
-      ))}
-    </section>
-  );
-}
-
-const SERVICES = [
-  { icon: Instagram, name: "Instagram Followers", meta: "Real • 30-day refill", price: "0.89" },
-  { icon: Music2, name: "TikTok Views", meta: "HQ • Instant", price: "0.04" },
-  { icon: Youtube, name: "YouTube Subscribers", meta: "Non-drop", price: "3.20" },
-  { icon: Twitter, name: "Twitter Likes", meta: "Real accounts", price: "0.55" },
-];
-
-function PopularServices() {
-  return (
-    <section id="services" className="mt-32">
-      <SectionHead eyebrow="Catalog" title="Popular services" sub="Hand-picked from 200+ active services across every major platform." />
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {SERVICES.map(({ icon: Icon, name, meta, price }) => (
-          <div key={name} className="glass group rounded-2xl p-5 transition-all hover:border-strong hover:-translate-y-0.5">
-            <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--gradient-brand-soft)] text-foreground">
-                <Icon className="h-5 w-5" />
-              </span>
-              <div className="text-sm font-medium">{name}</div>
-            </div>
-            <div className="mt-4 text-xs text-foreground-subtle">{meta}</div>
-            <div className="mt-6 flex items-end justify-between">
-              <div>
-                <div className="text-xs text-foreground-subtle">per 1,000</div>
-                <div className="tabular text-2xl">${price}</div>
-              </div>
-              <button className="rounded-lg px-3 py-1.5 text-xs text-foreground-muted hover:bg-[var(--surface-strong)] hover:text-foreground">
-                Order →
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-const FEATURES = [
-  { icon: Zap, t: "Instant delivery", d: "Most orders start within 30 seconds. Drip-feed and scheduling included for serious campaigns." },
-  { icon: ShieldCheck, t: "Refill guarantee", d: "30-day refill on every retention service. If it drops, we replace it. No questions, no tickets." },
-  { icon: Code2, t: "API access", d: "Clean v2 REST API. Place orders, sync services, check balance — automate your entire reseller pipeline." },
-];
-
-function Features() {
-  return (
-    <section id="api" className="mt-32">
-      <SectionHead eyebrow="Why Boostan" title="Built for resellers who don't have time to babysit." />
-      <div className="mt-10 grid gap-4 md:grid-cols-3">
-        {FEATURES.map(({ icon: Icon, t, d }) => (
-          <div key={t} className="glass rounded-2xl p-7">
-            <span className="grid h-10 w-10 place-items-center rounded-xl gradient-bg text-white">
-              <Icon className="h-5 w-5" />
-            </span>
-            <div className="mt-5 text-lg">{t}</div>
-            <p className="mt-2 text-sm text-foreground-muted">{d}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-const QUOTES = [
-  { q: "Switched 4 panels to Boostan. API uptime is unreal — haven't had a failed cron in 3 months.", a: "Marcus L.", r: "Agency owner, 12k orders/mo" },
-  { q: "Cheapest IG followers I've found that actually stick. Refills auto-process overnight.", a: "Priya S.", r: "Reseller since 2023" },
-  { q: "Dashboard is the only one that doesn't make me feel like I'm using software from 2014.", a: "Diego R.", r: "Growth consultant" },
-];
-
-function Testimonials() {
-  const [i, setI] = useState(0);
-  return (
-    <section className="mt-32">
-      <SectionHead eyebrow="Trusted" title="Resellers don't switch back." />
-      <div className="glass mt-10 rounded-3xl p-10 md:p-14">
-        <Sparkles className="h-6 w-6 text-[var(--accent)]" />
-        <p className="mt-6 max-w-3xl text-2xl leading-relaxed md:text-3xl">"{QUOTES[i].q}"</p>
-        <div className="mt-8 flex items-center justify-between">
+    <Section id="pricing">
+      <Eyebrow>Pricing</Eyebrow>
+      <SectionHead
+        title="Honest, simple pricing"
+        sub="We mark up wholesale rates by 50% + $1 per 1,000 orders. That's it. No hidden fees, no surprise charges."
+      />
+      <div className="mx-auto mt-10 max-w-2xl rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-8">
+        <div className="text-sm text-[var(--text-tertiary)]">Example · Instagram Followers</div>
+        <div className="mt-4 grid grid-cols-2 gap-6">
           <div>
-            <div className="text-sm">{QUOTES[i].a}</div>
-            <div className="text-xs text-foreground-subtle">{QUOTES[i].r}</div>
+            <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">Wholesale</div>
+            <div className="tabular mt-1 text-2xl text-[var(--text-secondary)]">$1.20<span className="text-sm">/1k</span></div>
           </div>
-          <div className="flex gap-1.5">
-            {QUOTES.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setI(idx)}
-                aria-label={`Quote ${idx + 1}`}
-                className={`h-1.5 rounded-full transition-all ${idx === i ? "w-8 gradient-bg" : "w-4 bg-[var(--border-strong)]"}`}
-              />
-            ))}
+          <div>
+            <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">You pay</div>
+            <div className="tabular mt-1 text-2xl text-[var(--text-primary)]">$2.80<span className="text-sm">/1k</span></div>
           </div>
         </div>
+        <ul className="mt-6 space-y-2 border-t border-[var(--border-subtle)] pt-6 text-sm text-[var(--text-secondary)]">
+          {["No subscription", "No hidden fees", "Refill on drops included"].map((t) => (
+            <li key={t} className="flex items-center gap-2"><Check className="h-4 w-4 text-[var(--success)]" /> {t}</li>
+          ))}
+        </ul>
+        <Link to="/signup" className="mt-6 inline-block text-sm text-[var(--accent)] hover:underline">
+          View full service pricing →
+        </Link>
       </div>
-    </section>
+    </Section>
   );
 }
 
-function PricingTeaser() {
-  return (
-    <section id="pricing" className="mt-32">
-      <div className="glass relative overflow-hidden rounded-3xl p-10 md:p-16 text-center">
-        <div className="glow-orb" style={{ top: -200, left: "20%", background: "#6B1E5C", opacity: .35 }} />
-        <div className="relative">
-          <div className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-foreground-muted">
-            <TrendingUp className="h-3.5 w-3.5" /> Wholesale rates
-          </div>
-          <h3 className="mt-5 text-4xl md:text-5xl">
-            Most affordable rates <span className="gradient-text">in the industry.</span>
-          </h3>
-          <p className="mx-auto mt-5 max-w-xl text-foreground-muted">
-            Pay-as-you-go. No subscriptions. Top up $25 and start ordering.
-          </p>
-          <a href="#" className="btn-gradient mt-8 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm">
-            See full price list <ArrowRight className="h-4 w-4" />
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
+/* ---------------- FAQ ---------------- */
 const FAQS = [
-  { q: "How fast do orders start?", a: "Median start time is 18 seconds. 99% of orders begin within 5 minutes — you'll see the live counter tick up in your dashboard." },
-  { q: "What if engagement drops?", a: "All retention services include a 30-day automatic refill. We monitor every order and re-fill drops without you opening a ticket." },
-  { q: "Do you have an API?", a: "Yes — a clean v2 REST API mirroring industry standard endpoints. Place orders, sync services, check status, manage balance." },
-  { q: "What payment methods do you accept?", a: "Crypto (BTC, ETH, USDT, and 40+ more via NOWPayments), credit cards via Stripe, and PayPal. Crypto deposits are instant." },
-  { q: "Can I get a refund?", a: "Unstarted orders are fully refundable to your panel balance. Partial orders are refunded proportionally for the undelivered amount." },
-  { q: "Is there a minimum deposit?", a: "$25. Low enough to test the panel, high enough to keep tire-kickers out." },
+  { q: "Are these real followers/likes/views?", a: "Yes — we use trusted upstream providers serving real engagement. We never use bot networks." },
+  { q: "How fast do orders start?",             a: "Most orders start within 30 seconds. Some niche services may take 1–3 minutes." },
+  { q: "What payment methods do you accept?",   a: "Crypto (USDT-TRC20, BTC, ETH) and Canadian Interac e-transfer. No credit cards yet — coming soon." },
+  { q: "Can I get a refund?",                   a: "Yes — we refill drops automatically and refund unfulfilled orders." },
+  { q: "Do you offer API access?",              a: "Yes — every account gets free API access for automation. Documentation in your dashboard." },
+  { q: "Is this safe for my Instagram/TikTok account?", a: "Yes — we comply with platform best practices. Slow drip-feed available for organic-looking growth." },
 ];
 
-function FAQ() {
+function FAQSection() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section id="faq" className="mt-32">
-      <SectionHead eyebrow="FAQ" title="Questions, answered." />
-      <div className="mt-10 space-y-3">
+    <Section id="faq">
+      <Eyebrow>FAQ</Eyebrow>
+      <SectionHead title="Questions, answered." />
+      <div className="mx-auto max-w-3xl divide-y divide-[var(--border-subtle)] border-y border-[var(--border-subtle)]">
         {FAQS.map((f, i) => {
           const isOpen = open === i;
           return (
-            <div key={f.q} className="glass rounded-2xl">
+            <div key={f.q}>
               <button
                 onClick={() => setOpen(isOpen ? null : i)}
-                className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                aria-expanded={isOpen}
+                className="flex w-full items-center justify-between gap-4 py-5 text-left"
               >
-                <span className="text-sm md:text-base">{f.q}</span>
-                <ChevronDown className={`h-4 w-4 shrink-0 text-foreground-muted transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                <span className="text-base font-medium text-[var(--text-primary)]">{f.q}</span>
+                <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--text-tertiary)] transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </button>
-              {isOpen && (
-                <div className="px-6 pb-6 text-sm text-foreground-muted">{f.a}</div>
-              )}
+              {isOpen && <div className="pb-5 text-sm text-[var(--text-secondary)]">{f.a}</div>}
             </div>
           );
         })}
       </div>
-    </section>
+    </Section>
   );
 }
 
+/* ---------------- FINAL CTA ---------------- */
 function FinalCTA() {
   return (
-    <section className="my-32">
-      <div className="glass relative overflow-hidden rounded-3xl p-12 text-center md:p-20">
-        <div className="glow-orb animate-float-med" style={{ top: -200, right: -100, background: "#B83E94", opacity: .4 }} />
-        <div className="glow-orb animate-float-slow" style={{ bottom: -200, left: -100, background: "#0B6B8C", opacity: .35 }} />
+    <Section>
+      <div className="relative overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-12 text-center md:p-20">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{ backgroundImage: "url(/assets/decorative/pattern-persian.svg)" }}
+          aria-hidden
+        />
         <div className="relative">
-          <h3 className="text-5xl tracking-tight md:text-6xl">
-            Ready to <span className="gradient-text">grow?</span>
-          </h3>
-          <p className="mx-auto mt-5 max-w-lg text-foreground-muted">
-            Create an account, deposit $25, and place your first order in under 60 seconds.
+          <h2 className="text-4xl tracking-tight md:text-5xl">Ready to start growing?</h2>
+          <p className="mx-auto mt-4 max-w-md text-[var(--text-secondary)]">
+            Join 200+ agencies and creators using Boostan.
           </p>
-          <a href="#" className="btn-gradient mt-8 inline-flex items-center gap-2 rounded-xl px-7 py-3.5 text-sm">
-            Get started — it's free <ArrowRight className="h-4 w-4" />
-          </a>
+          <Link
+            to="/signup"
+            className="mt-8 inline-flex items-center gap-2 rounded-md bg-[var(--accent)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
+          >
+            Get started — $25 minimum <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
 
-function SectionHead({ eyebrow, title, sub }: { eyebrow: string; title: string; sub?: string }) {
+/* ---------------- FOOTER ---------------- */
+function Footer() {
   return (
-    <div className="mx-auto max-w-2xl text-center">
-      <div className="text-xs uppercase tracking-[0.2em] text-foreground-subtle">{eyebrow}</div>
-      <h2 className="mt-3 text-4xl tracking-tight md:text-5xl">{title}</h2>
-      {sub && <p className="mt-4 text-foreground-muted">{sub}</p>}
+    <footer className="border-t border-[var(--border-subtle)] bg-[var(--bg-base)]">
+      <div className="mx-auto grid max-w-[1200px] gap-12 px-6 py-16 md:grid-cols-2">
+        <div>
+          <Link to="/" className="flex items-center gap-2 text-base font-medium tracking-tight">
+            <span className="grid h-7 w-7 place-items-center rounded-md bg-[var(--accent)] text-white">
+              <Sprout className="h-4 w-4" />
+            </span>
+            B<span className="text-[var(--accent)]">o</span>ostan
+          </Link>
+          <p className="mt-4 max-w-xs text-sm text-[var(--text-secondary)]">
+            بوستان · The garden where social grows.
+          </p>
+          <p className="mt-2 text-xs text-[var(--text-tertiary)]">Made in Toronto</p>
+        </div>
+        <div className="grid grid-cols-3 gap-6 text-sm">
+          <FooterCol title="Product" links={[["Services","#services"],["Pricing","#pricing"],["API Docs","/signup"]]} />
+          <FooterCol title="Company" links={[["About","#about"],["Contact","#"],["Support","#"]]} />
+          <FooterCol title="Legal"   links={[["Terms","#"],["Privacy","#"],["Refund Policy","#"]]} />
+        </div>
+      </div>
+      <div className="border-t border-[var(--border-subtle)]">
+        <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-6 text-xs text-[var(--text-tertiary)]">
+          <div>© {new Date().getFullYear()} Boostan</div>
+          <div className="flex items-center gap-4">
+            <a href="#" aria-label="X" className="hover:text-[var(--text-primary)]"><FaXTwitter className="h-4 w-4" /></a>
+            <a href="#" aria-label="Instagram" className="hover:text-[var(--text-primary)]"><FaInstagram className="h-4 w-4" /></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function FooterCol({ title, links }: { title: string; links: [string, string][] }) {
+  return (
+    <div>
+      <div className="mb-3 text-xs uppercase tracking-wider text-[var(--text-tertiary)]">{title}</div>
+      <ul className="space-y-2">
+        {links.map(([label, href]) => (
+          <li key={label}>
+            <a href={href} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">{label}</a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
 
-function Footer() {
+/* ---------------- helpers ---------------- */
+function Section({ id, children }: { id?: string; children: React.ReactNode }) {
+  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.08 });
   return (
-    <footer className="relative z-10 border-t border-[var(--border)] mt-12">
-      <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-6 px-5 py-10 sm:flex-row">
-        <div className="flex items-center gap-2 text-sm text-foreground-muted">
-          <span className="grid h-6 w-6 place-items-center rounded-md gradient-bg"><Sprout className="h-3.5 w-3.5 text-white" /></span>
-          Boostan © 2026
-        </div>
-        <div className="flex items-center gap-6 text-xs text-foreground-muted">
-          <a href="#" className="hover:text-foreground">Terms</a>
-          <a href="#" className="hover:text-foreground">Privacy</a>
-          <a href="#" className="hover:text-foreground">Status</a>
-          <a href="#" className="hover:text-foreground">Contact</a>
-        </div>
-      </div>
-    </footer>
+    <section
+      id={id}
+      ref={ref}
+      className={`mx-auto max-w-[1200px] px-6 py-24 transition-all duration-700 md:py-32 ${
+        inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+      }`}
+    >
+      {children}
+    </section>
+  );
+}
+
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return <div className="mb-3 text-xs uppercase tracking-[0.25em] text-[var(--text-tertiary)]">{children}</div>;
+}
+
+function SectionHead({ title, sub }: { title: string; sub?: string }) {
+  return (
+    <div className="mb-10 max-w-2xl">
+      <h2 className="text-3xl tracking-tight md:text-4xl">{title}</h2>
+      {sub && <p className="mt-3 text-[var(--text-secondary)]">{sub}</p>}
+    </div>
+  );
+}
+
+function Divider() {
+  return (
+    <div className="my-8 flex justify-center" aria-hidden>
+      <svg width="60" height="20" viewBox="0 0 60 20" fill="none" className="text-[var(--accent)]">
+        <path d="M2 10 C 15 2, 30 18, 45 10 S 58 10, 58 10" stroke="currentColor" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+        <circle cx="30" cy="10" r="1.5" fill="currentColor" />
+      </svg>
+    </div>
   );
 }

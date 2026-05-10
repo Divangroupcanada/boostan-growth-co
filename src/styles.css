@@ -233,4 +233,43 @@
     animation: none;
     box-shadow: none;
   }
+
+  /* Landing — hero video fallback */
+  .hero-fallback {
+    background:
+      radial-gradient(1200px 600px at 30% 20%, rgba(212,83,126,0.18), transparent 60%),
+      radial-gradient(900px 500px at 80% 80%, rgba(107,30,92,0.22), transparent 65%),
+      linear-gradient(180deg, #0A0A0B 0%, #1A0A14 100%);
+    animation: heroDrift 18s ease-in-out infinite alternate;
+  }
+  .placeholder-grad {
+    background:
+      linear-gradient(135deg, #1A1A1F 0%, #232328 100%);
+  }
+
+  /* Landing — staggered fade-up on hero */
+  .anim-stagger { opacity: 0; transform: translateY(16px); animation: fadeUp 700ms ease-out forwards; }
+  .anim-1 { animation-delay: 100ms; }
+  .anim-2 { animation-delay: 250ms; }
+  .anim-3 { animation-delay: 400ms; }
+  .anim-4 { animation-delay: 550ms; }
+  .anim-5 { animation-delay: 700ms; }
+  .anim-bounce { animation: chevBounce 2.4s ease-in-out infinite; }
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes chevBounce {
+  0%, 100% { transform: translate(-50%, 0); opacity: 0.6; }
+  50% { transform: translate(-50%, 6px); opacity: 1; }
+}
+@keyframes heroDrift {
+  0%   { background-position: 0% 0%, 100% 100%, 0 0; }
+  100% { background-position: 10% 5%, 90% 95%, 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-stagger, .anim-bounce, .hero-fallback { animation: none !important; }
+  .anim-stagger { opacity: 1; transform: none; }
 }
