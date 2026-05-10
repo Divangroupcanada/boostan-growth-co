@@ -113,14 +113,19 @@ function Hero() {
           <video
             className="h-full w-full object-cover"
             autoPlay muted loop playsInline
-            poster="/assets/hero/hero-poster.jpg"
+            poster={UNSPLASH.hero}
             aria-hidden="true"
             onError={() => setVideoOk(false)}
           >
             <source src="/assets/hero/hero-video.mp4" type="video/mp4" />
           </video>
         ) : (
-          <div className="hero-fallback h-full w-full" />
+          <img
+            src={UNSPLASH.hero}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover"
+          />
         )}
         {/* dark gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-base)]/40 via-[var(--bg-base)]/40 to-[var(--bg-base)]" />
