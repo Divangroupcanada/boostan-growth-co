@@ -156,6 +156,7 @@ export type Database = {
           service_type: string | null
           smmflw_id: string | null
           synced_at: string | null
+          tier: string | null
           updated_at: string
         }
         Insert: {
@@ -177,6 +178,7 @@ export type Database = {
           service_type?: string | null
           smmflw_id?: string | null
           synced_at?: string | null
+          tier?: string | null
           updated_at?: string
         }
         Update: {
@@ -198,6 +200,7 @@ export type Database = {
           service_type?: string | null
           smmflw_id?: string | null
           synced_at?: string | null
+          tier?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -409,6 +412,7 @@ export type Database = {
             }
             Returns: string
           }
+      recompute_service_tiers: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"
