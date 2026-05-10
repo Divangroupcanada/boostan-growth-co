@@ -20,10 +20,10 @@ export function SiteNav() {
         </nav>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Link to="/" className="hidden rounded-lg px-3 py-2 text-sm text-foreground-muted hover:text-foreground sm:inline-block">
+          <Link to="/login" className="hidden rounded-lg px-3 py-2 text-sm text-foreground-muted hover:text-foreground sm:inline-block">
             Sign in
           </Link>
-          <Link to="/" className="btn-gradient rounded-lg px-4 py-2 text-sm">
+          <Link to="/signup" className="btn-gradient rounded-lg px-4 py-2 text-sm">
             Sign up
           </Link>
         </div>
