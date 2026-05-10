@@ -1,7 +1,9 @@
 import { createFileRoute, Outlet, Navigate, Link, useRouterState } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import {
-  LayoutDashboard, ShoppingBag, ListOrdered, Wallet, Sparkles, LogOut, Sprout, Code2,
+  LayoutDashboard, ShoppingBag, ListOrdered, Wallet, Sparkles, LogOut, Sprout, Code2, Shield,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -21,6 +23,20 @@ const NAV = [
 function AuthenticatedLayout() {
   const { session, loading, signOut, user } = useAuth();
   const path = useRouterState({ select: (s) => s.location.pathname });
+
+  const { data: isAdmin } = useQuery({
+    queryKey: ["is-admin", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user!.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      return !!data;
+    },
+    enabled: !!user,
+  });
 
   if (loading) {
     return (
@@ -64,6 +80,19 @@ function AuthenticatedLayout() {
                 </Link>
               );
             })}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
+                  path.startsWith("/admin")
+                    ? "bg-[var(--surface-strong)] text-foreground"
+                    : "text-foreground-muted hover:bg-[var(--surface)] hover:text-foreground"
+                }`}
+              >
+                <Shield className="h-4 w-4" />
+                Admin
+              </Link>
+            )}
           </nav>
 
           <div className="mt-auto flex flex-col gap-3">

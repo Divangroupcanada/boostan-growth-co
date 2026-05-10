@@ -1,9 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { placeOrder } from "@/lib/smmflw.functions";
 import { useAuth } from "@/lib/auth";
 import { useMemo, useState } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, FlaskConical } from "lucide-react";
 import { toast } from "sonner";
 
 type Search = { service?: string };
@@ -21,6 +23,7 @@ function NewOrderPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const place = useServerFn(placeOrder);
 
   const { data: services } = useQuery({
     queryKey: ["services-all"],
@@ -42,49 +45,35 @@ function NewOrderPage() {
   const [serviceId, setServiceId] = useState<string>(preselect ?? "");
   const [link, setLink] = useState("");
   const [quantity, setQuantity] = useState<number>(1000);
+  const [testMode, setTestMode] = useState(true); // default ON
   const [submitting, setSubmitting] = useState(false);
 
   const service = useMemo(
     () => (services ?? []).find((s) => s.id === (serviceId || preselect)),
     [services, serviceId, preselect],
   );
-  const price = service ? (Number(service.rate_per_1000) * quantity) / 1000 : 0;
+  const rate = service ? Number(service.marked_up_rate ?? service.rate_per_1000) : 0;
+  const price = service ? (rate * quantity) / 1000 : 0;
   const balance = Number(profile?.balance ?? 0);
-  const canPay = balance >= price && service && quantity >= service.min_quantity && quantity <= service.max_quantity;
+  const canPay = !!service && balance >= price && quantity >= service.min_quantity && quantity <= service.max_quantity;
 
   const submit = async () => {
     if (!service || !user) return;
     if (!link) return toast.error("Add a link or username");
     if (!canPay) return toast.error("Insufficient balance or invalid quantity");
     setSubmitting(true);
-    const { error: orderErr } = await supabase.from("orders").insert({
-      user_id: user.id,
-      service_id: service.id,
-      link,
-      quantity,
-      price,
-      status: "pending",
-    });
-    if (orderErr) {
+    try {
+      const res = await place({ data: { serviceId: service.id, link, quantity, testMode } });
+      qc.invalidateQueries({ queryKey: ["profile", user.id] });
+      qc.invalidateQueries({ queryKey: ["orders", user.id] });
+      qc.invalidateQueries({ queryKey: ["orders-all", user.id] });
+      toast.success(testMode ? `Test order placed (${res.providerOrderId})` : "Order placed");
+      navigate({ to: "/orders" });
+    } catch (e: any) {
+      toast.error(e?.message ?? "Order failed");
+    } finally {
       setSubmitting(false);
-      return toast.error(orderErr.message);
     }
-    await supabase
-      .from("profiles")
-      .update({ balance: balance - price })
-      .eq("user_id", user.id);
-    await supabase.from("transactions").insert({
-      user_id: user.id,
-      type: "order",
-      amount: -price,
-      status: "completed",
-      description: `${service.name} × ${quantity}`,
-    });
-    qc.invalidateQueries({ queryKey: ["profile", user.id] });
-    qc.invalidateQueries({ queryKey: ["orders", user.id] });
-    setSubmitting(false);
-    toast.success("Order placed");
-    navigate({ to: "/orders" });
   };
 
   return (
@@ -105,7 +94,7 @@ function NewOrderPage() {
               <option value="">Select a service…</option>
               {(services ?? []).map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.platform} · {s.name} (${Number(s.rate_per_1000).toFixed(2)}/1k)
+                  {s.platform} · {s.name} (${Number(s.marked_up_rate ?? s.rate_per_1000).toFixed(2)}/1k)
                 </option>
               ))}
             </select>
@@ -130,6 +119,28 @@ function NewOrderPage() {
               className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-sm outline-none focus:border-[var(--border-strong)]"
             />
           </Field>
+
+          <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+            <input
+              type="checkbox"
+              checked={testMode}
+              onChange={(e) => setTestMode(e.target.checked)}
+              className="mt-0.5 h-4 w-4 accent-[var(--primary)]"
+            />
+            <div className="flex-1 text-sm">
+              <div className="flex items-center gap-2">
+                <FlaskConical className="h-3.5 w-3.5" />
+                <span>Test mode</span>
+                <span className="rounded-full bg-[var(--gradient-brand-soft)] px-2 py-0.5 text-[10px] uppercase tracking-wider">
+                  default
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-foreground-muted">
+                Wallet is debited and the order is recorded, but the SMMFLW provider is not called.
+                Uncheck to send the order to the live provider.
+              </p>
+            </div>
+          </label>
         </div>
 
         <div className="mt-7 grid gap-3 rounded-xl bg-[var(--surface)] p-5 text-sm sm:grid-cols-3">
@@ -145,7 +156,7 @@ function NewOrderPage() {
         >
           {submitting ? "Placing order…" : (
             <>
-              <Sparkles className="h-4 w-4" /> Place order <ArrowRight className="h-4 w-4" />
+              <Sparkles className="h-4 w-4" /> Place {testMode ? "test " : ""}order <ArrowRight className="h-4 w-4" />
             </>
           )}
         </button>
