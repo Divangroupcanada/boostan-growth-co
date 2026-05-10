@@ -6,11 +6,12 @@ import {
 import { FaInstagram, FaTiktok, FaYoutube, FaXTwitter } from "react-icons/fa6";
 import { supabase } from "@/integrations/supabase/client";
 
+// Unsplash Source API was deprecated; use direct image URLs (free, no key).
 const UNSPLASH = {
-  hero: "https://source.unsplash.com/1920x1080/?plant,dark,nature,macro",
-  "/assets/trust/creator-1.jpg": "https://source.unsplash.com/600x600/?creator,phone,instagram",
-  "/assets/trust/creator-2.jpg": "https://source.unsplash.com/600x600/?influencer,content,creation",
-  "/assets/trust/agency-1.jpg":  "https://source.unsplash.com/600x600/?agency,marketing,workspace",
+  hero: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=1920&q=80&auto=format&fit=crop",
+  "/assets/trust/creator-1.jpg": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600&q=80&auto=format&fit=crop",
+  "/assets/trust/creator-2.jpg": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80&auto=format&fit=crop",
+  "/assets/trust/agency-1.jpg":  "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80&auto=format&fit=crop",
 } as const;
 
 type SvcRow = {
