@@ -5,7 +5,14 @@ import {
 } from "lucide-react";
 import { FaInstagram, FaTiktok, FaYoutube, FaXTwitter } from "react-icons/fa6";
 import { supabase } from "@/integrations/supabase/client";
-import { ThemeToggle } from "@/components/theme-toggle";
+
+// Unsplash Source API was deprecated; use direct image URLs (free, no key).
+const UNSPLASH = {
+  hero: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=1920&q=80&auto=format&fit=crop",
+  "/assets/trust/creator-1.jpg": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600&q=80&auto=format&fit=crop",
+  "/assets/trust/creator-2.jpg": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80&auto=format&fit=crop",
+  "/assets/trust/agency-1.jpg":  "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80&auto=format&fit=crop",
+} as const;
 
 type SvcRow = {
   id: string;
@@ -77,7 +84,6 @@ function Nav() {
           <a href="#about"    className="hover:text-[var(--text-primary)] transition-colors">About</a>
         </nav>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <Link
             to="/login"
             className="hidden rounded-md px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] sm:inline-block"
@@ -108,14 +114,19 @@ function Hero() {
           <video
             className="h-full w-full object-cover"
             autoPlay muted loop playsInline
-            poster="/assets/hero/hero-poster.jpg"
+            poster={UNSPLASH.hero}
             aria-hidden="true"
             onError={() => setVideoOk(false)}
           >
             <source src="/assets/hero/hero-video.mp4" type="video/mp4" />
           </video>
         ) : (
-          <div className="hero-fallback h-full w-full" />
+          <img
+            src={UNSPLASH.hero}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover"
+          />
         )}
         {/* dark gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-base)]/40 via-[var(--bg-base)]/40 to-[var(--bg-base)]" />
@@ -388,17 +399,17 @@ function WhoItsFor() {
 }
 
 function AudienceCard({ img, title, desc }: { img: string; title: string; desc: string }) {
-  const [ok, setOk] = useState(true);
+  const fallback = (UNSPLASH as Record<string, string>)[img];
+  const [src, setSrc] = useState(img);
   return (
     <div className="overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)]">
       <div className="aspect-[4/3] w-full overflow-hidden bg-[var(--bg-surface-2)]">
-        {ok ? (
-          <img src={img} alt={title} className="h-full w-full object-cover" onError={() => setOk(false)} />
-        ) : (
-          <div className="placeholder-grad flex h-full w-full items-end p-5">
-            <span className="text-sm text-[var(--text-tertiary)]">{title}</span>
-          </div>
-        )}
+        <img
+          src={src}
+          alt={title}
+          className="h-full w-full object-cover"
+          onError={() => { if (fallback && src !== fallback) setSrc(fallback); }}
+        />
       </div>
       <div className="p-6">
         <div className="text-lg font-medium">{title}</div>
