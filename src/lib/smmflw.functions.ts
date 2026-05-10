@@ -238,11 +238,11 @@ export const getProviderBalance = createServerFn({ method: "POST" })
     });
     console.log(`[smmflw] balance parsed: ${JSON.stringify(resp)}`);
 
-    if (resp.status !== "success") {
+    if (resp.balance === undefined || resp.balance === null) {
       throw new Error(resp.message ?? `SMMFLW balance request failed: ${JSON.stringify(resp)}`);
     }
 
-    const balance = parseFloat(String(resp.balance ?? ""));
+    const balance = parseFloat(String(resp.balance));
     if (!Number.isFinite(balance)) {
       throw new Error(`SMMFLW returned invalid balance: ${JSON.stringify(resp)}`);
     }
