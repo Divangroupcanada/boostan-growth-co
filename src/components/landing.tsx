@@ -83,7 +83,6 @@ function Nav() {
           <a href="#about"    className="hover:text-[var(--text-primary)] transition-colors">About</a>
         </nav>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <Link
             to="/login"
             className="hidden rounded-md px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] sm:inline-block"
