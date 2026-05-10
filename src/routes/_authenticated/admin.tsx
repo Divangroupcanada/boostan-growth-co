@@ -131,6 +131,85 @@ function AdminPage() {
           Markup applies on next sync: <code>base × (1 + markup%) + fee</code>
         </p>
       </div>
+
+      <PendingManualDeposits />
+    </div>
+  );
+}
+
+function PendingManualDeposits() {
+  const qc = useQueryClient();
+  const confirmFn = useServerFn(adminConfirmManualDeposit);
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  const { data: pending } = useQuery({
+    queryKey: ["pending-etransfers"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("transactions")
+        .select("id, user_id, pay_amount, payment_status, created_at, description")
+        .eq("type", "manual_etransfer")
+        .neq("payment_status", "finished")
+        .order("created_at", { ascending: false });
+      return data ?? [];
+    },
+    refetchInterval: 30_000,
+  });
+
+  const confirm = async (id: string, amount: number) => {
+    setBusyId(id);
+    try {
+      await confirmFn({ data: { transaction_id: id, amount_usd: amount } });
+      toast.success(`Credited $${amount.toFixed(2)}`);
+      qc.invalidateQueries({ queryKey: ["pending-etransfers"] });
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed to credit");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  return (
+    <div className="glass rounded-2xl p-6">
+      <div className="flex items-center gap-2 text-sm">
+        <Mail className="h-4 w-4" /> Pending manual deposits
+      </div>
+      <p className="mt-1 text-xs text-foreground-subtle">
+        E-transfers submitted by users. Verify the funds landed, then click confirm to credit the wallet.
+      </p>
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-y border-[var(--border)] text-left text-xs uppercase tracking-wider text-foreground-subtle">
+              <th className="px-3 py-2 font-normal">User</th>
+              <th className="px-3 py-2 font-normal">Amount</th>
+              <th className="px-3 py-2 font-normal">Submitted</th>
+              <th className="px-3 py-2 font-normal" />
+            </tr>
+          </thead>
+          <tbody>
+            {(pending ?? []).length === 0 && (
+              <tr><td colSpan={4} className="px-3 py-6 text-center text-foreground-muted">No pending e-transfers.</td></tr>
+            )}
+            {(pending ?? []).map((p: any) => (
+              <tr key={p.id} className="border-b border-[var(--border)] last:border-0">
+                <td className="px-3 py-3 font-mono text-xs">{String(p.user_id).slice(0, 8)}…</td>
+                <td className="px-3 py-3 tabular">${Number(p.pay_amount ?? 0).toFixed(2)}</td>
+                <td className="px-3 py-3 text-xs text-foreground-muted">{new Date(p.created_at).toLocaleString()}</td>
+                <td className="px-3 py-3 text-right">
+                  <button
+                    onClick={() => confirm(p.id, Number(p.pay_amount ?? 0))}
+                    disabled={busyId === p.id || !p.pay_amount}
+                    className="btn-gradient inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs disabled:opacity-50"
+                  >
+                    <Check className="h-3 w-3" /> {busyId === p.id ? "Crediting…" : `Confirm + credit $${Number(p.pay_amount ?? 0).toFixed(2)}`}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
