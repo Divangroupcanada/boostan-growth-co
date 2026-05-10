@@ -3,9 +3,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { syncServices, getProviderBalance } from "@/lib/smmflw.functions";
+import { adminConfirmManualDeposit } from "@/lib/nowpayments.functions";
 import { useState } from "react";
 import { toast } from "sonner";
-import { RefreshCw, Wallet, Database, Settings as SettingsIcon } from "lucide-react";
+import { RefreshCw, Wallet, Database, Settings as SettingsIcon, Mail, Check } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
