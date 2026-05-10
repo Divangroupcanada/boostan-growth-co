@@ -244,6 +244,12 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          ipn_payload: Json | null
+          pay_address: string | null
+          pay_amount: number | null
+          pay_currency: string | null
+          payment_id: string | null
+          payment_status: string | null
           reference_id: string | null
           status: Database["public"]["Enums"]["tx_status"]
           type: Database["public"]["Enums"]["tx_type"]
@@ -255,6 +261,12 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          ipn_payload?: Json | null
+          pay_address?: string | null
+          pay_amount?: number | null
+          pay_currency?: string | null
+          payment_id?: string | null
+          payment_status?: string | null
           reference_id?: string | null
           status?: Database["public"]["Enums"]["tx_status"]
           type: Database["public"]["Enums"]["tx_type"]
@@ -266,6 +278,12 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          ipn_payload?: Json | null
+          pay_address?: string | null
+          pay_amount?: number | null
+          pay_currency?: string | null
+          payment_id?: string | null
+          payment_status?: string | null
           reference_id?: string | null
           status?: Database["public"]["Enums"]["tx_status"]
           type?: Database["public"]["Enums"]["tx_type"]
@@ -340,7 +358,14 @@ export type Database = {
         | "canceled"
         | "failed"
       tx_status: "pending" | "completed" | "failed"
-      tx_type: "deposit" | "order" | "refund" | "adjustment" | "order_debit"
+      tx_type:
+        | "deposit"
+        | "order"
+        | "refund"
+        | "adjustment"
+        | "order_debit"
+        | "deposit_pending"
+        | "manual_etransfer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -479,7 +504,15 @@ export const Constants = {
         "failed",
       ],
       tx_status: ["pending", "completed", "failed"],
-      tx_type: ["deposit", "order", "refund", "adjustment", "order_debit"],
+      tx_type: [
+        "deposit",
+        "order",
+        "refund",
+        "adjustment",
+        "order_debit",
+        "deposit_pending",
+        "manual_etransfer",
+      ],
     },
   },
 } as const
