@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useMemo, useState } from "react";
 import { ServiceCard, type ServiceCardData } from "@/components/service-card";
+import { TierComparison } from "@/components/tier-comparison";
 import {
   type ServiceType,
   type Tier,
