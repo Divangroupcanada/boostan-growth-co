@@ -106,7 +106,7 @@ function NewOrderWizard() {
       if (ps.tier) setTier(ps.tier as Tier);
       const minQ = ps.min_quantity ?? 1000;
       setQty((q) => (q >= ps.min_quantity && q <= ps.max_quantity ? q : Math.max(1000, minQ)));
-      setStep(5);
+      setStep(3);
       return;
     }
     let prefill: Partial<Search & { serviceId?: string }> = {};
