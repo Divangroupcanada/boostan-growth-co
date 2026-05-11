@@ -7,7 +7,7 @@ import { adminConfirmManualDeposit, listWebhookLogs, triggerTestWebhook } from "
 import { Fragment, useState } from "react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RefreshCw, Wallet, Database, Settings as SettingsIcon, Mail, Check, Activity, PlayCircle, ChevronDown, ChevronRight } from "lucide-react";
+import { RefreshCw, Wallet, Database, Settings as SettingsIcon, Mail, Check, Activity, PlayCircle, ChevronDown, ChevronRight, Star, Search as SearchIcon } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
