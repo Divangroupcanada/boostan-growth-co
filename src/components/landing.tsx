@@ -32,8 +32,10 @@ export function Landing() {
         <Hero />
         <TrustBar />
         <Stats />
+        <TryItNow />
         <ServicesPreview />
         <HowItWorks />
+        <HowWereDifferent />
         <WhoItsFor />
         <PricingTransparency />
         <FAQSection />
