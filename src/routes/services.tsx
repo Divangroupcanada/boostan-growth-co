@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useMemo, useState } from "react";
 import { ServiceCard, type ServiceCardData } from "@/components/service-card";
+import { TierComparison } from "@/components/tier-comparison";
 import {
   type ServiceType,
   type Tier,
@@ -66,6 +67,17 @@ function ServicesPage() {
 
   const all = services ?? [];
 
+  const startingFrom = useMemo(() => {
+    const m: Partial<Record<Tier, number>> = {};
+    for (const s of all) {
+      const t = (s.tier ?? "basic") as Tier;
+      const r = Number(s.marked_up_rate ?? s.rate_per_1000);
+      if (!Number.isFinite(r)) continue;
+      if (m[t] == null || r < (m[t] as number)) m[t] = r;
+    }
+    return m;
+  }, [all]);
+
   const platformCounts = useMemo(() => {
     const m: Record<string, number> = {};
     for (const s of all) m[s.platform] = (m[s.platform] ?? 0) + 1;
@@ -124,6 +136,9 @@ function ServicesPage() {
           {(all.length || 143)} premium services across Instagram, TikTok, and YouTube. Click to order.
         </p>
       </header>
+
+      {/* Tier comparison */}
+      <TierComparison startingFrom={startingFrom} />
 
       {/* Layer 1: platform tabs */}
       <div className="sticky top-0 z-10 -mx-6 mb-6 border-b border-[var(--border-subtle)] bg-[var(--bg-base)]/85 px-6 backdrop-blur">

@@ -91,7 +91,24 @@ function NewOrderWizard() {
   const [submitting, setSubmitting] = useState(false);
 
   // Pre-fill from URL search params or sessionStorage
+  const preselectedService = useMemo(() => {
+    if (!search.service || !services) return null;
+    return (services as any[]).find((s) => s.id === search.service) ?? null;
+  }, [search.service, services]);
+
   useEffect(() => {
+    // Direct service preselection — skip wizard, jump to delivery link
+    if (preselectedService) {
+      const ps = preselectedService;
+      setPlatform(ps.platform as PlatformKey);
+      const c = inferCategory(ps.display_name || ps.name);
+      if (c) setCategory(c);
+      if (ps.tier) setTier(ps.tier as Tier);
+      const minQ = ps.min_quantity ?? 1000;
+      setQty((q) => (q >= ps.min_quantity && q <= ps.max_quantity ? q : Math.max(1000, minQ)));
+      setStep(3);
+      return;
+    }
     let prefill: Partial<Search & { serviceId?: string }> = {};
     try {
       const stored = sessionStorage.getItem("boostan:order-prefill");
@@ -108,7 +125,7 @@ function NewOrderWizard() {
     if (p && c && q && t) setStep(5); // Jump to link input
     try { sessionStorage.removeItem("boostan:order-prefill"); } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [preselectedService]);
 
   // Categories available for the chosen platform
   const availableCategories = useMemo(() => {
@@ -125,6 +142,11 @@ function NewOrderWizard() {
 
   // Resolve matched service
   const match = useMemo(() => {
+    if (preselectedService) {
+      if (qty >= preselectedService.min_quantity && qty <= preselectedService.max_quantity)
+        return preselectedService;
+      return null;
+    }
     if (!platform || !category || !tier) return null;
     const candidates = (services ?? []).filter((s: any) => {
       if (s.platform !== platform) return false;
@@ -137,7 +159,7 @@ function NewOrderWizard() {
     return inRange.reduce((a: any, b: any) =>
       Number(a.marked_up_rate) <= Number(b.marked_up_rate) ? a : b,
     );
-  }, [services, platform, category, tier, qty]);
+  }, [services, platform, category, tier, qty, preselectedService]);
 
   const sliderBounds = useMemo(() => {
     if (!platform || !category) return { min: 100, max: 25000 };
@@ -183,13 +205,41 @@ function NewOrderWizard() {
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-[0.2em] text-foreground-subtle">New order</p>
         <h1 className="text-3xl md:text-4xl">Place an order</h1>
-        <ProgressBar step={step} total={6} />
+        {!preselectedService && <ProgressBar step={step} total={6} />}
       </header>
 
+      {preselectedService && (
+        <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-5">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">
+                {preselectedService.platform} · {tierLabel((preselectedService.tier ?? null) as Tier)}
+              </div>
+              <div className="mt-1 text-sm font-medium text-[var(--text-primary)]">
+                {preselectedService.display_name || preselectedService.name}
+              </div>
+              <div className="mt-1 text-xs text-[var(--text-tertiary)] tabular">
+                ${Number(preselectedService.marked_up_rate ?? preselectedService.rate_per_1000).toFixed(2)} / 1,000 ·{" "}
+                {preselectedService.min_quantity.toLocaleString()}–{preselectedService.max_quantity.toLocaleString()}
+              </div>
+            </div>
+            <Link
+              to="/services"
+              className="text-xs text-[var(--accent)] hover:underline whitespace-nowrap"
+            >
+              Change service
+            </Link>
+          </div>
+        </div>
+      )}
+
       <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-6 md:p-8">
-        {step > 1 && (
+        {step > 1 && (!preselectedService || step > 3) && (
           <button
-            onClick={() => setStep(step - 1)}
+            onClick={() => {
+              const back = step - 1;
+              setStep(preselectedService && back === 4 ? 3 : back);
+            }}
             className="mb-5 inline-flex items-center gap-1.5 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back
@@ -258,7 +308,7 @@ function NewOrderWizard() {
               </div>
             </div>
             <button
-              onClick={() => setStep(4)}
+              onClick={() => setStep(preselectedService ? 5 : 4)}
               className="mt-6 inline-flex items-center gap-2 rounded-md bg-[var(--accent)] px-5 py-2 text-sm font-medium text-white hover:bg-[var(--accent-hover)]"
             >
               Continue <ArrowRight className="h-4 w-4" />
