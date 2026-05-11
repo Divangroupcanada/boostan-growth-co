@@ -137,6 +137,9 @@ function ServicesPage() {
         </p>
       </header>
 
+      {/* Tier comparison */}
+      <TierComparison startingFrom={startingFrom} />
+
       {/* Layer 1: platform tabs */}
       <div className="sticky top-0 z-10 -mx-6 mb-6 border-b border-[var(--border-subtle)] bg-[var(--bg-base)]/85 px-6 backdrop-blur">
         <div className="flex items-center gap-1 overflow-x-auto">
