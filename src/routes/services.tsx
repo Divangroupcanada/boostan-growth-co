@@ -67,6 +67,17 @@ function ServicesPage() {
 
   const all = services ?? [];
 
+  const startingFrom = useMemo(() => {
+    const m: Partial<Record<Tier, number>> = {};
+    for (const s of all) {
+      const t = (s.tier ?? "basic") as Tier;
+      const r = Number(s.marked_up_rate ?? s.rate_per_1000);
+      if (!Number.isFinite(r)) continue;
+      if (m[t] == null || r < (m[t] as number)) m[t] = r;
+    }
+    return m;
+  }, [all]);
+
   const platformCounts = useMemo(() => {
     const m: Record<string, number> = {};
     for (const s of all) m[s.platform] = (m[s.platform] ?? 0) + 1;
