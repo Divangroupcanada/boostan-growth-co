@@ -32,8 +32,10 @@ export function Landing() {
         <Hero />
         <TrustBar />
         <Stats />
+        <TryItNow />
         <ServicesPreview />
         <HowItWorks />
+        <HowWereDifferent />
         <WhoItsFor />
         <PricingTransparency />
         <FAQSection />
@@ -255,17 +257,23 @@ function ServicesPreview() {
       for (const p of PLATFORMS) {
         const { data } = await supabase
           .from("services")
-          .select("id, platform, display_name, name, marked_up_rate, min_quantity, max_quantity, display_tier")
+          .select("id, platform, display_name, name, description, service_type, marked_up_rate, rate_per_1000, min_quantity, max_quantity, tier")
           .eq("active", true)
           .eq("platform", p.key)
           .order("marked_up_rate", { ascending: true })
           .limit(3);
-        out[p.key] = (data || []).map((s: any) => ({
-          id: s.id, platform: s.platform,
-          name: s.display_name || s.name,
-          marked_up_rate: Number(s.marked_up_rate),
-          min_quantity: s.min_quantity, max_quantity: s.max_quantity,
-          display_tier: s.display_tier,
+        out[p.key] = (data || []).map((s: any): SvcRow => ({
+          id: s.id,
+          platform: s.platform,
+          name: s.name,
+          display_name: s.display_name,
+          description: s.description,
+          service_type: s.service_type,
+          marked_up_rate: s.marked_up_rate == null ? null : Number(s.marked_up_rate),
+          rate_per_1000: Number(s.rate_per_1000),
+          min_quantity: s.min_quantity,
+          max_quantity: s.max_quantity,
+          tier: (s.tier ?? null) as Tier | null,
         }));
       }
       if (alive) setData(out);
@@ -305,37 +313,14 @@ function ServicesPreview() {
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        {(rows.length ? rows : Array.from({ length: 3 }).map((_, i) => null)).map((s, i) => (
-          <div
-            key={s?.id ?? i}
-            className="group rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-6 transition-all hover:border-[var(--border-default)] hover:bg-[var(--bg-surface-2)]"
-          >
-            <div className="flex items-center justify-between">
-              <span className="grid h-9 w-9 place-items-center rounded-md bg-[var(--bg-surface-2)] text-[var(--text-primary)] group-hover:bg-[var(--bg-surface-3)]">
-                <active.Icon className="h-4 w-4" />
-              </span>
-              {s?.display_tier && (
-                <span className="rounded-md border border-[var(--border-subtle)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[var(--text-tertiary)]">
-                  {s.display_tier}
-                </span>
-              )}
-            </div>
-            <div className="mt-5 line-clamp-2 min-h-[44px] text-sm font-medium text-[var(--text-primary)]">
-              {s?.name ?? "Loading…"}
-            </div>
-            <div className="mt-4 flex items-end justify-between">
-              <div>
-                <div className="text-xs text-[var(--text-tertiary)]">per 1,000</div>
-                <div className="tabular text-2xl text-[var(--text-primary)]">
-                  ${s ? s.marked_up_rate.toFixed(2) : "—"}
-                </div>
-              </div>
-              <div className="text-right text-xs text-[var(--text-tertiary)]">
-                {s ? `${s.min_quantity.toLocaleString()}–${s.max_quantity.toLocaleString()}` : ""}
-              </div>
-            </div>
-          </div>
-        ))}
+        {rows.length
+          ? rows.map((s) => <ServiceCard key={s.id} s={s} />)
+          : Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-[280px] animate-pulse rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)]"
+              />
+            ))}
       </div>
 
       <div className="mt-6 text-right text-sm">
@@ -347,7 +332,31 @@ function ServicesPreview() {
   );
 }
 
-/* ---------------- HOW IT WORKS ---------------- */
+/* ---------------- HOW WE'RE DIFFERENT ---------------- */
+const DIFFERENTIATORS = [
+  "Premium upstream provider — not the cheapest, but reliable",
+  "Real engagement, drip-feed delivery available",
+  "30-day auto-refill on follower drops",
+  "Crypto + e-transfer accepted, no card processing risks",
+];
+
+function HowWereDifferent() {
+  return (
+    <Section>
+      <Eyebrow>How we're different</Eyebrow>
+      <SectionHead title="Not the cheapest. Reliable." />
+      <ul className="divide-y divide-[var(--border-subtle)] border-y border-[var(--border-subtle)]">
+        {DIFFERENTIATORS.map((d) => (
+          <li key={d} className="flex items-start gap-3 py-5 text-base text-[var(--text-primary)]">
+            <Check className="mt-0.5 h-5 w-5 shrink-0 text-[var(--accent)]" />
+            <span>{d}</span>
+          </li>
+        ))}
+      </ul>
+    </Section>
+  );
+}
+
 const STEPS = [
   { n: "01", t: "Sign up & deposit", d: "Create your free account and add funds via crypto or e-transfer. $25 minimum." },
   { n: "02", t: "Pick your service", d: "Browse 143 services across Instagram, TikTok, and YouTube. Filter by quality tier and price." },
