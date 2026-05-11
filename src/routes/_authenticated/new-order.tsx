@@ -234,9 +234,12 @@ function NewOrderWizard() {
       )}
 
       <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-6 md:p-8">
-        {step > 1 && !preselectedService && (
+        {step > 1 && (!preselectedService || step > 3) && (
           <button
-            onClick={() => setStep(step - 1)}
+            onClick={() => {
+              const back = step - 1;
+              setStep(preselectedService && back === 4 ? 3 : back);
+            }}
             className="mb-5 inline-flex items-center gap-1.5 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back
