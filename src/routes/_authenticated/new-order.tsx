@@ -91,7 +91,24 @@ function NewOrderWizard() {
   const [submitting, setSubmitting] = useState(false);
 
   // Pre-fill from URL search params or sessionStorage
+  const preselectedService = useMemo(() => {
+    if (!search.service || !services) return null;
+    return (services as any[]).find((s) => s.id === search.service) ?? null;
+  }, [search.service, services]);
+
   useEffect(() => {
+    // Direct service preselection — skip wizard, jump to delivery link
+    if (preselectedService) {
+      const ps = preselectedService;
+      setPlatform(ps.platform as PlatformKey);
+      const c = inferCategory(ps.display_name || ps.name);
+      if (c) setCategory(c);
+      if (ps.tier) setTier(ps.tier as Tier);
+      const minQ = ps.min_quantity ?? 1000;
+      setQty((q) => (q >= ps.min_quantity && q <= ps.max_quantity ? q : Math.max(1000, minQ)));
+      setStep(5);
+      return;
+    }
     let prefill: Partial<Search & { serviceId?: string }> = {};
     try {
       const stored = sessionStorage.getItem("boostan:order-prefill");
@@ -108,7 +125,7 @@ function NewOrderWizard() {
     if (p && c && q && t) setStep(5); // Jump to link input
     try { sessionStorage.removeItem("boostan:order-prefill"); } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [preselectedService]);
 
   // Categories available for the chosen platform
   const availableCategories = useMemo(() => {
