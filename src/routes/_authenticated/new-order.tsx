@@ -205,11 +205,36 @@ function NewOrderWizard() {
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-[0.2em] text-foreground-subtle">New order</p>
         <h1 className="text-3xl md:text-4xl">Place an order</h1>
-        <ProgressBar step={step} total={6} />
+        {!preselectedService && <ProgressBar step={step} total={6} />}
       </header>
 
+      {preselectedService && (
+        <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-5">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">
+                {preselectedService.platform} · {tierLabel((preselectedService.tier ?? null) as Tier)}
+              </div>
+              <div className="mt-1 text-sm font-medium text-[var(--text-primary)]">
+                {preselectedService.display_name || preselectedService.name}
+              </div>
+              <div className="mt-1 text-xs text-[var(--text-tertiary)] tabular">
+                ${Number(preselectedService.marked_up_rate ?? preselectedService.rate_per_1000).toFixed(2)} / 1,000 ·{" "}
+                {preselectedService.min_quantity.toLocaleString()}–{preselectedService.max_quantity.toLocaleString()}
+              </div>
+            </div>
+            <Link
+              to="/services"
+              className="text-xs text-[var(--accent)] hover:underline whitespace-nowrap"
+            >
+              Change service
+            </Link>
+          </div>
+        </div>
+      )}
+
       <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-6 md:p-8">
-        {step > 1 && (
+        {step > 1 && !preselectedService && (
           <button
             onClick={() => setStep(step - 1)}
             className="mb-5 inline-flex items-center gap-1.5 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
