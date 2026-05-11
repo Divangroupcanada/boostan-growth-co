@@ -10,6 +10,7 @@ import {
   detectPlatform,
   type SmmflwService,
 } from "./smmflw.server";
+import { inferServiceType } from "./service-tier";
 
 // ---------- helpers ----------
 
