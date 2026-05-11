@@ -541,8 +541,8 @@ function Footer() {
         </div>
         <div className="grid grid-cols-3 gap-6 text-sm">
           <FooterCol title="Product" links={[["Services","#services"],["Pricing","#pricing"],["API Docs","/signup"]]} />
-          <FooterCol title="Company" links={[["About","#about"],["Contact","#"],["Support","#"]]} />
-          <FooterCol title="Legal"   links={[["Terms","#"],["Privacy","#"],["Refund Policy","#"]]} />
+          <FooterCol title="Company" links={[["About","/about"],["Contact","mailto:hello@boostan.co"],["Support","mailto:hello@boostan.co"]]} />
+          <FooterCol title="Legal"   links={[["Terms","/terms"],["Privacy","/privacy"],["Refund Policy","/refund"]]} />
         </div>
       </div>
       <div className="border-t border-[var(--border-subtle)]">
