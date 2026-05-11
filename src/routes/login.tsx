@@ -23,7 +23,13 @@ function LoginPage() {
     setLoading(false);
     if (error) return toast.error(error);
     toast.success("Welcome back");
-    navigate({ to: "/dashboard" });
+    const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+    const redirect = params.get("redirect");
+    if (redirect && redirect.startsWith("/")) {
+      window.location.href = redirect;
+    } else {
+      navigate({ to: "/dashboard" });
+    }
   };
 
   return (

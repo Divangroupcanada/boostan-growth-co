@@ -25,6 +25,51 @@ export function tierLabel(tier: Tier | null | undefined): string {
   return tier === "vip" ? "VIP" : tier[0].toUpperCase() + tier.slice(1);
 }
 
+export const SERVICE_TYPES = [
+  "followers",
+  "likes",
+  "views",
+  "comments",
+  "story_views",
+  "subscribers",
+  "watch_time",
+  "shares",
+  "saves",
+  "reels_plays",
+  "other",
+] as const;
+export type ServiceType = (typeof SERVICE_TYPES)[number];
+
+export const SERVICE_TYPE_LABEL: Record<ServiceType, string> = {
+  followers: "Followers",
+  likes: "Likes",
+  views: "Views",
+  comments: "Comments",
+  story_views: "Story Views",
+  subscribers: "Subscribers",
+  watch_time: "Watch Time",
+  shares: "Shares",
+  saves: "Saves",
+  reels_plays: "Reels Plays",
+  other: "Other",
+};
+
+/** Map an SMMFLW service name (and optional category) to one of our standardized types. */
+export function inferServiceType(name: string, category?: string | null): ServiceType {
+  const n = `${name || ""} ${category || ""}`.toLowerCase();
+  if (/watch\s?time/.test(n)) return "watch_time";
+  if (/story\s+(view|impression)/.test(n)) return "story_views";
+  if (/reel/.test(n)) return "reels_plays";
+  if (/subscriber/.test(n)) return "subscribers";
+  if (/share|repost|retweet/.test(n)) return "shares";
+  if (/save|bookmark/.test(n)) return "saves";
+  if (/comment/.test(n)) return "comments";
+  if (/follower|member/.test(n)) return "followers";
+  if (/like/.test(n)) return "likes";
+  if (/view|impression|play/.test(n)) return "views";
+  return "other";
+}
+
 export const CATEGORIES = [
   "Followers",
   "Likes",

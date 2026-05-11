@@ -144,12 +144,15 @@ export type Database = {
           created_at: string
           description: string | null
           display_name: string | null
+          display_order: number | null
           display_tier: string | null
           id: string
+          is_featured: boolean
           marked_up_rate: number | null
           max_quantity: number
           min_quantity: number
           name: string
+          order_count: number
           platform: string
           provider_service_id: string | null
           rate_per_1000: number
@@ -166,12 +169,15 @@ export type Database = {
           created_at?: string
           description?: string | null
           display_name?: string | null
+          display_order?: number | null
           display_tier?: string | null
           id?: string
+          is_featured?: boolean
           marked_up_rate?: number | null
           max_quantity?: number
           min_quantity?: number
           name: string
+          order_count?: number
           platform: string
           provider_service_id?: string | null
           rate_per_1000: number
@@ -188,12 +194,15 @@ export type Database = {
           created_at?: string
           description?: string | null
           display_name?: string | null
+          display_order?: number | null
           display_tier?: string | null
           id?: string
+          is_featured?: boolean
           marked_up_rate?: number | null
           max_quantity?: number
           min_quantity?: number
           name?: string
+          order_count?: number
           platform?: string
           provider_service_id?: string | null
           rate_per_1000?: number

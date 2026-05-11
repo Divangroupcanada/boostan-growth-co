@@ -24,7 +24,9 @@ function SignupPage() {
     setLoading(false);
     if (error) return toast.error(error);
     toast.success("Account created. Check your email to verify.");
-    navigate({ to: "/login" });
+    const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+    const redirect = params.get("redirect");
+    navigate({ to: "/login", search: redirect ? ({ redirect } as any) : undefined });
   };
 
   return (
