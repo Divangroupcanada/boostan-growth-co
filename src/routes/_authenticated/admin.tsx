@@ -135,6 +135,8 @@ function AdminPage() {
 
       <PendingManualDeposits />
 
+      <FeaturedServicesManager />
+
       <Tabs defaultValue="webhooks" className="w-full">
         <TabsList>
           <TabsTrigger value="webhooks" className="gap-2">
