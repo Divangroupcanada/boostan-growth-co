@@ -142,6 +142,11 @@ function NewOrderWizard() {
 
   // Resolve matched service
   const match = useMemo(() => {
+    if (preselectedService) {
+      if (qty >= preselectedService.min_quantity && qty <= preselectedService.max_quantity)
+        return preselectedService;
+      return null;
+    }
     if (!platform || !category || !tier) return null;
     const candidates = (services ?? []).filter((s: any) => {
       if (s.platform !== platform) return false;
@@ -154,7 +159,7 @@ function NewOrderWizard() {
     return inRange.reduce((a: any, b: any) =>
       Number(a.marked_up_rate) <= Number(b.marked_up_rate) ? a : b,
     );
-  }, [services, platform, category, tier, qty]);
+  }, [services, platform, category, tier, qty, preselectedService]);
 
   const sliderBounds = useMemo(() => {
     if (!platform || !category) return { min: 100, max: 25000 };
