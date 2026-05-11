@@ -452,3 +452,140 @@ function Stat({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+function FeaturedServicesManager() {
+  const qc = useQueryClient();
+  const [q, setQ] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  const { data: featured } = useQuery({
+    queryKey: ["services-featured"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("services")
+        .select("id, name, display_name, platform, service_type, is_featured, display_order")
+        .eq("is_featured", true)
+        .order("display_order", { ascending: true, nullsFirst: false });
+      return data ?? [];
+    },
+  });
+
+  const { data: matches } = useQuery({
+    queryKey: ["services-search", q],
+    queryFn: async () => {
+      if (!q.trim()) return [];
+      const { data } = await supabase
+        .from("services")
+        .select("id, name, display_name, platform, service_type, is_featured, display_order")
+        .or(`name.ilike.%${q}%,display_name.ilike.%${q}%`)
+        .eq("active", true)
+        .limit(15);
+      return data ?? [];
+    },
+  });
+
+  const update = async (id: string, patch: { is_featured?: boolean; display_order?: number | null }) => {
+    setBusyId(id);
+    try {
+      const { error } = await supabase.from("services").update(patch).eq("id", id);
+      if (error) throw error;
+      qc.invalidateQueries({ queryKey: ["services-featured"] });
+      qc.invalidateQueries({ queryKey: ["services-search"] });
+      qc.invalidateQueries({ queryKey: ["services-public"] });
+      toast.success("Updated");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Update failed");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  return (
+    <div className="glass rounded-2xl p-6">
+      <div className="flex items-center gap-2 text-sm">
+        <Star className="h-4 w-4" /> Featured services management
+      </div>
+      <p className="mt-1 text-xs text-foreground-subtle">
+        Featured services appear first on the public /services grid, sorted by display order (lower = earlier).
+      </p>
+
+      <div className="mt-4">
+        <div className="text-xs uppercase tracking-wider text-foreground-subtle">Currently featured</div>
+        <div className="mt-2 space-y-1">
+          {(featured ?? []).length === 0 && (
+            <div className="text-xs text-foreground-muted">None featured yet.</div>
+          )}
+          {(featured ?? []).map((s: any) => (
+            <FeaturedRow key={s.id} s={s} busy={busyId === s.id} onUpdate={update} />
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-6 border-t border-[var(--border)] pt-4">
+        <div className="flex items-center gap-2">
+          <SearchIcon className="h-4 w-4 text-foreground-subtle" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search services to feature…"
+            className="flex-1 rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-sm"
+          />
+        </div>
+        {q.trim() && (
+          <div className="mt-2 space-y-1">
+            {(matches ?? []).map((s: any) => (
+              <FeaturedRow key={s.id} s={s} busy={busyId === s.id} onUpdate={update} />
+            ))}
+            {matches && matches.length === 0 && (
+              <div className="text-xs text-foreground-muted">No matches.</div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FeaturedRow({
+  s,
+  busy,
+  onUpdate,
+}: {
+  s: any;
+  busy: boolean;
+  onUpdate: (id: string, patch: { is_featured?: boolean; display_order?: number | null }) => void;
+}) {
+  const [order, setOrder] = useState<string>(s.display_order?.toString() ?? "");
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-md border border-[var(--border)] px-3 py-2">
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm">{s.display_name || s.name}</div>
+        <div className="text-[11px] text-foreground-subtle">{s.platform} · {s.service_type}</div>
+      </div>
+      <input
+        type="number"
+        value={order}
+        onChange={(e) => setOrder(e.target.value)}
+        onBlur={() =>
+          onUpdate(s.id, {
+            display_order: order === "" ? null : Number(order),
+          })
+        }
+        placeholder="order"
+        className="w-20 rounded border border-[var(--border)] bg-transparent px-2 py-1 text-xs tabular"
+      />
+      <button
+        disabled={busy}
+        onClick={() => onUpdate(s.id, { is_featured: !s.is_featured })}
+        className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs transition-colors ${
+          s.is_featured
+            ? "bg-amber-500/15 text-amber-300 hover:bg-amber-500/25"
+            : "border border-[var(--border)] text-foreground-subtle hover:bg-[var(--surface)]"
+        }`}
+      >
+        <Star className={`h-3 w-3 ${s.is_featured ? "fill-amber-300" : ""}`} />
+        {s.is_featured ? "Featured" : "Feature"}
+      </button>
+    </div>
+  );
+}
