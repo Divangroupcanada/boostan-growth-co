@@ -305,7 +305,7 @@ function NewOrderWizard() {
               </div>
             </div>
             <button
-              onClick={() => setStep(4)}
+              onClick={() => setStep(preselectedService ? 5 : 4)}
               className="mt-6 inline-flex items-center gap-2 rounded-md bg-[var(--accent)] px-5 py-2 text-sm font-medium text-white hover:bg-[var(--accent-hover)]"
             >
               Continue <ArrowRight className="h-4 w-4" />
