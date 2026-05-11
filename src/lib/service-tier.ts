@@ -20,9 +20,15 @@ export function tierPillClasses(tier: Tier | null | undefined): string {
   }
 }
 
+export const TIER_LABELS: Record<Tier, string> = {
+  basic: "Standard",
+  premium: "Premium",
+  vip: "Pro",
+};
+
 export function tierLabel(tier: Tier | null | undefined): string {
   if (!tier) return "Standard";
-  return tier === "vip" ? "VIP" : tier[0].toUpperCase() + tier.slice(1);
+  return TIER_LABELS[tier] ?? "Standard";
 }
 
 export const SERVICE_TYPES = [
