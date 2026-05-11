@@ -73,7 +73,7 @@ export const syncServices = createServerFn({ method: "POST" })
         name: s.name,
         display_name: s.name,
         platform,
-        service_type: String(s.type ?? "default"),
+        service_type: inferServiceType(s.name, String(s.category ?? "")),
         base_rate: baseRate,
         marked_up_rate: marked,
         rate_per_1000: marked,
