@@ -1,1 +1,0 @@
-import{j as t}from"./index-Df9MH6-T.js";const r=({error:e})=>t.jsx("main",{className:"grid min-h-screen place-items-center bg-background px-6 text-foreground",children:t.jsxs("p",{className:"text-sm text-foreground-muted",children:["Could not load this authorization request: ",String(e?.message??e)]})});export{r as errorComponent};
