@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.2",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://jadxjqzuzgeqkyfabfyo.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "boostan",
+      "version": "0.1.0",
+      "title": "Boostan"
+    },
+    "tools": [
+      {
+        "name": "search_services",
+        "title": "Search services",
+        "description": "Search the Boostan catalog of social growth services (Instagram, TikTok, YouTube) with pricing, tier and quantity limits.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "description": "Text to match against the service name.",
+              "type": "string"
+            },
+            "platform": {
+              "description": "Platform filter, e.g. instagram, tiktok, youtube.",
+              "type": "string"
+            },
+            "service_type": {
+              "description": "Service type filter, e.g. followers, likes, views.",
+              "type": "string"
+            },
+            "limit": {
+              "default": 10,
+              "description": "Max results to return.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_wallet_balance",
+        "title": "Get wallet balance",
+        "description": "Return the signed-in Boostan user's wallet balance in USD.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_orders",
+        "title": "List orders",
+        "description": "List the signed-in Boostan user's recent orders with status, quantity and price.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Optional status filter, e.g. pending, processing, completed.",
+              "type": "string"
+            },
+            "limit": {
+              "default": 10,
+              "description": "Max orders to return.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_order",
+        "title": "Get order",
+        "description": "Fetch one of the signed-in Boostan user's orders by its id.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "order_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "The order id (uuid)."
+            }
+          },
+          "required": [
+            "order_id"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
