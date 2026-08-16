@@ -85,8 +85,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Boostan" },
       { name: "twitter:description", content: "Boostan is a premium SMM reseller panel for buying social media engagement services." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ab4645e3-0cf8-415c-8e7b-d8558ed3d243/id-preview-bf57c253--72d95eff-0bb4-44bf-ba53-b73e576a3caf.lovable.app-1778374639681.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ab4645e3-0cf8-415c-8e7b-d8558ed3d243/id-preview-bf57c253--72d95eff-0bb4-44bf-ba53-b73e576a3caf.lovable.app-1778374639681.png" },
+      { property: "og:image", content: "https://boostan.co/og-image.png" },
+      { name: "twitter:image", content: "https://boostan.co/og-image.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
