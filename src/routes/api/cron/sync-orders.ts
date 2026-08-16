@@ -82,12 +82,21 @@ export const Route = createFileRoute("/api/cron/sync-orders")({
         let refunded = 0;
         const failures: string[] = [];
 
-        for (const order of orders) {
+        // The provider supports multi-order status (comma-separated ids), which
+        // matters here: one request per order would mean up to BATCH_LIMIT
+        // sequential fetches and a serverless timeout. Chunk instead.
+        const CHUNK = 25;
+        const statuses = new Map<string, ProviderStatus>();
+
+        for (let i = 0; i < orders.length; i += CHUNK) {
+          const slice = orders.slice(i, i + CHUNK);
+          const ids = slice.map((o) => String(o.provider_order_id)).join(",");
           try {
             const body = new URLSearchParams({
               key: apiKey,
+              api: apiKey, // provider docs list `api` for the multi-status call
               action: "status",
-              order: String(order.provider_order_id),
+              orders: ids,
             });
             const res = await fetch(PROVIDER_URL, {
               method: "POST",
@@ -95,11 +104,37 @@ export const Route = createFileRoute("/api/cron/sync-orders")({
               body,
             });
             if (!res.ok) {
-              failures.push(`${order.id}: provider HTTP ${res.status}`);
+              failures.push(`batch ${i}: provider HTTP ${res.status}`);
               continue;
             }
+            const payload = (await res.json()) as
+              | Record<string, ProviderStatus>
+              | ProviderStatus;
 
-            const payload = (await res.json()) as ProviderStatus;
+            // A single-id batch can come back unkeyed.
+            if (slice.length === 1 && "status" in (payload as ProviderStatus)) {
+              statuses.set(
+                String(slice[0].provider_order_id),
+                payload as ProviderStatus,
+              );
+            } else {
+              for (const [id, st] of Object.entries(
+                payload as Record<string, ProviderStatus>,
+              )) {
+                statuses.set(id, st);
+              }
+            }
+          } catch (err) {
+            failures.push(
+              `batch ${i}: ${err instanceof Error ? err.message : "unknown error"}`,
+            );
+          }
+        }
+
+        for (const order of orders) {
+          try {
+            const payload = statuses.get(String(order.provider_order_id));
+            if (!payload) continue;
             if (payload.error || !payload.status) {
               failures.push(`${order.id}: ${payload.error ?? "no status returned"}`);
               continue;
