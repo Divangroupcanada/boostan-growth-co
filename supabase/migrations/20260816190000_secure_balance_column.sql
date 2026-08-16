@@ -15,8 +15,12 @@
 -- Legitimate balance changes keep working: place_order_atomic and the deposit
 -- credit paths are SECURITY DEFINER / service-role, both of which bypass RLS.
 
--- 1. Column-level privileges ------------------------------------------------
-REVOKE UPDATE (balance) ON public.profiles FROM authenticated, anon;
+-- 1. Column privileges -----------------------------------------------------
+-- NOTE: a column-level REVOKE alone does NOT work here — Supabase issues a
+-- table-wide GRANT ALL ... TO authenticated which overrides it. Revoke UPDATE
+-- at the table level, then re-grant only the columns a user may change.
+REVOKE UPDATE ON public.profiles FROM authenticated, anon;
+GRANT UPDATE (display_name, avatar_url) ON public.profiles TO authenticated;
 
 -- 2. Tighten the RLS policy -------------------------------------------------
 DROP POLICY IF EXISTS "Users update own profile" ON public.profiles;

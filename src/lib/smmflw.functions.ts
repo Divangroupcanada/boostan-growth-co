@@ -146,30 +146,52 @@ export const placeOrder = createServerFn({ method: "POST" })
     if (rpcErr) throw new Error(rpcErr.message);
     if (!orderId) throw new Error("Order creation failed");
 
-    if (!service.smmflw_id) throw new Error("Service missing provider id");
-    const resp = await smmflwCall<{ order?: string | number; error?: string }>({
-      action: "add",
-      service: service.smmflw_id,
-      link: data.link,
-      quantity: data.quantity,
-      ...(data.testMode ? { is_test: 1 as const } : {}),
-    });
-    if (!resp.order) throw new Error("Provider did not return an order id");
-    const providerOrderId = String(resp.order);
-    const providerStatus = "in_progress";
+    // From here the user has ALREADY been debited by place_order_atomic. Any
+    // failure below must refund them, or they pay for an order that never
+    // reached the provider. refundOrder is idempotent per order id.
+    try {
+      if (!service.smmflw_id) throw new Error("Service missing provider id");
+      const resp = await smmflwCall<{ order?: string | number; error?: string }>({
+        action: "add",
+        service: service.smmflw_id,
+        link: data.link,
+        quantity: data.quantity,
+        ...(data.testMode ? { is_test: 1 as const } : {}),
+      });
+      if (!resp.order) {
+        throw new Error(resp.error || "Provider did not return an order id");
+      }
+      const providerOrderId = String(resp.order);
 
-    // Persist provider id (admin client to bypass RLS UPDATE restrictions).
-    const { error: updErr } = await supabaseAdmin
-      .from("orders")
-      .update({
-        smmflw_order_id: providerOrderId,
-        provider_order_id: providerOrderId,
-        status: providerStatus as "in_progress" | "pending",
-      })
-      .eq("id", orderId as string);
-    if (updErr) throw new Error(updErr.message);
+      // Persist provider id (admin client to bypass RLS UPDATE restrictions).
+      const { error: updErr } = await supabaseAdmin
+        .from("orders")
+        .update({
+          smmflw_order_id: providerOrderId,
+          provider_order_id: providerOrderId,
+          status: "in_progress" as const,
+        })
+        .eq("id", orderId as string);
+      if (updErr) throw new Error(updErr.message);
 
-    return { orderId: orderId as string, providerOrderId, testMode: data.testMode };
+      return { orderId: orderId as string, providerOrderId, testMode: data.testMode };
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : "Unknown provider error";
+      const { error: refundErr } = await supabaseAdmin.rpc("refund_order", {
+        _order_id: orderId as string,
+        _reason: reason,
+      });
+      if (refundErr) {
+        // Refund failed too — surface loudly so it can be settled by hand.
+        console.error(
+          `[placeOrder] REFUND FAILED order=${orderId} reason="${reason}" refundError="${refundErr.message}"`,
+        );
+        throw new Error(
+          "Order failed and the automatic refund did not complete. Our team has been notified — please contact support.",
+        );
+      }
+      throw new Error(`Order failed and your balance was refunded. Reason: ${reason}`);
+    }
   });
 
 // ---------- 3. check-status (user) ----------

@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Private areas — no value in search, keep out of the index
+Disallow: /dashboard
+Disallow: /orders
+Disallow: /wallet
+Disallow: /new-order
+Disallow: /admin
+Disallow: /api-keys
+Disallow: /api/
+Disallow: /mcp
+
+Sitemap: https://boostan.co/sitemap.xml

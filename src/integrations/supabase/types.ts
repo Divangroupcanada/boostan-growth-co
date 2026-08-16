@@ -422,6 +422,14 @@ export type Database = {
             Returns: string
           }
       recompute_service_tiers: { Args: never; Returns: undefined }
+      refund_order: {
+        Args: { _order_id: string; _reason?: string }
+        Returns: number
+      }
+      refund_order_partial: {
+        Args: { _amount: number; _order_id: string; _reason?: string }
+        Returns: number
+      }
     }
     Enums: {
       app_role: "admin" | "user"
