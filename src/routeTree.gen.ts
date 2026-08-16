@@ -25,6 +25,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedApiKeysRouteImport } from './routes/_authenticated/api-keys'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ApiPublicNowpaymentsWebhookRouteImport } from './routes/api/public/nowpayments-webhook'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -106,6 +107,11 @@ const ApiPublicNowpaymentsWebhookRoute =
     path: '/api/public/nowpayments-webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/new-order': typeof AuthenticatedNewOrderRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/wallet': typeof AuthenticatedWalletRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/nowpayments-webhook': typeof ApiPublicNowpaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/new-order': typeof AuthenticatedNewOrderRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/wallet': typeof AuthenticatedWalletRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/nowpayments-webhook': typeof ApiPublicNowpaymentsWebhookRoute
 }
 export interface FileRoutesById {
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/_authenticated/new-order': typeof AuthenticatedNewOrderRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/nowpayments-webhook': typeof ApiPublicNowpaymentsWebhookRoute
 }
 export interface FileRouteTypes {
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/new-order'
     | '/orders'
     | '/wallet'
+    | '/.lovable/oauth/consent'
     | '/api/public/nowpayments-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/new-order'
     | '/orders'
     | '/wallet'
+    | '/.lovable/oauth/consent'
     | '/api/public/nowpayments-webhook'
   id:
     | '__root__'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/_authenticated/new-order'
     | '/_authenticated/orders'
     | '/_authenticated/wallet'
+    | '/.lovable/oauth/consent'
     | '/api/public/nowpayments-webhook'
   fileRoutesById: FileRoutesById
 }
@@ -225,6 +237,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   ApiPublicNowpaymentsWebhookRoute: typeof ApiPublicNowpaymentsWebhookRoute
 }
 
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicNowpaymentsWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -376,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   ApiPublicNowpaymentsWebhookRoute: ApiPublicNowpaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
