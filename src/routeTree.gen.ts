@@ -24,6 +24,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedNewOrderRouteImport } from './routes/_authenticated/new-order'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
+import { Route as BuySlugRouteImport } from './routes/buy.$slug'
 import { Route as ApiCronSyncOrdersRouteImport } from './routes/api/cron/sync-orders'
 import { Route as ApiPublicNowpaymentsWebhookRouteImport } from './routes/api/public/nowpayments-webhook'
 
@@ -101,6 +102,11 @@ const AuthenticatedWalletRoute = AuthenticatedWalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const BuySlugRoute = BuySlugRouteImport.update({
+  id: '/buy/$slug',
+  path: '/buy/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCronSyncOrdersRoute = ApiCronSyncOrdersRouteImport.update({
   id: '/api/cron/sync-orders',
   path: '/api/cron/sync-orders',
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/new-order': typeof AuthenticatedNewOrderRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/wallet': typeof AuthenticatedWalletRoute
+  '/buy/$slug': typeof BuySlugRoute
   '/api/cron/sync-orders': typeof ApiCronSyncOrdersRoute
   '/api/public/nowpayments-webhook': typeof ApiPublicNowpaymentsWebhookRoute
 }
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/new-order': typeof AuthenticatedNewOrderRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/wallet': typeof AuthenticatedWalletRoute
+  '/buy/$slug': typeof BuySlugRoute
   '/api/cron/sync-orders': typeof ApiCronSyncOrdersRoute
   '/api/public/nowpayments-webhook': typeof ApiPublicNowpaymentsWebhookRoute
 }
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/_authenticated/new-order': typeof AuthenticatedNewOrderRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
+  '/buy/$slug': typeof BuySlugRoute
   '/api/cron/sync-orders': typeof ApiCronSyncOrdersRoute
   '/api/public/nowpayments-webhook': typeof ApiPublicNowpaymentsWebhookRoute
 }
@@ -186,6 +195,7 @@ export interface FileRouteTypes {
     | '/new-order'
     | '/orders'
     | '/wallet'
+    | '/buy/$slug'
     | '/api/cron/sync-orders'
     | '/api/public/nowpayments-webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/new-order'
     | '/orders'
     | '/wallet'
+    | '/buy/$slug'
     | '/api/cron/sync-orders'
     | '/api/public/nowpayments-webhook'
   id:
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/_authenticated/new-order'
     | '/_authenticated/orders'
     | '/_authenticated/wallet'
+    | '/buy/$slug'
     | '/api/cron/sync-orders'
     | '/api/public/nowpayments-webhook'
   fileRoutesById: FileRoutesById
@@ -237,6 +249,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
+  BuySlugRoute: typeof BuySlugRoute
   ApiCronSyncOrdersRoute: typeof ApiCronSyncOrdersRoute
   ApiPublicNowpaymentsWebhookRoute: typeof ApiPublicNowpaymentsWebhookRoute
 }
@@ -348,6 +361,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWalletRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/buy/$slug': {
+      id: '/buy/$slug'
+      path: '/buy/$slug'
+      fullPath: '/buy/$slug'
+      preLoaderRoute: typeof BuySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/cron/sync-orders': {
       id: '/api/cron/sync-orders'
       path: '/api/cron/sync-orders'
@@ -396,6 +416,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
+  BuySlugRoute: BuySlugRoute,
   ApiCronSyncOrdersRoute: ApiCronSyncOrdersRoute,
   ApiPublicNowpaymentsWebhookRoute: ApiPublicNowpaymentsWebhookRoute,
 }

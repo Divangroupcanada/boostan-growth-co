@@ -78,9 +78,13 @@ function Nav() {
           </span>
         </Link>
         <nav className="hidden items-center gap-8 text-sm text-[var(--text-secondary)] md:flex">
-          <a href="#services" className="hover:text-[var(--text-primary)] transition-colors">
+          <Link
+            to="/buy/$slug"
+            params={{ slug: "instagram-followers" }}
+            className="transition-colors hover:text-[var(--text-primary)]"
+          >
             Services
-          </a>
+          </Link>
           <a href="#pricing" className="hover:text-[var(--text-primary)] transition-colors">
             Pricing
           </a>
