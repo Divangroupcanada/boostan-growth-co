@@ -33,7 +33,4 @@ export default defineConfig({
       "@tanstack/query-core",
     ],
   },
-  build: {
-    rollupOptions: { external: ["cloudflare:workers"] },
-  },
 });

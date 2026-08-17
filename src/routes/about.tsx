@@ -53,7 +53,7 @@ function AboutPage() {
         creative brands across Toronto, Montreal, Dubai, and Los Angeles.
       </p>
       <p>
-        The platform was built in-house using modern infrastructure (Supabase, Lovable,
+        The platform was built in-house using modern infrastructure (Supabase, Vercel,
         NOWPayments) with an emphasis on security, transparency, and reliability.
       </p>
 

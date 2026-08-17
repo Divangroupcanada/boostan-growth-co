@@ -77,7 +77,7 @@ function PrivacyPage() {
           transaction details
         </li>
         <li>
-          <strong>Cloud infrastructure providers</strong> — Supabase, Lovable, and similar
+          <strong>Cloud infrastructure providers</strong> — Supabase, Vercel, and similar
           platforms host the Service and may access data as part of their services
         </li>
         <li><strong>Legal authorities</strong> — when required by valid legal process</li>
