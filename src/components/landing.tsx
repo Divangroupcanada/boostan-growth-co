@@ -5,6 +5,7 @@ import { FaInstagram, FaTiktok, FaYoutube, FaXTwitter } from "react-icons/fa6";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, localizeDigits } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { Guarantees } from "@/components/guarantees";
 import { TryItNow } from "@/components/try-it-now";
 import { ServiceCard, type ServiceCardData } from "@/components/service-card";
 import type { Tier } from "@/lib/service-tier";
@@ -35,6 +36,7 @@ export function Landing() {
         <Hero />
         <TrustBar />
         <TryItNow />
+        <Guarantees />
         <ServicesPreview />
         <HowItWorks />
         <HowWereDifferent />
@@ -252,7 +254,7 @@ function TrustBar() {
   return (
     <section id="trust" className="border-y border-[var(--border-subtle)] bg-[var(--bg-base)] py-6">
       <div className="mx-auto max-w-[1200px] px-6 text-center text-sm text-[var(--text-secondary)]">
-        Trusted by 200+ agencies and creators across Toronto, Dubai, NYC, LA
+        Independent panel · Toronto, Canada · Crypto and Interac e-transfer
       </div>
     </section>
   );
@@ -384,7 +386,7 @@ function ServicesPreview() {
       <Eyebrow>Catalog</Eyebrow>
       <SectionHead
         title="Services that actually work"
-        sub={`${totalCount} hand-curated services across Instagram, TikTok, and YouTube. Real engagement, never bots.`}
+        sub={`${totalCount} services across Instagram, TikTok and YouTube. Live pricing, straight from the catalog.`}
       />
       <div className="mt-10 flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-4">
         {PLATFORMS.map((p) => {
@@ -431,7 +433,7 @@ function ServicesPreview() {
 const DIFFERENTIATORS = [
   "Premium upstream provider — not the cheapest, but reliable",
   "Real engagement, drip-feed delivery available",
-  "30-day auto-refill on follower drops",
+  "Undelivered or partial orders refunded automatically",
   "Crypto + e-transfer accepted, no card processing risks",
 ];
 
@@ -466,7 +468,7 @@ const STEPS = [
   {
     n: "03",
     t: "Watch it grow",
-    d: "Orders start within 30 seconds. Track progress in real-time. Get refilled if anything drops.",
+    d: "Status is refreshed every 15 minutes. Start times are set by the provider (1–72 hours depending on the service).",
   },
 ];
 
@@ -504,7 +506,7 @@ const AUDIENCE = [
   {
     img: "/assets/trust/creator-2.jpg",
     title: "Businesses",
-    desc: "Build social proof for restaurants, salons, e-commerce. Trusted by 200+ Toronto businesses.",
+    desc: "Build social proof for restaurants, salons and e-commerce storefronts.",
   },
 ];
 
@@ -581,7 +583,7 @@ function PricingTransparency() {
           </div>
         </div>
         <ul className="mt-6 space-y-2 border-t border-[var(--border-subtle)] pt-6 text-sm text-[var(--text-secondary)]">
-          {["No subscription", "No hidden fees", "Refill on drops included"].map((t) => (
+          {["No subscription", "No hidden fees", "Automatic refund if undelivered"].map((t) => (
             <li key={t} className="flex items-center gap-2">
               <Check className="h-4 w-4 text-[var(--success)]" /> {t}
             </li>
@@ -601,30 +603,34 @@ function PricingTransparency() {
 /* ---------------- FAQ ---------------- */
 const FAQS = [
   {
-    q: "Are these real followers/likes/views?",
-    a: "Yes — we use trusted upstream providers serving real engagement. We never use bot networks.",
+    q: "Where does the engagement actually come from?",
+    a: "We're a reseller: orders are fulfilled by an upstream provider (smmflw), and we mark their wholesale rate up by a fixed amount. We don't run the delivery network ourselves, so we won't claim to know exactly how every account is sourced. What we will tell you is which provider we use and what we're charged.",
   },
   {
     q: "How fast do orders start?",
-    a: "Most orders start within 30 seconds. Some niche services may take 1–3 minutes.",
+    a: "The provider quotes 1–72 hours depending on the service, and the estimate is shown on each service in the catalog. Many start much sooner, but we'd rather give you their number than a marketing one.",
   },
   {
     q: "What payment methods do you accept?",
-    a: "Crypto (USDT-TRC20, BTC, ETH) and Canadian Interac e-transfer. No credit cards yet — coming soon.",
+    a: "Cryptocurrency via NOWPayments (USDT-TRC20 and others) and Interac e-transfer in Canada. No cards yet, so we never store card details.",
   },
   {
-    q: "Can I get a refund?",
-    a: "Yes — we refill drops automatically and refund unfulfilled orders.",
+    q: "What happens if my order doesn't deliver?",
+    a: "Your balance is credited back automatically. If an order is rejected or cancelled you get a full refund; if it delivers partially you're refunded for the undelivered share. You don't need to open a ticket for either.",
+  },
+  {
+    q: "Do you offer refill or drip-feed?",
+    a: "Not yet. Some upstream services support them and we're building both into the order form — until they're live we don't advertise them as features you can buy.",
   },
   {
     q: "Do you offer API access?",
-    a: "Yes — every account gets free API access for automation. Documentation in your dashboard.",
+    a: "Not yet. It's on the roadmap for resellers, and the page in your dashboard is a preview of what's coming rather than a working key.",
   },
   {
-    q: "Is this safe for my Instagram/TikTok account?",
-    a: "Yes — we comply with platform best practices. Slow drip-feed available for organic-looking growth.",
+    q: "Is this safe for my account?",
+    a: "We never ask for your password — a public link or username is all that's needed. Beyond that, buying engagement is against the terms of service of every major platform, and no provider can honestly guarantee an account will never be actioned. Order sizes that are modest relative to your existing audience carry less risk than large sudden spikes.",
   },
-];
+] as const;
 
 function FAQSection() {
   const [open, setOpen] = useState<number | null>(0);
@@ -669,7 +675,7 @@ function FinalCTA() {
         <div className="relative">
           <h2 className="text-4xl tracking-tight md:text-5xl">Ready to start growing?</h2>
           <p className="mx-auto mt-4 max-w-md text-[var(--text-secondary)]">
-            Join 200+ agencies and creators using Boostan.
+            Top up from $5. No subscription, no minimum commitment.
           </p>
           <Link
             to="/signup"

@@ -14,14 +14,22 @@ function applyTheme(t: "dark" | "light") {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
-  const [resolved, setResolved] = useState<"dark" | "light">("dark");
+  const [theme, setThemeState] = useState<Theme>("light");
+  const [resolved, setResolved] = useState<"dark" | "light">("light");
 
-  // Dark-mode-only for now. Ignore stored preference and OS setting.
+  // Light by default: a storefront should read bright and approachable. A
+  // stored preference still wins so anyone who picks dark keeps it.
   useEffect(() => {
-    applyTheme("dark");
-    setResolved("dark");
-    setThemeState("dark");
+    let next: "dark" | "light" = "light";
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved === "dark" || saved === "light") next = saved;
+    } catch {
+      // storage unavailable — stay light
+    }
+    applyTheme(next);
+    setResolved(next);
+    setThemeState(next);
   }, []);
 
   const setTheme = (t: Theme) => {

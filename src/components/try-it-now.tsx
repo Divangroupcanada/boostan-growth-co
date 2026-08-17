@@ -16,9 +16,9 @@ import {
 } from "@/lib/service-tier";
 
 const PLATFORMS = [
-  { key: "Instagram", count: 75, Icon: FaInstagram },
-  { key: "TikTok", count: 21, Icon: FaTiktok },
-  { key: "YouTube", count: 47, Icon: FaYoutube },
+  { key: "Instagram", Icon: FaInstagram },
+  { key: "TikTok", Icon: FaTiktok },
+  { key: "YouTube", Icon: FaYoutube },
 ] as const;
 
 type PlatformKey = (typeof PLATFORMS)[number]["key"];
@@ -118,7 +118,7 @@ export function TryItNow() {
       <div className="mb-10 max-w-2xl">
         <h2 className="text-3xl tracking-tight md:text-4xl">See instant pricing.</h2>
         <p className="mt-3 text-[var(--text-secondary)]">
-          Configure an order across our 143 services. No sign-up required to browse.
+          Configure an order and see the exact price. No sign-up required to browse.
         </p>
       </div>
 
@@ -143,7 +143,9 @@ export function TryItNow() {
                     <p.Icon className={`h-5 w-5 ${active ? "text-[var(--accent)]" : ""}`} />
                     <div className="text-left">
                       <div className="text-sm font-medium text-[var(--text-primary)]">{p.key}</div>
-                      <div className="text-xs text-[var(--text-tertiary)]">{p.count} services</div>
+                      <div className="text-xs text-[var(--text-tertiary)]">
+                        {all.filter((s) => s.platform === p.key).length} services
+                      </div>
                     </div>
                   </button>
                 );
