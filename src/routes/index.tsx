@@ -13,7 +13,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Boostan — Premium SMM Panel" },
       {
         property: "og:description",
-        content: "Instant delivery, refill guarantee, clean API. Top up $25 and start growing.",
+        content:
+          "Live prices, automatic refunds on undelivered orders. Top up from $5 and start growing.",
       },
     ],
   }),

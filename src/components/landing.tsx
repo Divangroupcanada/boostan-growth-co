@@ -3,6 +3,8 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronDown, Sprout, Check } from "lucide-react";
 import { FaInstagram, FaTiktok, FaYoutube, FaXTwitter } from "react-icons/fa6";
 import { supabase } from "@/integrations/supabase/client";
+import { useI18n, localizeDigits } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { TryItNow } from "@/components/try-it-now";
 import { ServiceCard, type ServiceCardData } from "@/components/service-card";
 import type { Tier } from "@/lib/service-tier";
@@ -32,7 +34,6 @@ export function Landing() {
       <main>
         <Hero />
         <TrustBar />
-        <Stats />
         <TryItNow />
         <ServicesPreview />
         <HowItWorks />
@@ -95,9 +96,10 @@ function Nav() {
           >
             Sign in
           </Link>
+          <LanguageSwitcher />
           <Link
             to="/signup"
-            className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
+            className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent-foreground)] transition-colors hover:bg-[var(--accent-hover)]"
           >
             Get started
           </Link>
@@ -108,79 +110,139 @@ function Nav() {
 }
 
 /* ---------------- HERO ---------------- */
+/** Headline in each script; the inactive one appears as a quiet echo. */
+const EN_TITLE = "Growth, tended.";
+const FA_TITLE = "رشد، با حوصله.";
+
+/**
+ * Live per-platform service counts. Shared by the hero and the catalog so the
+ * page never advertises a number the database can't back up.
+ */
+function useServiceCounts() {
+  const [counts, setCounts] = useState<Record<string, number>>({});
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const tally: Record<string, number> = {};
+      for (const p of PLATFORMS) {
+        const { count } = await supabase
+          .from("services")
+          .select("id", { count: "exact", head: true })
+          .eq("active", true)
+          .eq("platform", p.key);
+        tally[p.key] = count ?? 0;
+      }
+      if (alive) setCounts(tally);
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+  return { counts };
+}
+
 function Hero() {
-  const [videoOk, setVideoOk] = useState(true);
+  const { t, locale } = useI18n();
+  const { counts } = useServiceCounts();
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  // The other script, shown small above the headline. A bilingual brand should
+  // look bilingual before you touch the language switch.
+  const echo = locale === "fa" ? EN_TITLE : FA_TITLE;
 
   return (
-    <section className="relative -mt-[68px] flex min-h-screen items-center overflow-hidden">
-      {/* Video background */}
-      <div className="absolute inset-0 z-0">
-        {videoOk ? (
-          <video
-            className="h-full w-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={UNSPLASH.hero}
-            aria-hidden="true"
-            onError={() => setVideoOk(false)}
-          >
-            <source src="/assets/hero/hero-video.mp4" type="video/mp4" />
-          </video>
-        ) : (
-          <img
-            src={UNSPLASH.hero}
-            alt=""
-            aria-hidden="true"
-            className="h-full w-full object-cover"
-          />
-        )}
-        {/* dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-base)]/40 via-[var(--bg-base)]/40 to-[var(--bg-base)]" />
+    <section className="relative -mt-[68px] flex min-h-[92vh] items-center overflow-hidden">
+      {/* Chahar bagh: the four-quadrant Persian garden plan, drawn as a quiet
+          lattice rather than a stock photo. Pure SVG — nothing to load. */}
+      <div aria-hidden="true" className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[var(--bg-base)]" />
+        <svg className="absolute inset-0 h-full w-full opacity-[0.16]" aria-hidden="true">
+          <defs>
+            <pattern id="khatam" width="88" height="88" patternUnits="userSpaceOnUse">
+              {/* eight-point star, the khatam motif from Persian tilework */}
+              <g fill="none" stroke="var(--accent)" strokeWidth="0.9">
+                <rect x="22" y="22" width="44" height="44" />
+                <rect x="22" y="22" width="44" height="44" transform="rotate(45 44 44)" />
+                <circle cx="44" cy="44" r="3.5" stroke="var(--saffron)" />
+              </g>
+            </pattern>
+            <radialGradient id="bloom" cx="28%" cy="34%" r="62%">
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.30" />
+              <stop offset="55%" stopColor="var(--saffron)" stopOpacity="0.07" />
+              <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#khatam)" />
+          <rect width="100%" height="100%" fill="url(#bloom)" />
+        </svg>
+        {/* settle the pattern into the page rather than cutting it off */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--bg-base)]" />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-6 pt-32 pb-24">
-        <div className="max-w-[720px] space-y-6">
-          <div className="anim-stagger anim-1 text-xs uppercase tracking-[0.25em] text-[var(--text-tertiary)]">
-            بوستان · Boostan
-          </div>
-          <h1 className="anim-stagger anim-2 text-[40px] leading-[1.05] tracking-[-0.03em] sm:text-[56px] md:text-[68px] lg:text-[72px]">
-            Your social presence,
-            <br />
-            <span className="text-[var(--text-primary)]">growing.</span>
-          </h1>
-          <p className="anim-stagger anim-3 max-w-[560px] text-base text-[var(--text-secondary)] sm:text-lg">
-            The premium SMM panel for serious creators, agencies, and businesses. Real engagement,
-            instant delivery, automated API.
+      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-6 pt-32 pb-20">
+        <div className="max-w-[760px]">
+          <p className="anim-stagger anim-1 text-xs uppercase tracking-[0.25em] text-[var(--accent)]">
+            {t("hero.eyebrow")}
           </p>
-          <div className="anim-stagger anim-4 flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
+
+          <p
+            aria-hidden="true"
+            className="anim-stagger anim-2 mt-6 text-lg text-[var(--text-tertiary)]"
+            lang={locale === "fa" ? "en" : "fa"}
+          >
+            {echo}
+          </p>
+          <h1 className="anim-stagger anim-2 mt-1 text-[44px] leading-[1.03] font-semibold tracking-[-0.03em] text-[var(--text-primary)] sm:text-[62px] md:text-[76px]">
+            {t("hero.title")}
+          </h1>
+
+          <p className="anim-stagger anim-3 mt-6 max-w-[600px] text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
+            {t("hero.lede")}
+          </p>
+
+          <div className="anim-stagger anim-4 mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
               to="/signup"
-              className="inline-flex items-center justify-center gap-2 rounded-md bg-[var(--accent)] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-[var(--accent)] px-6 py-3.5 text-sm font-medium text-[var(--accent-foreground)] transition-colors hover:bg-[var(--accent-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
-              Get started — $25 minimum <ArrowRight className="h-4 w-4" />
+              {t("hero.cta")}
+              <ArrowRight className="h-4 w-4 rtl:rotate-180" />
             </Link>
             <a
               href="#services"
-              className="inline-flex items-center justify-center gap-2 rounded-md border border-[var(--border-default)] bg-transparent px-5 py-3 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-surface-1)]"
+              className="inline-flex items-center justify-center gap-2 rounded-md border border-[var(--border-default)] px-6 py-3.5 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-surface-1)]"
             >
-              Browse services
+              {t("hero.cta.secondary")}
             </a>
           </div>
-          <div className="anim-stagger anim-5 text-xs text-[var(--text-tertiary)]">
-            No commitments · Cancel anytime · Crypto + e-transfer accepted
-          </div>
+
+          <p className="anim-stagger anim-5 mt-5 text-xs text-[var(--text-tertiary)]">
+            {t("hero.note")}
+          </p>
+
+          {/* Real figures only. The previous "99.9% uptime" style counters were
+              invented, which is a liability on a site that takes payments. */}
+          <dl className="anim-stagger anim-5 mt-12 grid max-w-[560px] grid-cols-2 gap-x-8 gap-y-6 border-t border-[var(--border-subtle)] pt-8 sm:grid-cols-3">
+            <div>
+              <dt className="text-2xl font-semibold text-[var(--text-primary)]">
+                {total ? localizeDigits(total, locale) : "—"}
+              </dt>
+              <dd className="mt-0.5 text-xs text-[var(--text-tertiary)]">{t("stat.services")}</dd>
+            </div>
+            <div>
+              <dt className="text-2xl font-semibold text-[var(--text-primary)]">
+                {localizeDigits(3, locale)}
+              </dt>
+              <dd className="mt-0.5 text-xs text-[var(--text-tertiary)]">{t("stat.platforms")}</dd>
+            </div>
+            <div className="col-span-2 sm:col-span-1">
+              <dt className="text-sm font-medium text-[var(--saffron)]">
+                {t("stat.refund.value")}
+              </dt>
+              <dd className="mt-0.5 text-xs text-[var(--text-tertiary)]">{t("stat.refund")}</dd>
+            </div>
+          </dl>
         </div>
       </div>
-
-      <a
-        href="#trust"
-        aria-label="Scroll"
-        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-[var(--text-tertiary)] anim-bounce"
-      >
-        <ChevronDown className="h-5 w-5" />
-      </a>
     </section>
   );
 }
@@ -195,14 +257,6 @@ function TrustBar() {
     </section>
   );
 }
-
-/* ---------------- STATS ---------------- */
-const STATS = [
-  { value: 255, suffix: "+", label: "Premium services" },
-  { value: 99.8, suffix: "%", label: "Uptime guarantee", decimals: 1 },
-  { value: 30, suffix: "s", label: "Average start time", prefix: "<" },
-  { value: 24, suffix: "/7", label: "Automated delivery" },
-] as const;
 
 function useInView<T extends Element>(opts?: IntersectionObserverInit) {
   const ref = useRef<T | null>(null);
@@ -265,32 +319,6 @@ function CountUp({
   );
 }
 
-function Stats() {
-  return (
-    <Section>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {STATS.map((s) => (
-          <div
-            key={s.label}
-            className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-8"
-          >
-            <div className="text-4xl font-medium tracking-tight text-[var(--text-primary)] md:text-5xl">
-              <CountUp
-                to={s.value}
-                decimals={(s as any).decimals ?? 0}
-                prefix={(s as any).prefix ?? ""}
-                suffix={s.suffix}
-              />
-            </div>
-            <div className="mt-2 text-sm text-[var(--text-secondary)]">{s.label}</div>
-          </div>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-/* ---------------- SERVICES PREVIEW ---------------- */
 function ServicesPreview() {
   const [activeP, setActiveP] = useState<(typeof PLATFORMS)[number]["key"]>("Instagram");
   const [data, setData] = useState<Record<string, SvcRow[]>>({});
@@ -428,7 +456,7 @@ const STEPS = [
   {
     n: "01",
     t: "Sign up & deposit",
-    d: "Create your free account and add funds via crypto or e-transfer. $25 minimum.",
+    d: "Create your free account and add funds via crypto or e-transfer. $5 minimum.",
   },
   {
     n: "02",
@@ -647,7 +675,7 @@ function FinalCTA() {
             to="/signup"
             className="mt-8 inline-flex items-center gap-2 rounded-md bg-[var(--accent)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
           >
-            Get started — $25 minimum <ArrowRight className="h-4 w-4" />
+            Get started — from $5 <ArrowRight className="h-4 w-4 rtl:rotate-180" />
           </Link>
         </div>
       </div>

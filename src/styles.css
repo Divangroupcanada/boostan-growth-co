@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -5,7 +6,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: 6px;
   --radius-md: 8px;
@@ -67,20 +68,22 @@
 /* DARK (default) — Linear-inspired, magenta accent */
 :root, .dark {
   /* Linear tokens */
-  --bg-base: #0A0A0B;
-  --bg-surface-1: #111114;
-  --bg-surface-2: #1A1A1F;
-  --bg-surface-3: #232328;
-  --border-subtle: #26262B;
-  --border-default: #2E2E33;
+  --bg-base: #0B1220;
+  --bg-surface-1: #111B2E;
+  --bg-surface-2: #17253C;
+  --bg-surface-3: #1F304C;
+  --border-subtle: #1E2E47;
+  --border-default: #2A3E5C;
   --text-primary: #FAFAFA;
   --text-secondary: #A1A1AA;
   --text-tertiary: #71717A;
   --text-disabled: #52525B;
 
-  --accent: #D4537E;
-  --accent-hover: #C24573;
-  --accent-subtle: rgba(212, 83, 126, 0.1);
+  --accent: #35B0AE;
+  --accent-hover: #2A9694;
+  --accent-subtle: rgba(53, 176, 174, 0.12);
+  --saffron: #E9A93C;
+  --saffron-subtle: rgba(233, 169, 60, 0.12);
   --accent-foreground: #ffffff;
 
   --success: #10B981;
@@ -115,20 +118,24 @@
 }
 
 .light {
-  --bg-base: #FFFFFF;
-  --bg-surface-1: #FAFAFA;
-  --bg-surface-2: #F4F4F5;
-  --bg-surface-3: #E4E4E7;
-  --border-subtle: #E4E4E7;
-  --border-default: #D4D4D8;
-  --text-primary: #18181B;
-  --text-secondary: #52525B;
-  --text-tertiary: #71717A;
-  --text-disabled: #A1A1AA;
+  /* Tile-white: a cool, faintly turquoise paper rather than plain grey. */
+  --bg-base: #FBFCFC;
+  --bg-surface-1: #F4F7F7;
+  --bg-surface-2: #EAF0F0;
+  --bg-surface-3: #DCE6E6;
+  --border-subtle: #DFE7E7;
+  --border-default: #C6D4D4;
+  --text-primary: #10202B;
+  --text-secondary: #47606B;
+  --text-tertiary: #6B838E;
+  --text-disabled: #9DB0B8;
 
-  --accent: #D4537E;
-  --accent-hover: #C24573;
-  --accent-subtle: rgba(212, 83, 126, 0.1);
+  /* Darker teal so accent-coloured text clears AA on a light ground. */
+  --accent: #10726F;
+  --accent-hover: #0B5B58;
+  --accent-subtle: rgba(16, 114, 111, 0.10);
+  --saffron: #B0700F;
+  --saffron-subtle: rgba(176, 112, 15, 0.10);
   --accent-foreground: #ffffff;
 
   --success: #059669;
@@ -272,4 +279,36 @@
 @media (prefers-reduced-motion: reduce) {
   .anim-stagger, .anim-bounce, .hero-fallback { animation: none !important; }
   .anim-stagger { opacity: 1; transform: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   Bilingual typography.
+   Vazirmatn covers Latin and Persian, so switching language keeps one voice.
+   Persian glyphs sit optically smaller at the same px and need more leading,
+   so nudge both when the Farsi locale is active (class set by I18nProvider).
+--------------------------------------------------------------------------- */
+html.font-fa body {
+  font-size: 1.04em;
+  line-height: 1.85;
+}
+
+html.font-fa h1,
+html.font-fa h2,
+html.font-fa h3 {
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+/* Persian text should not be forced into tight tracking meant for Latin caps. */
+html.font-fa [class*="tracking-["] {
+  letter-spacing: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-stagger,
+  .anim-bounce {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

@@ -261,7 +261,7 @@ export function TryItNow() {
                 }}
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-md bg-[var(--accent)] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
               >
-                Sign up & order — $25 minimum <ArrowRight className="h-4 w-4" />
+                Sign up & order — from $5 <ArrowRight className="h-4 w-4 rtl:rotate-180" />
               </Link>
             </>
           ) : (

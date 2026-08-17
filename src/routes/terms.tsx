@@ -59,7 +59,7 @@ function TermsPage() {
         funds to place orders.
       </p>
       <ul>
-        <li>Minimum deposit: $25 USD or equivalent</li>
+        <li>Minimum deposit: $5 USD or equivalent</li>
         <li>
           Accepted methods: Cryptocurrency (USDT-TRC20 and others via NOWPayments), Interac
           e-transfer (Canada)
