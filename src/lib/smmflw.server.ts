@@ -97,14 +97,26 @@ export function pickDisplayTier(rate: number): "Starter" | "Pro" | "Premium" {
   return "Premium";
 }
 
-// Detect platform from SMMFLW category string.
+// Detect platform from the SMMFLW category string or, when absent, the name.
+//
+// Order matters: check the most specific tokens first so "Instagram Reels"
+// doesn't fall through to a looser match. Anything unrecognised returns null
+// and is skipped at sync time rather than landing in the catalog untyped.
 export function detectPlatform(...sources: Array<string | undefined>): string | null {
   // Providers differ: some return a `category` field, others (smmflw) omit it
   // entirely and only encode the platform in the service name. Match against
   // whatever we were given so neither shape silently yields zero services.
   const c = sources.filter(Boolean).join(" ").toLowerCase();
   if (c.includes("instagram")) return "Instagram";
-  if (c.includes("tiktok")) return "TikTok";
-  if (c.includes("youtube")) return "YouTube";
+  if (c.includes("tiktok") || c.includes("tik tok")) return "TikTok";
+  if (c.includes("youtube") || c.includes("you tube")) return "YouTube";
+  // Telegram matters disproportionately for the Persian-speaking market.
+  if (c.includes("telegram")) return "Telegram";
+  if (c.includes("spotify")) return "Spotify";
+  if (c.includes("twitter") || /\bx\b\s*\(twitter\)/.test(c)) return "X";
+  if (c.includes("facebook")) return "Facebook";
+  if (c.includes("linkedin")) return "LinkedIn";
+  if (c.includes("threads")) return "Threads";
+  if (c.includes("soundcloud")) return "SoundCloud";
   return null;
 }

@@ -126,10 +126,12 @@ const FA_TITLE = "رشد، با حوصله.";
  */
 function useServiceCounts() {
   const [counts, setCounts] = useState<Record<string, number>>({});
+  const [from, setFrom] = useState<Record<string, number>>({});
   useEffect(() => {
     let alive = true;
     (async () => {
       const tally: Record<string, number> = {};
+      const cheapest: Record<string, number> = {};
       for (const p of PLATFORMS) {
         const { count } = await supabase
           .from("services")
@@ -137,23 +139,39 @@ function useServiceCounts() {
           .eq("active", true)
           .eq("platform", p.key);
         tally[p.key] = count ?? 0;
+
+        const { data } = await supabase
+          .from("services")
+          .select("marked_up_rate")
+          .eq("active", true)
+          .eq("platform", p.key)
+          .order("marked_up_rate", { ascending: true })
+          .limit(1);
+        const rate = data?.[0]?.marked_up_rate;
+        if (rate != null) cheapest[p.key] = Number(rate);
       }
-      if (alive) setCounts(tally);
+      if (alive) {
+        setCounts(tally);
+        setFrom(cheapest);
+      }
     })();
     return () => {
       alive = false;
     };
   }, []);
-  return { counts };
+  return { counts, from };
 }
 
 function Hero() {
   const { t, locale } = useI18n();
-  const { counts } = useServiceCounts();
+  const { counts, from } = useServiceCounts();
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
   // The other script, shown small above the headline. A bilingual brand should
   // look bilingual before you touch the language switch.
   const echo = locale === "fa" ? EN_TITLE : FA_TITLE;
+  // Lowest live rate across platforms — the price anchor competitors lead with.
+  const rates = Object.values(from);
+  const cheapest = rates.length ? Math.min(...rates) : null;
 
   return (
     <section className="relative -mt-[68px] flex min-h-[92vh] items-center overflow-hidden">
@@ -241,10 +259,12 @@ function Hero() {
               <dd className="mt-0.5 text-xs text-[var(--text-tertiary)]">{t("stat.platforms")}</dd>
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <dt className="text-sm font-medium text-[var(--saffron)]">
-                {t("stat.refund.value")}
+              <dt className="text-2xl font-semibold text-[var(--text-primary)]">
+                {cheapest !== null ? `$${cheapest.toFixed(2)}` : "—"}
               </dt>
-              <dd className="mt-0.5 text-xs text-[var(--text-tertiary)]">{t("stat.refund")}</dd>
+              <dd className="mt-0.5 text-xs text-[var(--text-tertiary)]">
+                {locale === "fa" ? "شروع از، هر ۱۰۰۰" : "from, per 1,000"}
+              </dd>
             </div>
           </dl>
         </div>
