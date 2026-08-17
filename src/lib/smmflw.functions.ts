@@ -94,6 +94,13 @@ export const syncServices = createServerFn({ method: "POST" })
       upserts = rows.length;
     }
 
+    // Tiers are derived from price rank within each platform, so they must be
+    // recomputed after every sync. Without this, newly synced rows have
+    // tier = NULL and the tier filters on /services and the homepage
+    // estimator match nothing.
+    const { error: tierErr } = await supabaseAdmin.rpc("recompute_service_tiers");
+    if (tierErr) console.error(`[syncServices] tier recompute failed: ${tierErr.message}`);
+
     await supabaseAdmin.from("settings").update({ last_services_sync: now }).eq("id", true);
 
     return { synced: upserts, total_from_provider: services.length };

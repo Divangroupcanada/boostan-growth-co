@@ -20,9 +20,9 @@ const UNSPLASH = {
 type SvcRow = ServiceCardData;
 
 const PLATFORMS = [
-  { key: "Instagram", label: "Instagram", count: 75, Icon: FaInstagram },
-  { key: "TikTok", label: "TikTok", count: 21, Icon: FaTiktok },
-  { key: "YouTube", label: "YouTube", count: 47, Icon: FaYoutube },
+  { key: "Instagram", label: "Instagram", count: 129, Icon: FaInstagram },
+  { key: "TikTok", label: "TikTok", count: 57, Icon: FaTiktok },
+  { key: "YouTube", label: "YouTube", count: 69, Icon: FaYoutube },
 ] as const;
 
 export function Landing() {
@@ -198,7 +198,7 @@ function TrustBar() {
 
 /* ---------------- STATS ---------------- */
 const STATS = [
-  { value: 143, suffix: "", label: "Premium services" },
+  { value: 255, suffix: "+", label: "Premium services" },
   { value: 99.8, suffix: "%", label: "Uptime guarantee", decimals: 1 },
   { value: 30, suffix: "s", label: "Average start time", prefix: "<" },
   { value: 24, suffix: "/7", label: "Automated delivery" },
@@ -294,12 +294,21 @@ function Stats() {
 function ServicesPreview() {
   const [activeP, setActiveP] = useState<(typeof PLATFORMS)[number]["key"]>("Instagram");
   const [data, setData] = useState<Record<string, SvcRow[]>>({});
+  const [counts, setCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
     let alive = true;
     (async () => {
       const out: Record<string, SvcRow[]> = {};
+      const tally: Record<string, number> = {};
       for (const p of PLATFORMS) {
+        // head+count: row count only, no payload transferred.
+        const { count } = await supabase
+          .from("services")
+          .select("id", { count: "exact", head: true })
+          .eq("active", true)
+          .eq("platform", p.key);
+        tally[p.key] = count ?? 0;
         const { data } = await supabase
           .from("services")
           .select(
@@ -323,7 +332,10 @@ function ServicesPreview() {
           tier: (s.tier ?? null) as Tier | null,
         }));
       }
-      if (alive) setData(out);
+      if (alive) {
+        setData(out);
+        setCounts(tally);
+      }
     })();
     return () => {
       alive = false;
@@ -332,13 +344,19 @@ function ServicesPreview() {
 
   const active = PLATFORMS.find((p) => p.key === activeP)!;
   const rows = data[activeP] || [];
+  // Live counts once loaded; fall back to the static figure for the first paint
+  // and for SSR, so the copy never reads "0 services".
+  const activeCount = counts[activeP] ?? active.count;
+  const totalCount = Object.keys(counts).length
+    ? Object.values(counts).reduce((a, b) => a + b, 0)
+    : PLATFORMS.reduce((a, p) => a + p.count, 0);
 
   return (
     <Section id="services">
       <Eyebrow>Catalog</Eyebrow>
       <SectionHead
         title="Services that actually work"
-        sub="143 hand-curated services across Instagram, TikTok, and YouTube. Real engagement, never bots."
+        sub={`${totalCount} hand-curated services across Instagram, TikTok, and YouTube. Real engagement, never bots.`}
       />
       <div className="mt-10 flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-4">
         {PLATFORMS.map((p) => {
@@ -374,7 +392,7 @@ function ServicesPreview() {
 
       <div className="mt-6 text-right text-sm">
         <Link to="/signup" className="text-[var(--accent)] hover:underline">
-          View all {active.count} {active.label} services →
+          View all {activeCount} {active.label} services →
         </Link>
       </div>
     </Section>
@@ -415,7 +433,7 @@ const STEPS = [
   {
     n: "02",
     t: "Pick your service",
-    d: "Browse 143 services across Instagram, TikTok, and YouTube. Filter by quality tier and price.",
+    d: "Browse our full catalog across Instagram, TikTok, and YouTube. Filter by quality tier and price.",
   },
   {
     n: "03",
