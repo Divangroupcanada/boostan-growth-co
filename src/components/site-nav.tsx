@@ -13,14 +13,25 @@ export function SiteNav() {
           <span className="text-base font-medium tracking-tight">Boostan</span>
         </Link>
         <nav className="hidden items-center gap-7 text-sm text-foreground-muted md:flex">
-          <a href="#services" className="hover:text-foreground">Services</a>
-          <a href="#pricing" className="hover:text-foreground">Pricing</a>
-          <a href="#api" className="hover:text-foreground">API</a>
-          <a href="#faq" className="hover:text-foreground">FAQ</a>
+          <a href="#services" className="hover:text-foreground">
+            Services
+          </a>
+          <a href="#pricing" className="hover:text-foreground">
+            Pricing
+          </a>
+          <a href="#api" className="hover:text-foreground">
+            API
+          </a>
+          <a href="#faq" className="hover:text-foreground">
+            FAQ
+          </a>
         </nav>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Link to="/login" className="hidden rounded-lg px-3 py-2 text-sm text-foreground-muted hover:text-foreground sm:inline-block">
+          <Link
+            to="/login"
+            className="hidden rounded-lg px-3 py-2 text-sm text-foreground-muted hover:text-foreground sm:inline-block"
+          >
             Sign in
           </Link>
           <Link to="/signup" className="btn-gradient rounded-lg px-4 py-2 text-sm">

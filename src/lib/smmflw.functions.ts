@@ -94,10 +94,7 @@ export const syncServices = createServerFn({ method: "POST" })
       upserts = rows.length;
     }
 
-    await supabaseAdmin
-      .from("settings")
-      .update({ last_services_sync: now })
-      .eq("id", true);
+    await supabaseAdmin.from("settings").update({ last_services_sync: now }).eq("id", true);
 
     return { synced: upserts, total_from_provider: services.length };
   });
@@ -120,19 +117,23 @@ export const placeOrder = createServerFn({ method: "POST" })
     // Load service via the user's RLS-scoped client (must be active).
     const { data: service, error: svcErr } = await supabase
       .from("services")
-      .select("id, smmflw_id, marked_up_rate, base_rate, rate_per_1000, min_quantity, max_quantity, name, active")
+      .select(
+        "id, smmflw_id, marked_up_rate, base_rate, rate_per_1000, min_quantity, max_quantity, name, active",
+      )
       .eq("id", data.serviceId)
       .maybeSingle();
     if (svcErr) throw new Error(svcErr.message);
     if (!service || !service.active) throw new Error("Service not available");
     if (data.quantity < service.min_quantity || data.quantity > service.max_quantity) {
-      throw new Error(`Quantity must be between ${service.min_quantity} and ${service.max_quantity}`);
+      throw new Error(
+        `Quantity must be between ${service.min_quantity} and ${service.max_quantity}`,
+      );
     }
 
     const rate = Number(service.marked_up_rate ?? service.rate_per_1000);
     const baseRate = Number(service.base_rate ?? rate);
-    const charge = Math.round((rate * data.quantity) / 1000 * 100) / 100;
-    const cost = Math.round((baseRate * data.quantity) / 1000 * 100) / 100;
+    const charge = Math.round(((rate * data.quantity) / 1000) * 100) / 100;
+    const cost = Math.round(((baseRate * data.quantity) / 1000) * 100) / 100;
 
     // Atomic balance debit + order insert + transaction (uses auth.uid()).
     const { data: orderId, error: rpcErr } = await supabase.rpc("place_order_atomic", {
@@ -215,8 +216,6 @@ export const checkOrderStatus = createServerFn({ method: "POST" })
     const providerId = order.smmflw_order_id ?? order.provider_order_id;
     if (!providerId) throw new Error("Order has no provider id");
 
-
-
     const resp = await smmflwCall<{
       status?: string;
       start_count?: string | number;
@@ -243,7 +242,12 @@ export const getProviderBalance = createServerFn({ method: "POST" })
   .middleware([attachSupabaseAuth, requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context.userId);
-    const resp = await smmflwCall<{ balance?: string | number; currency?: string; status?: string; message?: string }>({
+    const resp = await smmflwCall<{
+      balance?: string | number;
+      currency?: string;
+      status?: string;
+      message?: string;
+    }>({
       action: "balance",
     });
     console.log(`[smmflw] balance parsed: ${JSON.stringify(resp)}`);

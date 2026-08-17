@@ -3,11 +3,28 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { syncServices, getProviderBalance } from "@/lib/smmflw.functions";
-import { adminConfirmManualDeposit, listWebhookLogs, triggerTestWebhook } from "@/lib/nowpayments.functions";
+import {
+  adminConfirmManualDeposit,
+  listWebhookLogs,
+  triggerTestWebhook,
+} from "@/lib/nowpayments.functions";
 import { Fragment, useState } from "react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RefreshCw, Wallet, Database, Settings as SettingsIcon, Mail, Check, Activity, PlayCircle, ChevronDown, ChevronRight, Star, Search as SearchIcon } from "lucide-react";
+import {
+  RefreshCw,
+  Wallet,
+  Database,
+  Settings as SettingsIcon,
+  Mail,
+  Check,
+  Activity,
+  PlayCircle,
+  ChevronDown,
+  ChevronRight,
+  Star,
+  Search as SearchIcon,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
@@ -21,7 +38,9 @@ function AdminPage() {
 
   const [syncing, setSyncing] = useState(false);
   const [loadingBal, setLoadingBal] = useState(false);
-  const [providerBal, setProviderBal] = useState<{ balance: number; currency: string } | null>(null);
+  const [providerBal, setProviderBal] = useState<{ balance: number; currency: string } | null>(
+    null,
+  );
 
   const { data: settings } = useQuery({
     queryKey: ["settings"],
@@ -186,12 +205,17 @@ function WebhookActivity() {
             <Activity className="h-4 w-4" /> Recent webhook calls
           </div>
           <p className="mt-1 text-xs text-foreground-subtle">
-            Live log of every NOWPayments callback. Auto-refreshes every 15s. For the first 30 days, every call is captured in full.
+            Live log of every NOWPayments callback. Auto-refreshes every 15s. For the first 30 days,
+            every call is captured in full.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <label className="flex items-center gap-1.5 text-xs">
-            <input type="checkbox" checked={onlyFailures} onChange={(e) => setOnlyFailures(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={onlyFailures}
+              onChange={(e) => setOnlyFailures(e.target.checked)}
+            />
             Only failures
           </label>
           <button
@@ -220,7 +244,11 @@ function WebhookActivity() {
           </thead>
           <tbody>
             {rows.length === 0 && (
-              <tr><td colSpan={9} className="px-3 py-6 text-center text-foreground-muted">No webhook activity yet.</td></tr>
+              <tr>
+                <td colSpan={9} className="px-3 py-6 text-center text-foreground-muted">
+                  No webhook activity yet.
+                </td>
+              </tr>
             )}
             {rows.map((r: any) => {
               const isOpen = !!expanded[r.id];
@@ -229,10 +257,16 @@ function WebhookActivity() {
                   <tr key={r.id} className="border-b border-[var(--border)] last:border-0">
                     <td className="px-2 py-2">
                       <button onClick={() => setExpanded((s) => ({ ...s, [r.id]: !isOpen }))}>
-                        {isOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+                        {isOpen ? (
+                          <ChevronDown className="h-3 w-3" />
+                        ) : (
+                          <ChevronRight className="h-3 w-3" />
+                        )}
                       </button>
                     </td>
-                    <td className="px-2 py-2 text-xs text-foreground-muted whitespace-nowrap">{new Date(r.created_at).toLocaleString()}</td>
+                    <td className="px-2 py-2 text-xs text-foreground-muted whitespace-nowrap">
+                      {new Date(r.created_at).toLocaleString()}
+                    </td>
                     <td className="px-2 py-2">
                       {r.signature_valid === true ? (
                         <span className="text-emerald-400 text-xs">✓</span>
@@ -245,25 +279,59 @@ function WebhookActivity() {
                     <td className="px-2 py-2 font-mono text-xs">{r.payment_id ?? "—"}</td>
                     <td className="px-2 py-2 text-xs">{r.payment_status ?? "—"}</td>
                     <td className={`px-2 py-2 text-xs ${actionTone(r)}`}>{r.action ?? "—"}</td>
-                    <td className="px-2 py-2 tabular text-xs">{r.amount_credited ? `$${Number(r.amount_credited).toFixed(2)}` : "—"}</td>
+                    <td className="px-2 py-2 tabular text-xs">
+                      {r.amount_credited ? `$${Number(r.amount_credited).toFixed(2)}` : "—"}
+                    </td>
                     <td className="px-2 py-2 tabular text-xs">{r.response_status}</td>
-                    <td className="px-2 py-2 text-xs">{r.is_test ? <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-amber-400">TEST</span> : ""}</td>
+                    <td className="px-2 py-2 text-xs">
+                      {r.is_test ? (
+                        <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-amber-400">
+                          TEST
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                    </td>
                   </tr>
                   {isOpen && (
-                    <tr key={r.id + "-d"} className="border-b border-[var(--border)] bg-[var(--surface)]/40">
+                    <tr
+                      key={r.id + "-d"}
+                      className="border-b border-[var(--border)] bg-[var(--surface)]/40"
+                    >
                       <td></td>
                       <td colSpan={8} className="px-2 py-3">
                         <div className="space-y-2 text-xs">
-                          {r.error && <div><span className="text-foreground-subtle">error:</span> <span className="text-red-400">{r.error}</span></div>}
-                          {r.signature_reason && <div><span className="text-foreground-subtle">sig reason:</span> {r.signature_reason}</div>}
-                          <div><span className="text-foreground-subtle">tx lookup:</span> {r.tx_lookup_found ? `found (${r.tx_id?.slice(0,8)}…)` : "not found"}</div>
+                          {r.error && (
+                            <div>
+                              <span className="text-foreground-subtle">error:</span>{" "}
+                              <span className="text-red-400">{r.error}</span>
+                            </div>
+                          )}
+                          {r.signature_reason && (
+                            <div>
+                              <span className="text-foreground-subtle">sig reason:</span>{" "}
+                              {r.signature_reason}
+                            </div>
+                          )}
+                          <div>
+                            <span className="text-foreground-subtle">tx lookup:</span>{" "}
+                            {r.tx_lookup_found ? `found (${r.tx_id?.slice(0, 8)}…)` : "not found"}
+                          </div>
                           <details>
-                            <summary className="cursor-pointer text-foreground-subtle">headers</summary>
-                            <pre className="mt-1 overflow-x-auto rounded bg-black/30 p-2 text-[10px]">{JSON.stringify(r.headers, null, 2)}</pre>
+                            <summary className="cursor-pointer text-foreground-subtle">
+                              headers
+                            </summary>
+                            <pre className="mt-1 overflow-x-auto rounded bg-black/30 p-2 text-[10px]">
+                              {JSON.stringify(r.headers, null, 2)}
+                            </pre>
                           </details>
                           <details>
-                            <summary className="cursor-pointer text-foreground-subtle">payload</summary>
-                            <pre className="mt-1 overflow-x-auto rounded bg-black/30 p-2 text-[10px]">{JSON.stringify(r.parsed_payload ?? r.raw_body, null, 2)}</pre>
+                            <summary className="cursor-pointer text-foreground-subtle">
+                              payload
+                            </summary>
+                            <pre className="mt-1 overflow-x-auto rounded bg-black/30 p-2 text-[10px]">
+                              {JSON.stringify(r.parsed_payload ?? r.raw_body, null, 2)}
+                            </pre>
                           </details>
                         </div>
                       </td>
@@ -284,7 +352,9 @@ function TestWebhook() {
   const qc = useQueryClient();
   const [paymentId, setPaymentId] = useState("");
   const [amount, setAmount] = useState(1);
-  const [status, setStatus] = useState<"finished" | "confirmed" | "partially_paid" | "failed" | "expired" | "waiting">("finished");
+  const [status, setStatus] = useState<
+    "finished" | "confirmed" | "partially_paid" | "failed" | "expired" | "waiting"
+  >("finished");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<any>(null);
 
@@ -315,9 +385,11 @@ function TestWebhook() {
         <PlayCircle className="h-4 w-4" /> Trigger test webhook
       </div>
       <p className="mt-1 text-xs text-foreground-subtle">
-        Posts a fake-but-cryptographically-valid NOWPayments callback to <code>/api/public/nowpayments-webhook</code>.
-        Leave Payment ID blank to verify HMAC + lookup path. To test the full credit pipeline,
-        paste a real <code>payment_id</code> from a pending crypto deposit (the user's balance WILL be credited and a transaction labeled "TEST" will be recorded).
+        Posts a fake-but-cryptographically-valid NOWPayments callback to{" "}
+        <code>/api/public/nowpayments-webhook</code>. Leave Payment ID blank to verify HMAC + lookup
+        path. To test the full credit pipeline, paste a real <code>payment_id</code> from a pending
+        crypto deposit (the user's balance WILL be credited and a transaction labeled "TEST" will be
+        recorded).
       </p>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         <label className="text-xs">
@@ -346,9 +418,13 @@ function TestWebhook() {
             onChange={(e) => setStatus(e.target.value as any)}
             className="mt-1 w-full rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-sm"
           >
-            {["finished","confirmed","partially_paid","failed","expired","waiting"].map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
+            {["finished", "confirmed", "partially_paid", "failed", "expired", "waiting"].map(
+              (s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ),
+            )}
           </select>
         </label>
       </div>
@@ -361,7 +437,9 @@ function TestWebhook() {
       </button>
 
       {result && (
-        <pre className="mt-4 overflow-x-auto rounded bg-black/30 p-3 text-[11px]">{JSON.stringify(result, null, 2)}</pre>
+        <pre className="mt-4 overflow-x-auto rounded bg-black/30 p-3 text-[11px]">
+          {JSON.stringify(result, null, 2)}
+        </pre>
       )}
     </div>
   );
@@ -405,7 +483,8 @@ function PendingManualDeposits() {
         <Mail className="h-4 w-4" /> Pending manual deposits
       </div>
       <p className="mt-1 text-xs text-foreground-subtle">
-        E-transfers submitted by users. Verify the funds landed, then click confirm to credit the wallet.
+        E-transfers submitted by users. Verify the funds landed, then click confirm to credit the
+        wallet.
       </p>
       <div className="mt-4 overflow-x-auto">
         <table className="w-full text-sm">
@@ -419,20 +498,29 @@ function PendingManualDeposits() {
           </thead>
           <tbody>
             {(pending ?? []).length === 0 && (
-              <tr><td colSpan={4} className="px-3 py-6 text-center text-foreground-muted">No pending e-transfers.</td></tr>
+              <tr>
+                <td colSpan={4} className="px-3 py-6 text-center text-foreground-muted">
+                  No pending e-transfers.
+                </td>
+              </tr>
             )}
             {(pending ?? []).map((p: any) => (
               <tr key={p.id} className="border-b border-[var(--border)] last:border-0">
                 <td className="px-3 py-3 font-mono text-xs">{String(p.user_id).slice(0, 8)}…</td>
                 <td className="px-3 py-3 tabular">${Number(p.pay_amount ?? 0).toFixed(2)}</td>
-                <td className="px-3 py-3 text-xs text-foreground-muted">{new Date(p.created_at).toLocaleString()}</td>
+                <td className="px-3 py-3 text-xs text-foreground-muted">
+                  {new Date(p.created_at).toLocaleString()}
+                </td>
                 <td className="px-3 py-3 text-right">
                   <button
                     onClick={() => confirm(p.id, Number(p.pay_amount ?? 0))}
                     disabled={busyId === p.id || !p.pay_amount}
                     className="btn-gradient inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs disabled:opacity-50"
                   >
-                    <Check className="h-3 w-3" /> {busyId === p.id ? "Crediting…" : `Confirm + credit $${Number(p.pay_amount ?? 0).toFixed(2)}`}
+                    <Check className="h-3 w-3" />{" "}
+                    {busyId === p.id
+                      ? "Crediting…"
+                      : `Confirm + credit $${Number(p.pay_amount ?? 0).toFixed(2)}`}
                   </button>
                 </td>
               </tr>
@@ -484,7 +572,10 @@ function FeaturedServicesManager() {
     },
   });
 
-  const update = async (id: string, patch: { is_featured?: boolean; display_order?: number | null }) => {
+  const update = async (
+    id: string,
+    patch: { is_featured?: boolean; display_order?: number | null },
+  ) => {
     setBusyId(id);
     try {
       const { error } = await supabase.from("services").update(patch).eq("id", id);
@@ -506,11 +597,14 @@ function FeaturedServicesManager() {
         <Star className="h-4 w-4" /> Featured services management
       </div>
       <p className="mt-1 text-xs text-foreground-subtle">
-        Featured services appear first on the public /services grid, sorted by display order (lower = earlier).
+        Featured services appear first on the public /services grid, sorted by display order (lower
+        = earlier).
       </p>
 
       <div className="mt-4">
-        <div className="text-xs uppercase tracking-wider text-foreground-subtle">Currently featured</div>
+        <div className="text-xs uppercase tracking-wider text-foreground-subtle">
+          Currently featured
+        </div>
         <div className="mt-2 space-y-1">
           {(featured ?? []).length === 0 && (
             <div className="text-xs text-foreground-muted">None featured yet.</div>
@@ -560,7 +654,9 @@ function FeaturedRow({
     <div className="flex items-center justify-between gap-3 rounded-md border border-[var(--border)] px-3 py-2">
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm">{s.display_name || s.name}</div>
-        <div className="text-[11px] text-foreground-subtle">{s.platform} · {s.service_type}</div>
+        <div className="text-[11px] text-foreground-subtle">
+          {s.platform} · {s.service_type}
+        </div>
       </div>
       <input
         type="number"

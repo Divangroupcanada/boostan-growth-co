@@ -105,7 +105,11 @@ export function hasRefill(name: string, description?: string | null): boolean {
 }
 
 /** True if the service supports drip-feed delivery. */
-export function hasDripFeed(name: string, serviceType?: string | null, description?: string | null): boolean {
+export function hasDripFeed(
+  name: string,
+  serviceType?: string | null,
+  description?: string | null,
+): boolean {
   const text = `${name || ""} ${description || ""} ${serviceType || ""}`.toLowerCase();
   return text.includes("drip");
 }

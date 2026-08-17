@@ -31,8 +31,14 @@ function SignupPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <div className="glow-orb animate-float-slow" style={{ top: -160, right: -120, background: "var(--primary-glow)" }} />
-      <div className="glow-orb animate-float-med" style={{ bottom: -160, left: -120, background: "var(--secondary)", opacity: .35 }} />
+      <div
+        className="glow-orb animate-float-slow"
+        style={{ top: -160, right: -120, background: "var(--primary-glow)" }}
+      />
+      <div
+        className="glow-orb animate-float-med"
+        style={{ bottom: -160, left: -120, background: "var(--secondary)", opacity: 0.35 }}
+      />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-6 py-12">
         <Link to="/" className="mb-10 flex items-center gap-2">
@@ -44,23 +50,51 @@ function SignupPage() {
 
         <div className="glass w-full rounded-2xl p-8">
           <h1 className="text-2xl">Plant your garden</h1>
-          <p className="mt-1 text-sm text-foreground-muted">Create your reseller account in 30 seconds.</p>
+          <p className="mt-1 text-sm text-foreground-muted">
+            Create your reseller account in 30 seconds.
+          </p>
 
           <form onSubmit={onSubmit} className="mt-7 space-y-4">
-            <Field label="Display name" type="text" value={name} onChange={setName} placeholder="Marcus L." />
-            <Field label="Email" type="email" value={email} onChange={setEmail} placeholder="you@email.com" />
-            <Field label="Password" type="password" value={password} onChange={setPassword} placeholder="At least 6 characters" />
+            <Field
+              label="Display name"
+              type="text"
+              value={name}
+              onChange={setName}
+              placeholder="Marcus L."
+            />
+            <Field
+              label="Email"
+              type="email"
+              value={email}
+              onChange={setEmail}
+              placeholder="you@email.com"
+            />
+            <Field
+              label="Password"
+              type="password"
+              value={password}
+              onChange={setPassword}
+              placeholder="At least 6 characters"
+            />
             <button
               disabled={loading}
               className="btn-gradient mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm disabled:opacity-60"
             >
-              {loading ? "Creating account…" : <>Create account <ArrowRight className="h-4 w-4" /></>}
+              {loading ? (
+                "Creating account…"
+              ) : (
+                <>
+                  Create account <ArrowRight className="h-4 w-4" />
+                </>
+              )}
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-foreground-muted">
             Already have an account?{" "}
-            <Link to="/login" className="text-foreground hover:underline">Sign in</Link>
+            <Link to="/login" className="text-foreground hover:underline">
+              Sign in
+            </Link>
           </p>
         </div>
       </div>
@@ -68,8 +102,18 @@ function SignupPage() {
   );
 }
 
-function Field({ label, type, value, onChange, placeholder }: {
-  label: string; type: string; value: string; onChange: (v: string) => void; placeholder?: string;
+function Field({
+  label,
+  type,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  type: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
 }) {
   return (
     <label className="block">

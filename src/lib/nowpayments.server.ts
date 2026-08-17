@@ -7,7 +7,7 @@ const NP_URL = "https://api.nowpayments.io/v1";
 export type CreateInvoiceInput = {
   price_amount: number;
   price_currency: string; // "usd"
-  pay_currency?: string;  // "usdttrc20"
+  pay_currency?: string; // "usdttrc20"
   order_id: string;
   order_description?: string;
   ipn_callback_url: string;
@@ -63,7 +63,9 @@ export async function npFetch<T = any>(
     body: init.body ? JSON.stringify(init.body) : undefined,
   });
   const text = await res.text();
-  console.log(`[nowpayments] ${init.method ?? "GET"} ${path} -> ${res.status} ${text.slice(0, 300)}`);
+  console.log(
+    `[nowpayments] ${init.method ?? "GET"} ${path} -> ${res.status} ${text.slice(0, 300)}`,
+  );
   if (!res.ok) {
     throw new Error(`NOWPayments HTTP ${res.status}: ${text.slice(0, 300)}`);
   }

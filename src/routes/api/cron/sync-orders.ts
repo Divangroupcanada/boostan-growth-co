@@ -107,27 +107,18 @@ export const Route = createFileRoute("/api/cron/sync-orders")({
               failures.push(`batch ${i}: provider HTTP ${res.status}`);
               continue;
             }
-            const payload = (await res.json()) as
-              | Record<string, ProviderStatus>
-              | ProviderStatus;
+            const payload = (await res.json()) as Record<string, ProviderStatus> | ProviderStatus;
 
             // A single-id batch can come back unkeyed.
             if (slice.length === 1 && "status" in (payload as ProviderStatus)) {
-              statuses.set(
-                String(slice[0].provider_order_id),
-                payload as ProviderStatus,
-              );
+              statuses.set(String(slice[0].provider_order_id), payload as ProviderStatus);
             } else {
-              for (const [id, st] of Object.entries(
-                payload as Record<string, ProviderStatus>,
-              )) {
+              for (const [id, st] of Object.entries(payload as Record<string, ProviderStatus>)) {
                 statuses.set(id, st);
               }
             }
           } catch (err) {
-            failures.push(
-              `batch ${i}: ${err instanceof Error ? err.message : "unknown error"}`,
-            );
+            failures.push(`batch ${i}: ${err instanceof Error ? err.message : "unknown error"}`);
           }
         }
 
@@ -173,8 +164,7 @@ export const Route = createFileRoute("/api/cron/sync-orders")({
             // Partial delivery -> refund only the undelivered share.
             if (mapped === "partial" && remains && remains > 0 && order.quantity > 0) {
               const charge = Number(order.charge ?? order.price ?? 0);
-              const undelivered =
-                Math.round((charge * remains) / order.quantity * 100) / 100;
+              const undelivered = Math.round(((charge * remains) / order.quantity) * 100) / 100;
               if (undelivered > 0) {
                 const { error: rErr } = await db.rpc("refund_order_partial", {
                   _order_id: order.id,
@@ -186,9 +176,7 @@ export const Route = createFileRoute("/api/cron/sync-orders")({
               }
             }
           } catch (err) {
-            failures.push(
-              `${order.id}: ${err instanceof Error ? err.message : "unknown error"}`,
-            );
+            failures.push(`${order.id}: ${err instanceof Error ? err.message : "unknown error"}`);
           }
         }
 

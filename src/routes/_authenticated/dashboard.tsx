@@ -25,7 +25,11 @@ function DashboardPage() {
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("*").eq("user_id", user!.id).maybeSingle();
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user!.id)
+        .maybeSingle();
       return data;
     },
     enabled: !!user,
@@ -50,10 +54,25 @@ function DashboardPage() {
   const spent = orders?.reduce((s, o) => s + Number(o.price), 0) ?? 0;
 
   const stats = [
-    { label: "Wallet balance", value: `$${Number(balance).toFixed(2)}`, icon: Wallet, accent: "var(--primary-glow)" },
-    { label: "Total orders", value: totalOrders.toString(), icon: ShoppingBag, accent: "var(--secondary)" },
+    {
+      label: "Wallet balance",
+      value: `$${Number(balance).toFixed(2)}`,
+      icon: Wallet,
+      accent: "var(--primary-glow)",
+    },
+    {
+      label: "Total orders",
+      value: totalOrders.toString(),
+      icon: ShoppingBag,
+      accent: "var(--secondary)",
+    },
     { label: "Completed", value: completed.toString(), icon: TrendingUp, accent: "var(--success)" },
-    { label: "Spent (recent)", value: `$${spent.toFixed(2)}`, icon: Activity, accent: "var(--accent)" },
+    {
+      label: "Spent (recent)",
+      value: `$${spent.toFixed(2)}`,
+      icon: Activity,
+      accent: "var(--accent)",
+    },
   ];
 
   const sample = MOCK_ORDERS;
@@ -65,14 +84,21 @@ function DashboardPage() {
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-foreground-subtle">Welcome back</p>
           <h1 className="mt-1 text-3xl md:text-4xl">
-            {profile?.display_name ?? user?.email?.split("@")[0]} <span className="gradient-text">·</span> ready to grow.
+            {profile?.display_name ?? user?.email?.split("@")[0]}{" "}
+            <span className="gradient-text">·</span> ready to grow.
           </h1>
         </div>
         <div className="flex gap-2">
-          <Link to="/wallet" className="glass inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm">
+          <Link
+            to="/wallet"
+            className="glass inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm"
+          >
             Top up <Plus className="h-4 w-4" />
           </Link>
-          <Link to="/new-order" className="btn-gradient inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm">
+          <Link
+            to="/new-order"
+            className="btn-gradient inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm"
+          >
             New order <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
@@ -104,7 +130,9 @@ function DashboardPage() {
             <h2 className="text-lg">Recent orders</h2>
             <p className="text-xs text-foreground-muted">Last 8 orders across your account.</p>
           </div>
-          <Link to="/orders" className="text-xs text-foreground-muted hover:text-foreground">View all →</Link>
+          <Link to="/orders" className="text-xs text-foreground-muted hover:text-foreground">
+            View all →
+          </Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -119,16 +147,25 @@ function DashboardPage() {
             </thead>
             <tbody>
               {showOrders.map((o, i) => (
-                <tr key={o.id ?? i} className="border-b border-[var(--border)] last:border-0 hover:bg-[var(--surface)]">
+                <tr
+                  key={o.id ?? i}
+                  className="border-b border-[var(--border)] last:border-0 hover:bg-[var(--surface)]"
+                >
                   <td className="px-6 py-4">
                     <div>{o.services?.name ?? o.service}</div>
-                    <div className="text-xs text-foreground-subtle">{o.services?.platform ?? o.platform}</div>
+                    <div className="text-xs text-foreground-subtle">
+                      {o.services?.platform ?? o.platform}
+                    </div>
                   </td>
-                  <td className="max-w-[200px] truncate px-6 py-4 text-foreground-muted">{o.link}</td>
+                  <td className="max-w-[200px] truncate px-6 py-4 text-foreground-muted">
+                    {o.link}
+                  </td>
                   <td className="tabular px-6 py-4">{Number(o.quantity).toLocaleString()}</td>
                   <td className="tabular px-6 py-4">${Number(o.price).toFixed(2)}</td>
                   <td className="px-6 py-4">
-                    <span className={`inline-block rounded-md px-2 py-0.5 text-xs capitalize ${STATUS_STYLES[o.status] ?? ""}`}>
+                    <span
+                      className={`inline-block rounded-md px-2 py-0.5 text-xs capitalize ${STATUS_STYLES[o.status] ?? ""}`}
+                    >
                       {String(o.status).replace("_", " ")}
                     </span>
                   </td>
@@ -143,9 +180,44 @@ function DashboardPage() {
 }
 
 const MOCK_ORDERS = [
-  { id: "m1", services: { name: "Instagram Followers - HQ", platform: "Instagram" }, link: "instagram.com/marcus.l", quantity: 5000, price: 12.0, status: "in_progress" },
-  { id: "m2", services: { name: "TikTok Views", platform: "TikTok" }, link: "tiktok.com/@priya/video/9821", quantity: 50000, price: 5.0, status: "completed" },
-  { id: "m3", services: { name: "YouTube Subscribers", platform: "YouTube" }, link: "youtube.com/@diegor", quantity: 200, price: 2.4, status: "processing" },
-  { id: "m4", services: { name: "Twitter Likes", platform: "Twitter / X" }, link: "x.com/marcusl/status/884", quantity: 1000, price: 1.4, status: "completed" },
-  { id: "m5", services: { name: "Telegram Members", platform: "Telegram" }, link: "t.me/boostangrowth", quantity: 2500, price: 7.0, status: "pending" },
+  {
+    id: "m1",
+    services: { name: "Instagram Followers - HQ", platform: "Instagram" },
+    link: "instagram.com/marcus.l",
+    quantity: 5000,
+    price: 12.0,
+    status: "in_progress",
+  },
+  {
+    id: "m2",
+    services: { name: "TikTok Views", platform: "TikTok" },
+    link: "tiktok.com/@priya/video/9821",
+    quantity: 50000,
+    price: 5.0,
+    status: "completed",
+  },
+  {
+    id: "m3",
+    services: { name: "YouTube Subscribers", platform: "YouTube" },
+    link: "youtube.com/@diegor",
+    quantity: 200,
+    price: 2.4,
+    status: "processing",
+  },
+  {
+    id: "m4",
+    services: { name: "Twitter Likes", platform: "Twitter / X" },
+    link: "x.com/marcusl/status/884",
+    quantity: 1000,
+    price: 1.4,
+    status: "completed",
+  },
+  {
+    id: "m5",
+    services: { name: "Telegram Members", platform: "Telegram" },
+    link: "t.me/boostangrowth",
+    quantity: 2500,
+    price: 7.0,
+    status: "pending",
+  },
 ];

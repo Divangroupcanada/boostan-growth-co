@@ -52,7 +52,9 @@ function OrdersPage() {
       active.forEach(async (o: any) => {
         try {
           await check({ data: { orderId: o.id } });
-        } catch {/* silent */}
+        } catch {
+          /* silent */
+        }
       });
       qc.invalidateQueries({ queryKey: ["orders-all", user?.id] });
     }, 30_000);
@@ -63,7 +65,9 @@ function OrdersPage() {
     setRefreshing(id);
     try {
       const res = await check({ data: { orderId: id } });
-      toast.success(`Status: ${res.status}${res.remains != null ? ` · remains ${res.remains}` : ""}`);
+      toast.success(
+        `Status: ${res.status}${res.remains != null ? ` · remains ${res.remains}` : ""}`,
+      );
       qc.invalidateQueries({ queryKey: ["orders-all", user?.id] });
     } catch (e: any) {
       toast.error(e?.message ?? "Refresh failed");
@@ -98,12 +102,16 @@ function OrdersPage() {
               {(orders ?? []).length === 0 && (
                 <tr>
                   <td colSpan={8} className="px-6 py-16 text-center text-sm text-foreground-muted">
-                    No orders yet. Head to <span className="text-foreground">New order</span> to create your first one.
+                    No orders yet. Head to <span className="text-foreground">New order</span> to
+                    create your first one.
                   </td>
                 </tr>
               )}
               {(orders ?? []).map((o: any) => (
-                <tr key={o.id} className="border-b border-[var(--border)] last:border-0 hover:bg-[var(--surface)]">
+                <tr
+                  key={o.id}
+                  className="border-b border-[var(--border)] last:border-0 hover:bg-[var(--surface)]"
+                >
                   <td className="px-6 py-4 font-mono text-xs text-foreground-subtle">
                     {o.id.slice(0, 8)}
                     {o.is_test_order && (
@@ -116,15 +124,21 @@ function OrdersPage() {
                     <div>{o.services?.name}</div>
                     <div className="text-xs text-foreground-subtle">{o.services?.platform}</div>
                   </td>
-                  <td className="max-w-[220px] truncate px-6 py-4 text-foreground-muted">{o.link}</td>
+                  <td className="max-w-[220px] truncate px-6 py-4 text-foreground-muted">
+                    {o.link}
+                  </td>
                   <td className="tabular px-6 py-4">{Number(o.quantity).toLocaleString()}</td>
                   <td className="tabular px-6 py-4">${Number(o.price).toFixed(2)}</td>
                   <td className="px-6 py-4">
-                    <span className={`inline-block rounded-md px-2 py-0.5 text-xs capitalize ${STATUS_STYLES[o.status] ?? ""}`}>
+                    <span
+                      className={`inline-block rounded-md px-2 py-0.5 text-xs capitalize ${STATUS_STYLES[o.status] ?? ""}`}
+                    >
                       {String(o.status).replace("_", " ")}
                     </span>
                     {o.remains != null && (
-                      <div className="mt-1 text-[10px] text-foreground-subtle">remains {o.remains}</div>
+                      <div className="mt-1 text-[10px] text-foreground-subtle">
+                        remains {o.remains}
+                      </div>
                     )}
                   </td>
                   <td className="px-6 py-4 text-xs text-foreground-muted">
@@ -137,7 +151,9 @@ function OrdersPage() {
                       className="inline-flex items-center gap-1 rounded-md border border-[var(--border)] px-2 py-1 text-xs hover:bg-[var(--surface-strong)] disabled:opacity-40"
                       title="Refresh status"
                     >
-                      <RefreshCw className={`h-3 w-3 ${refreshing === o.id ? "animate-spin" : ""}`} />
+                      <RefreshCw
+                        className={`h-3 w-3 ${refreshing === o.id ? "animate-spin" : ""}`}
+                      />
                       Refresh
                     </button>
                   </td>

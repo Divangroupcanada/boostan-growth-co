@@ -5,9 +5,15 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About — Boostan" },
-      { name: "description", content: "Boostan is a premium social media engagement platform built in Toronto." },
+      {
+        name: "description",
+        content: "Boostan is a premium social media engagement platform built in Toronto.",
+      },
       { property: "og:title", content: "About — Boostan" },
-      { property: "og:description", content: "Boostan is a premium social media engagement platform built in Toronto." },
+      {
+        property: "og:description",
+        content: "Boostan is a premium social media engagement platform built in Toronto.",
+      },
     ],
   }),
   component: AboutPage,
@@ -37,9 +43,9 @@ function AboutPage() {
 
       <h2>What we do</h2>
       <p>
-        We provide curated engagement services across Instagram, TikTok, and YouTube — currently
-        143 services across followers, likes, views, comments, and more. Each service is
-        hand-selected from premium upstream providers for quality and reliability.
+        We provide curated engagement services across Instagram, TikTok, and YouTube — currently 143
+        services across followers, likes, views, comments, and more. Each service is hand-selected
+        from premium upstream providers for quality and reliability.
       </p>
       <p>
         We mark up wholesale rates by 50% plus a flat $1 per 1,000 to cover platform costs, payment
@@ -53,16 +59,22 @@ function AboutPage() {
         creative brands across Toronto, Montreal, Dubai, and Los Angeles.
       </p>
       <p>
-        The platform was built in-house using modern infrastructure (Supabase, Vercel,
-        NOWPayments) with an emphasis on security, transparency, and reliability.
+        The platform was built in-house using modern infrastructure (Supabase, Vercel, NOWPayments)
+        with an emphasis on security, transparency, and reliability.
       </p>
 
       <h2>What we're not</h2>
       <ul>
         <li>We're not Instagram, TikTok, or YouTube — we're not affiliated with these platforms</li>
-        <li>We're not a bot farm — engagement comes from upstream providers using real-looking accounts and ethical delivery patterns</li>
+        <li>
+          We're not a bot farm — engagement comes from upstream providers using real-looking
+          accounts and ethical delivery patterns
+        </li>
         <li>We're not the cheapest option — we choose quality over rock-bottom pricing</li>
-        <li>We're not a get-rich-quick scheme — buying engagement is one tool among many, not a substitute for great content</li>
+        <li>
+          We're not a get-rich-quick scheme — buying engagement is one tool among many, not a
+          substitute for great content
+        </li>
       </ul>
 
       <h2>Trust signals</h2>
@@ -74,8 +86,7 @@ function AboutPage() {
         <li>Transparent pricing on every service</li>
         <li>Clear, honest refund policies</li>
         <li>
-          Responsive customer support via{" "}
-          <a href="mailto:hello@boostan.co">hello@boostan.co</a>
+          Responsive customer support via <a href="mailto:hello@boostan.co">hello@boostan.co</a>
         </li>
         <li>Continuously improving service quality and platform reliability</li>
       </ul>

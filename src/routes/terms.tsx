@@ -27,8 +27,8 @@ function TermsPage() {
       <p>
         Boostan provides social media engagement services for Instagram, TikTok, and YouTube,
         sourced from third-party upstream providers. Services include but are not limited to
-        followers, likes, views, comments, and similar engagement metrics. The Service operates as
-        a software platform connecting Users with these upstream providers.
+        followers, likes, views, comments, and similar engagement metrics. The Service operates as a
+        software platform connecting Users with these upstream providers.
       </p>
 
       <h2>3. Eligibility</h2>
@@ -39,7 +39,10 @@ function TermsPage() {
       </p>
 
       <h2>4. Account Registration</h2>
-      <p>To purchase services, you must create an account with a valid email address. You are responsible for:</p>
+      <p>
+        To purchase services, you must create an account with a valid email address. You are
+        responsible for:
+      </p>
       <ul>
         <li>Maintaining the confidentiality of your account credentials</li>
         <li>All activity that occurs under your account</li>
@@ -51,11 +54,20 @@ function TermsPage() {
       </p>
 
       <h2>5. Wallet and Deposits</h2>
-      <p>Boostan operates on a prepaid wallet system. Users deposit funds in advance and use those funds to place orders.</p>
+      <p>
+        Boostan operates on a prepaid wallet system. Users deposit funds in advance and use those
+        funds to place orders.
+      </p>
       <ul>
         <li>Minimum deposit: $25 USD or equivalent</li>
-        <li>Accepted methods: Cryptocurrency (USDT-TRC20 and others via NOWPayments), Interac e-transfer (Canada)</li>
-        <li>Deposits are credited as platform balance after on-chain confirmation or manual verification</li>
+        <li>
+          Accepted methods: Cryptocurrency (USDT-TRC20 and others via NOWPayments), Interac
+          e-transfer (Canada)
+        </li>
+        <li>
+          Deposits are credited as platform balance after on-chain confirmation or manual
+          verification
+        </li>
         <li>
           Platform balance is <strong>non-refundable to original payment method</strong> but may be
           used for any service available on the platform
@@ -65,7 +77,9 @@ function TermsPage() {
       <h2>6. Order Placement and Fulfillment</h2>
       <p>When you place an order:</p>
       <ul>
-        <li>The order quantity is reserved from your wallet balance at the displayed marked-up rate</li>
+        <li>
+          The order quantity is reserved from your wallet balance at the displayed marked-up rate
+        </li>
         <li>Orders are forwarded to upstream providers for fulfillment</li>
         <li>Most orders begin processing within 60 seconds</li>
         <li>Estimated completion times vary by service and quantity</li>
@@ -74,7 +88,9 @@ function TermsPage() {
       <ul>
         <li>You are responsible for the accuracy of the target URL or username provided</li>
         <li>You have the authority to request engagement on the account/content provided</li>
-        <li>Orders cannot be cancelled once they have started processing with the upstream provider</li>
+        <li>
+          Orders cannot be cancelled once they have started processing with the upstream provider
+        </li>
       </ul>
 
       <h2>7. Service Limitations and Disclaimers</h2>
@@ -102,20 +118,22 @@ function TermsPage() {
         <li>Use the Service for any activity that violates applicable law in your jurisdiction</li>
       </ul>
       <p>
-        We reserve the right to refuse service, refund deposits, and terminate accounts that
-        violate these prohibitions.
+        We reserve the right to refuse service, refund deposits, and terminate accounts that violate
+        these prohibitions.
       </p>
 
       <h2>9. Intellectual Property</h2>
       <p>
-        All content on Boostan (excluding User-provided content like target URLs) is the property
-        of Shahab Balamchi or its licensors and protected under applicable intellectual property
-        law. You may not copy, reproduce, or use Boostan branding, design, or content without
-        permission.
+        All content on Boostan (excluding User-provided content like target URLs) is the property of
+        Shahab Balamchi or its licensors and protected under applicable intellectual property law.
+        You may not copy, reproduce, or use Boostan branding, design, or content without permission.
       </p>
 
       <h2>10. Limitation of Liability</h2>
-      <p>To the maximum extent permitted by law, Boostan, Shahab Balamchi, and any affiliates are not liable for:</p>
+      <p>
+        To the maximum extent permitted by law, Boostan, Shahab Balamchi, and any affiliates are not
+        liable for:
+      </p>
       <ul>
         <li>Indirect, incidental, special, or consequential damages</li>
         <li>Loss of profits, data, or social media account standing</li>
@@ -145,7 +163,10 @@ function TermsPage() {
       </p>
 
       <h2>13. Governing Law and Dispute Resolution</h2>
-      <p>These Terms are governed by the laws of the Province of Ontario, Canada. Any disputes shall be resolved through:</p>
+      <p>
+        These Terms are governed by the laws of the Province of Ontario, Canada. Any disputes shall
+        be resolved through:
+      </p>
       <ul>
         <li>Good-faith negotiation as the first step</li>
         <li>Mediation if negotiation fails</li>
@@ -155,8 +176,7 @@ function TermsPage() {
 
       <h2>14. Contact</h2>
       <p>
-        Questions about these Terms:{" "}
-        <a href="mailto:hello@boostan.co">hello@boostan.co</a>
+        Questions about these Terms: <a href="mailto:hello@boostan.co">hello@boostan.co</a>
       </p>
     </LegalLayout>
   );

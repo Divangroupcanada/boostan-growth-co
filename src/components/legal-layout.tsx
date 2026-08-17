@@ -29,10 +29,7 @@ export function LegalLayout({
 
         <div className="mt-16 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-5 text-sm text-[var(--text-secondary)]">
           Have questions? Email{" "}
-          <a
-            href="mailto:hello@boostan.co"
-            className="text-[var(--accent)] hover:underline"
-          >
+          <a href="mailto:hello@boostan.co" className="text-[var(--accent)] hover:underline">
             hello@boostan.co
           </a>
         </div>

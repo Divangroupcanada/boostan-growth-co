@@ -40,11 +40,7 @@ const TIERS: TierInfo[] = [
   },
 ];
 
-export function TierComparison({
-  startingFrom,
-}: {
-  startingFrom: Partial<Record<Tier, number>>;
-}) {
+export function TierComparison({ startingFrom }: { startingFrom: Partial<Record<Tier, number>> }) {
   const [open, setOpen] = useState(false);
 
   return (

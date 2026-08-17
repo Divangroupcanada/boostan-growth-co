@@ -39,7 +39,9 @@ export async function smmflwCall<T = unknown>(payload: SmmAction): Promise<T> {
   });
 
   const rawText = await res.text();
-  console.log(`[smmflw] action=${payload.action} status=${res.status} raw=${rawText.slice(0, 500)}`);
+  console.log(
+    `[smmflw] action=${payload.action} status=${res.status} raw=${rawText.slice(0, 500)}`,
+  );
 
   if (!res.ok) {
     throw new Error(`SMMFLW HTTP ${res.status}: ${rawText.slice(0, 200)}`);
@@ -62,7 +64,9 @@ export async function smmflwCall<T = unknown>(payload: SmmAction): Promise<T> {
 
 // Map SMMFLW status string -> our order_status enum values.
 export function mapProviderStatus(s: string | undefined): string {
-  const v = String(s ?? "").toLowerCase().replace(/\s+/g, "_");
+  const v = String(s ?? "")
+    .toLowerCase()
+    .replace(/\s+/g, "_");
   switch (v) {
     case "completed":
       return "completed";

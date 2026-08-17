@@ -4,11 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useMemo, useState } from "react";
 import { ServiceCard, type ServiceCardData } from "@/components/service-card";
 import { TierComparison } from "@/components/tier-comparison";
-import {
-  type ServiceType,
-  type Tier,
-  SERVICE_TYPE_LABEL,
-} from "@/lib/service-tier";
+import { type ServiceType, type Tier, SERVICE_TYPE_LABEL } from "@/lib/service-tier";
 import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
@@ -16,7 +12,10 @@ export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
       { title: "All services — Boostan" },
-      { name: "description", content: "143 premium services across Instagram, TikTok, and YouTube. Click any to order." },
+      {
+        name: "description",
+        content: "143 premium services across Instagram, TikTok, and YouTube. Click any to order.",
+      },
     ],
   }),
 });
@@ -47,20 +46,21 @@ function ServicesPage() {
 
   const setPlatformPersist = (p: string | null) => {
     setPlatform(p);
-    try { localStorage.setItem("boostan-services-platform", p ?? "all"); } catch {}
+    try {
+      localStorage.setItem("boostan-services-platform", p ?? "all");
+    } catch {}
   };
   const setStypePersist = (t: string | null) => {
     setStype(t);
-    try { localStorage.setItem(`boostan-services-type-${platform ?? "all"}`, t ?? "all"); } catch {}
+    try {
+      localStorage.setItem(`boostan-services-type-${platform ?? "all"}`, t ?? "all");
+    } catch {}
   };
 
   const { data: services } = useQuery({
     queryKey: ["services-public"],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("services")
-        .select("*")
-        .eq("active", true);
+      const { data } = await supabase.from("services").select("*").eq("active", true);
       return (data ?? []) as any[];
     },
   });
@@ -96,10 +96,7 @@ function ServicesPage() {
   }, [platformFiltered]);
 
   const visibleTypes = useMemo(
-    () =>
-      (Object.keys(typeCounts) as ServiceType[]).sort(
-        (a, b) => typeCounts[b] - typeCounts[a],
-      ),
+    () => (Object.keys(typeCounts) as ServiceType[]).sort((a, b) => typeCounts[b] - typeCounts[a]),
     [typeCounts],
   );
 
@@ -122,7 +119,9 @@ function ServicesPage() {
       const bt = TIER_RANK[b.tier ?? "basic"] ?? 3;
       if (at !== bt) return at - bt;
       // cheapest of equal
-      return Number(a.marked_up_rate ?? a.rate_per_1000) - Number(b.marked_up_rate ?? b.rate_per_1000);
+      return (
+        Number(a.marked_up_rate ?? a.rate_per_1000) - Number(b.marked_up_rate ?? b.rate_per_1000)
+      );
     });
   }, [platformFiltered, stype]);
 
@@ -133,7 +132,8 @@ function ServicesPage() {
           Services
         </h1>
         <p className="mt-3 max-w-2xl text-lg text-[var(--text-secondary)]">
-          {(all.length || 143)} premium services across Instagram, TikTok, and YouTube. Click to order.
+          {all.length || 143} premium services across Instagram, TikTok, and YouTube. Click to
+          order.
         </p>
       </header>
 
@@ -169,7 +169,9 @@ function ServicesPage() {
       {/* Layer 3: grid */}
       {filtered.length === 0 ? (
         <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-12 text-center">
-          <p className="text-[var(--text-secondary)]">No services match this filter. Try a different type.</p>
+          <p className="text-[var(--text-secondary)]">
+            No services match this filter. Try a different type.
+          </p>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -196,9 +198,15 @@ function ServicesPage() {
 
       {/* CTA strip */}
       <section className="mt-20 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-10 text-center">
-        <h2 className="text-2xl font-medium text-[var(--text-primary)]">Don't see what you need?</h2>
+        <h2 className="text-2xl font-medium text-[var(--text-primary)]">
+          Don't see what you need?
+        </h2>
         <p className="mx-auto mt-3 max-w-xl text-sm text-[var(--text-secondary)]">
-          Email <a href="mailto:hello@boostan.co" className="text-[var(--accent)] hover:underline">hello@boostan.co</a> — we can often source specific services from our upstream catalog of 1,000+ options.
+          Email{" "}
+          <a href="mailto:hello@boostan.co" className="text-[var(--accent)] hover:underline">
+            hello@boostan.co
+          </a>{" "}
+          — we can often source specific services from our upstream catalog of 1,000+ options.
         </p>
         <a
           href="mailto:hello@boostan.co"

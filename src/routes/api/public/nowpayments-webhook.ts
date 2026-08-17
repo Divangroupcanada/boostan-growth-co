@@ -170,7 +170,10 @@ export async function processNowpaymentsWebhook(
     }
 
     const { data: profile, error: prErr } = await supabaseAdmin
-      .from("profiles").select("balance").eq("user_id", pending.user_id).single();
+      .from("profiles")
+      .select("balance")
+      .eq("user_id", pending.user_id)
+      .single();
     if (prErr) {
       log.action = "profile_lookup_failed";
       log.error = prErr.message;
@@ -222,11 +225,16 @@ export async function processNowpaymentsWebhook(
 
     log.action = "credited";
     log.amount_credited = amountUsd;
-    console.log(`[nowpayments-webhook] credited $${amountUsd} to user ${pending.user_id}, new balance $${newBalance}`);
+    console.log(
+      `[nowpayments-webhook] credited $${amountUsd} to user ${pending.user_id}, new balance $${newBalance}`,
+    );
   } else if (isPartial) {
-    await supabaseAdmin.from("transactions").update({
-      description: `⚠ Partial payment — admin review needed (paid: ${body.actually_paid} ${body.pay_currency})`,
-    }).eq("id", pending.id);
+    await supabaseAdmin
+      .from("transactions")
+      .update({
+        description: `⚠ Partial payment — admin review needed (paid: ${body.actually_paid} ${body.pay_currency})`,
+      })
+      .eq("id", pending.id);
     log.action = "partial_flagged";
     console.warn(`[nowpayments-webhook] partial payment for ${paymentId}`);
   } else if (isFailed) {

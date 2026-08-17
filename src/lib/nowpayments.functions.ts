@@ -43,7 +43,10 @@ export const createDeposit = createServerFn({ method: "POST" })
 
     // Validate amount against settings.min_deposit
     const { data: settings, error: sErr } = await supabaseAdmin
-      .from("settings").select("min_deposit").eq("id", true).single();
+      .from("settings")
+      .select("min_deposit")
+      .eq("id", true)
+      .single();
     if (sErr) throw new Error(sErr.message);
     const minDeposit = Number(settings.min_deposit);
     if (data.amount_usd < minDeposit) {
@@ -69,7 +72,10 @@ export const createDeposit = createServerFn({ method: "POST" })
 
     // Insert pending transaction (admin client — no user INSERT policy on transactions)
     const { data: profile } = await supabaseAdmin
-      .from("profiles").select("balance").eq("user_id", userId).single();
+      .from("profiles")
+      .select("balance")
+      .eq("user_id", userId)
+      .single();
     const currentBalance = Number(profile?.balance ?? 0);
 
     const { error: txErr } = await supabaseAdmin.from("transactions").insert({
@@ -129,27 +135,37 @@ export const markManualEtransfer = createServerFn({ method: "POST" })
     const { userId } = context;
 
     const { data: settings, error: sErr } = await supabaseAdmin
-      .from("settings").select("min_deposit").eq("id", true).single();
+      .from("settings")
+      .select("min_deposit")
+      .eq("id", true)
+      .single();
     if (sErr) throw new Error(sErr.message);
     if (data.amount_usd < Number(settings.min_deposit)) {
       throw new Error(`Minimum deposit is $${Number(settings.min_deposit).toFixed(2)}`);
     }
 
     const { data: profile } = await supabaseAdmin
-      .from("profiles").select("balance").eq("user_id", userId).single();
+      .from("profiles")
+      .select("balance")
+      .eq("user_id", userId)
+      .single();
     const currentBalance = Number(profile?.balance ?? 0);
 
-    const { data: row, error } = await supabaseAdmin.from("transactions").insert({
-      user_id: userId,
-      type: "manual_etransfer",
-      amount: 0,
-      status: "pending",
-      description: `E-transfer pending — $${data.amount_usd.toFixed(2)} USD (awaiting admin confirmation)`,
-      balance_after: currentBalance,
-      payment_status: "waiting",
-      pay_amount: data.amount_usd,
-      pay_currency: "cad_etransfer",
-    }).select("id").single();
+    const { data: row, error } = await supabaseAdmin
+      .from("transactions")
+      .insert({
+        user_id: userId,
+        type: "manual_etransfer",
+        amount: 0,
+        status: "pending",
+        description: `E-transfer pending — $${data.amount_usd.toFixed(2)} USD (awaiting admin confirmation)`,
+        balance_after: currentBalance,
+        payment_status: "waiting",
+        pay_amount: data.amount_usd,
+        pay_currency: "cad_etransfer",
+      })
+      .select("id")
+      .single();
     if (error) throw new Error(error.message);
 
     return { id: row.id };
@@ -178,12 +194,16 @@ export const adminConfirmManualDeposit = createServerFn({ method: "POST" })
     if (pending.payment_status === "finished") return { ok: true, already: true };
 
     const { data: profile, error: prErr } = await supabaseAdmin
-      .from("profiles").select("balance").eq("user_id", pending.user_id).single();
+      .from("profiles")
+      .select("balance")
+      .eq("user_id", pending.user_id)
+      .single();
     if (prErr) throw new Error(prErr.message);
     const newBalance = Number(profile.balance) + data.amount_usd;
 
     const { error: balErr } = await supabaseAdmin
-      .from("profiles").update({ balance: newBalance, updated_at: new Date().toISOString() })
+      .from("profiles")
+      .update({ balance: newBalance, updated_at: new Date().toISOString() })
       .eq("user_id", pending.user_id);
     if (balErr) throw new Error(balErr.message);
 
@@ -249,7 +269,9 @@ function sortKeysDeep(value: unknown): unknown {
 const testWebhookSchema = z.object({
   payment_id: z.string().min(1).optional(),
   amount_usd: z.number().positive().max(10_000).default(1),
-  status: z.enum(["finished", "confirmed", "partially_paid", "failed", "expired", "waiting"]).default("finished"),
+  status: z
+    .enum(["finished", "confirmed", "partially_paid", "failed", "expired", "waiting"])
+    .default("finished"),
 });
 
 export const triggerTestWebhook = createServerFn({ method: "POST" })

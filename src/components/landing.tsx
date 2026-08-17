@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowRight, ChevronDown, Sprout, Check,
-} from "lucide-react";
+import { ArrowRight, ChevronDown, Sprout, Check } from "lucide-react";
 import { FaInstagram, FaTiktok, FaYoutube, FaXTwitter } from "react-icons/fa6";
 import { supabase } from "@/integrations/supabase/client";
 import { TryItNow } from "@/components/try-it-now";
@@ -11,17 +9,20 @@ import type { Tier } from "@/lib/service-tier";
 
 const UNSPLASH = {
   hero: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=1920&q=80&auto=format&fit=crop",
-  "/assets/trust/creator-1.jpg": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600&q=80&auto=format&fit=crop",
-  "/assets/trust/creator-2.jpg": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80&auto=format&fit=crop",
-  "/assets/trust/agency-1.jpg":  "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80&auto=format&fit=crop",
+  "/assets/trust/creator-1.jpg":
+    "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600&q=80&auto=format&fit=crop",
+  "/assets/trust/creator-2.jpg":
+    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80&auto=format&fit=crop",
+  "/assets/trust/agency-1.jpg":
+    "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80&auto=format&fit=crop",
 } as const;
 
 type SvcRow = ServiceCardData;
 
 const PLATFORMS = [
   { key: "Instagram", label: "Instagram", count: 75, Icon: FaInstagram },
-  { key: "TikTok",    label: "TikTok",    count: 21, Icon: FaTiktok },
-  { key: "YouTube",   label: "YouTube",   count: 47, Icon: FaYoutube },
+  { key: "TikTok", label: "TikTok", count: 21, Icon: FaTiktok },
+  { key: "YouTube", label: "YouTube", count: 47, Icon: FaYoutube },
 ] as const;
 
 export function Landing() {
@@ -74,10 +75,18 @@ function Nav() {
           </span>
         </Link>
         <nav className="hidden items-center gap-8 text-sm text-[var(--text-secondary)] md:flex">
-          <a href="#services" className="hover:text-[var(--text-primary)] transition-colors">Services</a>
-          <a href="#pricing"  className="hover:text-[var(--text-primary)] transition-colors">Pricing</a>
-          <a href="#faq"      className="hover:text-[var(--text-primary)] transition-colors">FAQ</a>
-          <a href="#about"    className="hover:text-[var(--text-primary)] transition-colors">About</a>
+          <a href="#services" className="hover:text-[var(--text-primary)] transition-colors">
+            Services
+          </a>
+          <a href="#pricing" className="hover:text-[var(--text-primary)] transition-colors">
+            Pricing
+          </a>
+          <a href="#faq" className="hover:text-[var(--text-primary)] transition-colors">
+            FAQ
+          </a>
+          <a href="#about" className="hover:text-[var(--text-primary)] transition-colors">
+            About
+          </a>
         </nav>
         <div className="flex items-center gap-2">
           <Link
@@ -109,7 +118,10 @@ function Hero() {
         {videoOk ? (
           <video
             className="h-full w-full object-cover"
-            autoPlay muted loop playsInline
+            autoPlay
+            muted
+            loop
+            playsInline
             poster={UNSPLASH.hero}
             aria-hidden="true"
             onError={() => setVideoOk(false)}
@@ -134,12 +146,13 @@ function Hero() {
             بوستان · Boostan
           </div>
           <h1 className="anim-stagger anim-2 text-[40px] leading-[1.05] tracking-[-0.03em] sm:text-[56px] md:text-[68px] lg:text-[72px]">
-            Your social presence,<br />
+            Your social presence,
+            <br />
             <span className="text-[var(--text-primary)]">growing.</span>
           </h1>
           <p className="anim-stagger anim-3 max-w-[560px] text-base text-[var(--text-secondary)] sm:text-lg">
-            The premium SMM panel for serious creators, agencies, and businesses.
-            Real engagement, instant delivery, automated API.
+            The premium SMM panel for serious creators, agencies, and businesses. Real engagement,
+            instant delivery, automated API.
           </p>
           <div className="anim-stagger anim-4 flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
             <Link
@@ -185,10 +198,10 @@ function TrustBar() {
 
 /* ---------------- STATS ---------------- */
 const STATS = [
-  { value: 143,  suffix: "",    label: "Premium services" },
-  { value: 99.8, suffix: "%",   label: "Uptime guarantee", decimals: 1 },
-  { value: 30,   suffix: "s",   label: "Average start time", prefix: "<" },
-  { value: 24,   suffix: "/7",  label: "Automated delivery" },
+  { value: 143, suffix: "", label: "Premium services" },
+  { value: 99.8, suffix: "%", label: "Uptime guarantee", decimals: 1 },
+  { value: 30, suffix: "s", label: "Average start time", prefix: "<" },
+  { value: 24, suffix: "/7", label: "Automated delivery" },
 ] as const;
 
 function useInView<T extends Element>(opts?: IntersectionObserverInit) {
@@ -198,7 +211,12 @@ function useInView<T extends Element>(opts?: IntersectionObserverInit) {
     if (!ref.current) return;
     const el = ref.current;
     const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setInView(true); io.unobserve(el); } },
+      ([e]) => {
+        if (e.isIntersecting) {
+          setInView(true);
+          io.unobserve(el);
+        }
+      },
       { threshold: 0.2, ...opts },
     );
     io.observe(el);
@@ -207,12 +225,25 @@ function useInView<T extends Element>(opts?: IntersectionObserverInit) {
   return { ref, inView };
 }
 
-function CountUp({ to, decimals = 0, prefix = "", suffix = "" }: { to: number; decimals?: number; prefix?: string; suffix?: string }) {
+function CountUp({
+  to,
+  decimals = 0,
+  prefix = "",
+  suffix = "",
+}: {
+  to: number;
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+}) {
   const { ref, inView } = useInView<HTMLSpanElement>();
   const [n, setN] = useState(0);
   useEffect(() => {
     if (!inView) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { setN(to); return; }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setN(to);
+      return;
+    }
     const dur = 1400;
     const start = performance.now();
     let raf = 0;
@@ -225,7 +256,13 @@ function CountUp({ to, decimals = 0, prefix = "", suffix = "" }: { to: number; d
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [inView, to]);
-  return <span ref={ref} className="tabular">{prefix}{n.toFixed(decimals)}{suffix}</span>;
+  return (
+    <span ref={ref} className="tabular">
+      {prefix}
+      {n.toFixed(decimals)}
+      {suffix}
+    </span>
+  );
 }
 
 function Stats() {
@@ -233,9 +270,17 @@ function Stats() {
     <Section>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {STATS.map((s) => (
-          <div key={s.label} className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-8">
+          <div
+            key={s.label}
+            className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-8"
+          >
             <div className="text-4xl font-medium tracking-tight text-[var(--text-primary)] md:text-5xl">
-              <CountUp to={s.value} decimals={(s as any).decimals ?? 0} prefix={(s as any).prefix ?? ""} suffix={s.suffix} />
+              <CountUp
+                to={s.value}
+                decimals={(s as any).decimals ?? 0}
+                prefix={(s as any).prefix ?? ""}
+                suffix={s.suffix}
+              />
             </div>
             <div className="mt-2 text-sm text-[var(--text-secondary)]">{s.label}</div>
           </div>
@@ -247,7 +292,7 @@ function Stats() {
 
 /* ---------------- SERVICES PREVIEW ---------------- */
 function ServicesPreview() {
-  const [activeP, setActiveP] = useState<typeof PLATFORMS[number]["key"]>("Instagram");
+  const [activeP, setActiveP] = useState<(typeof PLATFORMS)[number]["key"]>("Instagram");
   const [data, setData] = useState<Record<string, SvcRow[]>>({});
 
   useEffect(() => {
@@ -257,7 +302,9 @@ function ServicesPreview() {
       for (const p of PLATFORMS) {
         const { data } = await supabase
           .from("services")
-          .select("id, platform, display_name, name, description, service_type, marked_up_rate, rate_per_1000, min_quantity, max_quantity, tier")
+          .select(
+            "id, platform, display_name, name, description, service_type, marked_up_rate, rate_per_1000, min_quantity, max_quantity, tier",
+          )
           .eq("active", true)
           .eq("platform", p.key)
           .order("marked_up_rate", { ascending: true })
@@ -278,10 +325,12 @@ function ServicesPreview() {
       }
       if (alive) setData(out);
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, []);
 
-  const active = PLATFORMS.find(p => p.key === activeP)!;
+  const active = PLATFORMS.find((p) => p.key === activeP)!;
   const rows = data[activeP] || [];
 
   return (
@@ -358,9 +407,21 @@ function HowWereDifferent() {
 }
 
 const STEPS = [
-  { n: "01", t: "Sign up & deposit", d: "Create your free account and add funds via crypto or e-transfer. $25 minimum." },
-  { n: "02", t: "Pick your service", d: "Browse 143 services across Instagram, TikTok, and YouTube. Filter by quality tier and price." },
-  { n: "03", t: "Watch it grow",     d: "Orders start within 30 seconds. Track progress in real-time. Get refilled if anything drops." },
+  {
+    n: "01",
+    t: "Sign up & deposit",
+    d: "Create your free account and add funds via crypto or e-transfer. $25 minimum.",
+  },
+  {
+    n: "02",
+    t: "Pick your service",
+    d: "Browse 143 services across Instagram, TikTok, and YouTube. Filter by quality tier and price.",
+  },
+  {
+    n: "03",
+    t: "Watch it grow",
+    d: "Orders start within 30 seconds. Track progress in real-time. Get refilled if anything drops.",
+  },
 ];
 
 function HowItWorks() {
@@ -384,9 +445,21 @@ function HowItWorks() {
 
 /* ---------------- WHO IT'S FOR ---------------- */
 const AUDIENCE = [
-  { img: "/assets/trust/agency-1.jpg",  title: "Agencies",   desc: "Manage growth for multiple clients. API access, bulk orders, white-label invoices." },
-  { img: "/assets/trust/creator-1.jpg", title: "Creators",   desc: "Boost reach without burning hours. Real engagement on real content." },
-  { img: "/assets/trust/creator-2.jpg", title: "Businesses", desc: "Build social proof for restaurants, salons, e-commerce. Trusted by 200+ Toronto businesses." },
+  {
+    img: "/assets/trust/agency-1.jpg",
+    title: "Agencies",
+    desc: "Manage growth for multiple clients. API access, bulk orders, white-label invoices.",
+  },
+  {
+    img: "/assets/trust/creator-1.jpg",
+    title: "Creators",
+    desc: "Boost reach without burning hours. Real engagement on real content.",
+  },
+  {
+    img: "/assets/trust/creator-2.jpg",
+    title: "Businesses",
+    desc: "Build social proof for restaurants, salons, e-commerce. Trusted by 200+ Toronto businesses.",
+  },
 ];
 
 function WhoItsFor() {
@@ -395,7 +468,9 @@ function WhoItsFor() {
       <Eyebrow>Who it's for</Eyebrow>
       <SectionHead title="Built for the people who take growth seriously." />
       <div className="grid gap-4 md:grid-cols-3">
-        {AUDIENCE.map((a) => <AudienceCard key={a.title} {...a} />)}
+        {AUDIENCE.map((a) => (
+          <AudienceCard key={a.title} {...a} />
+        ))}
       </div>
     </Section>
   );
@@ -411,13 +486,20 @@ function AudienceCard({ img, title, desc }: { img: string; title: string; desc: 
           src={src}
           alt={title}
           className="h-full w-full object-cover"
-          onError={() => { if (fallback && src !== fallback) setSrc(fallback); }}
+          onError={() => {
+            if (fallback && src !== fallback) setSrc(fallback);
+          }}
         />
       </div>
       <div className="p-6">
         <div className="text-lg font-medium">{title}</div>
         <p className="mt-2 text-sm text-[var(--text-secondary)]">{desc}</p>
-        <a href="#services" className="mt-4 inline-block text-sm text-[var(--accent)] hover:underline">Learn more →</a>
+        <a
+          href="#services"
+          className="mt-4 inline-block text-sm text-[var(--accent)] hover:underline"
+        >
+          Learn more →
+        </a>
       </div>
     </div>
   );
@@ -436,20 +518,33 @@ function PricingTransparency() {
         <div className="text-sm text-[var(--text-tertiary)]">Example · Instagram Followers</div>
         <div className="mt-4 grid grid-cols-2 gap-6">
           <div>
-            <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">Wholesale</div>
-            <div className="tabular mt-1 text-2xl text-[var(--text-secondary)]">$1.20<span className="text-sm">/1k</span></div>
+            <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">
+              Wholesale
+            </div>
+            <div className="tabular mt-1 text-2xl text-[var(--text-secondary)]">
+              $1.20<span className="text-sm">/1k</span>
+            </div>
           </div>
           <div>
-            <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">You pay</div>
-            <div className="tabular mt-1 text-2xl text-[var(--text-primary)]">$2.80<span className="text-sm">/1k</span></div>
+            <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">
+              You pay
+            </div>
+            <div className="tabular mt-1 text-2xl text-[var(--text-primary)]">
+              $2.80<span className="text-sm">/1k</span>
+            </div>
           </div>
         </div>
         <ul className="mt-6 space-y-2 border-t border-[var(--border-subtle)] pt-6 text-sm text-[var(--text-secondary)]">
           {["No subscription", "No hidden fees", "Refill on drops included"].map((t) => (
-            <li key={t} className="flex items-center gap-2"><Check className="h-4 w-4 text-[var(--success)]" /> {t}</li>
+            <li key={t} className="flex items-center gap-2">
+              <Check className="h-4 w-4 text-[var(--success)]" /> {t}
+            </li>
           ))}
         </ul>
-        <Link to="/signup" className="mt-6 inline-block text-sm text-[var(--accent)] hover:underline">
+        <Link
+          to="/signup"
+          className="mt-6 inline-block text-sm text-[var(--accent)] hover:underline"
+        >
           View full service pricing →
         </Link>
       </div>
@@ -459,12 +554,30 @@ function PricingTransparency() {
 
 /* ---------------- FAQ ---------------- */
 const FAQS = [
-  { q: "Are these real followers/likes/views?", a: "Yes — we use trusted upstream providers serving real engagement. We never use bot networks." },
-  { q: "How fast do orders start?",             a: "Most orders start within 30 seconds. Some niche services may take 1–3 minutes." },
-  { q: "What payment methods do you accept?",   a: "Crypto (USDT-TRC20, BTC, ETH) and Canadian Interac e-transfer. No credit cards yet — coming soon." },
-  { q: "Can I get a refund?",                   a: "Yes — we refill drops automatically and refund unfulfilled orders." },
-  { q: "Do you offer API access?",              a: "Yes — every account gets free API access for automation. Documentation in your dashboard." },
-  { q: "Is this safe for my Instagram/TikTok account?", a: "Yes — we comply with platform best practices. Slow drip-feed available for organic-looking growth." },
+  {
+    q: "Are these real followers/likes/views?",
+    a: "Yes — we use trusted upstream providers serving real engagement. We never use bot networks.",
+  },
+  {
+    q: "How fast do orders start?",
+    a: "Most orders start within 30 seconds. Some niche services may take 1–3 minutes.",
+  },
+  {
+    q: "What payment methods do you accept?",
+    a: "Crypto (USDT-TRC20, BTC, ETH) and Canadian Interac e-transfer. No credit cards yet — coming soon.",
+  },
+  {
+    q: "Can I get a refund?",
+    a: "Yes — we refill drops automatically and refund unfulfilled orders.",
+  },
+  {
+    q: "Do you offer API access?",
+    a: "Yes — every account gets free API access for automation. Documentation in your dashboard.",
+  },
+  {
+    q: "Is this safe for my Instagram/TikTok account?",
+    a: "Yes — we comply with platform best practices. Slow drip-feed available for organic-looking growth.",
+  },
 ];
 
 function FAQSection() {
@@ -484,7 +597,9 @@ function FAQSection() {
                 className="flex w-full items-center justify-between gap-4 py-5 text-left"
               >
                 <span className="text-base font-medium text-[var(--text-primary)]">{f.q}</span>
-                <ChevronDown className={`h-4 w-4 shrink-0 text-[var(--text-tertiary)] transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`h-4 w-4 shrink-0 text-[var(--text-tertiary)] transition-transform ${isOpen ? "rotate-180" : ""}`}
+                />
               </button>
               {isOpen && <div className="pb-5 text-sm text-[var(--text-secondary)]">{f.a}</div>}
             </div>
@@ -540,17 +655,42 @@ function Footer() {
           <p className="mt-2 text-xs text-[var(--text-tertiary)]">Made in Toronto</p>
         </div>
         <div className="grid grid-cols-3 gap-6 text-sm">
-          <FooterCol title="Product" links={[["Services","#services"],["Pricing","#pricing"],["API Docs","/signup"]]} />
-          <FooterCol title="Company" links={[["About","/about"],["Contact","mailto:hello@boostan.co"],["Support","mailto:hello@boostan.co"]]} />
-          <FooterCol title="Legal"   links={[["Terms","/terms"],["Privacy","/privacy"],["Refund Policy","/refund"]]} />
+          <FooterCol
+            title="Product"
+            links={[
+              ["Services", "#services"],
+              ["Pricing", "#pricing"],
+              ["API Docs", "/signup"],
+            ]}
+          />
+          <FooterCol
+            title="Company"
+            links={[
+              ["About", "/about"],
+              ["Contact", "mailto:hello@boostan.co"],
+              ["Support", "mailto:hello@boostan.co"],
+            ]}
+          />
+          <FooterCol
+            title="Legal"
+            links={[
+              ["Terms", "/terms"],
+              ["Privacy", "/privacy"],
+              ["Refund Policy", "/refund"],
+            ]}
+          />
         </div>
       </div>
       <div className="border-t border-[var(--border-subtle)]">
         <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-6 text-xs text-[var(--text-tertiary)]">
           <div>© {new Date().getFullYear()} Boostan</div>
           <div className="flex items-center gap-4">
-            <a href="#" aria-label="X" className="hover:text-[var(--text-primary)]"><FaXTwitter className="h-4 w-4" /></a>
-            <a href="#" aria-label="Instagram" className="hover:text-[var(--text-primary)]"><FaInstagram className="h-4 w-4" /></a>
+            <a href="#" aria-label="X" className="hover:text-[var(--text-primary)]">
+              <FaXTwitter className="h-4 w-4" />
+            </a>
+            <a href="#" aria-label="Instagram" className="hover:text-[var(--text-primary)]">
+              <FaInstagram className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </div>
@@ -561,11 +701,18 @@ function Footer() {
 function FooterCol({ title, links }: { title: string; links: [string, string][] }) {
   return (
     <div>
-      <div className="mb-3 text-xs uppercase tracking-wider text-[var(--text-tertiary)]">{title}</div>
+      <div className="mb-3 text-xs uppercase tracking-wider text-[var(--text-tertiary)]">
+        {title}
+      </div>
       <ul className="space-y-2">
         {links.map(([label, href]) => (
           <li key={label}>
-            <a href={href} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">{label}</a>
+            <a
+              href={href}
+              className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+            >
+              {label}
+            </a>
           </li>
         ))}
       </ul>
@@ -590,7 +737,11 @@ function Section({ id, children }: { id?: string; children: React.ReactNode }) {
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <div className="mb-3 text-xs uppercase tracking-[0.25em] text-[var(--text-tertiary)]">{children}</div>;
+  return (
+    <div className="mb-3 text-xs uppercase tracking-[0.25em] text-[var(--text-tertiary)]">
+      {children}
+    </div>
+  );
 }
 
 function SectionHead({ title, sub }: { title: string; sub?: string }) {
@@ -606,7 +757,13 @@ function Divider() {
   return (
     <div className="my-8 flex justify-center" aria-hidden>
       <svg width="60" height="20" viewBox="0 0 60 20" fill="none" className="text-[var(--accent)]">
-        <path d="M2 10 C 15 2, 30 18, 45 10 S 58 10, 58 10" stroke="currentColor" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+        <path
+          d="M2 10 C 15 2, 30 18, 45 10 S 58 10, 58 10"
+          stroke="currentColor"
+          strokeWidth="1.2"
+          fill="none"
+          strokeLinecap="round"
+        />
         <circle cx="30" cy="10" r="1.5" fill="currentColor" />
       </svg>
     </div>

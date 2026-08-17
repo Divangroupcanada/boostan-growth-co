@@ -48,7 +48,9 @@ export function TryItNow() {
     (async () => {
       const { data } = await supabase
         .from("services")
-        .select("id, platform, name, display_name, marked_up_rate, min_quantity, max_quantity, tier, smmflw_id")
+        .select(
+          "id, platform, name, display_name, marked_up_rate, min_quantity, max_quantity, tier, smmflw_id",
+        )
         .eq("active", true);
       if (!alive || !data) return;
       const mapped = data.map((s: any): Svc => ({
@@ -65,7 +67,9 @@ export function TryItNow() {
       }));
       setAll(mapped);
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, []);
 
   // Categories that exist for the selected platform
@@ -108,7 +112,9 @@ export function TryItNow() {
 
   return (
     <section className="mx-auto max-w-[1200px] px-6 py-24 md:py-32">
-      <div className="mb-3 text-xs uppercase tracking-[0.25em] text-[var(--text-tertiary)]">Try it now</div>
+      <div className="mb-3 text-xs uppercase tracking-[0.25em] text-[var(--text-tertiary)]">
+        Try it now
+      </div>
       <div className="mb-10 max-w-2xl">
         <h2 className="text-3xl tracking-tight md:text-4xl">See instant pricing.</h2>
         <p className="mt-3 text-[var(--text-secondary)]">
@@ -208,7 +214,9 @@ export function TryItNow() {
 
         {/* RIGHT — result */}
         <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-1)] p-6 lg:sticky lg:top-24 lg:self-start">
-          <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">Estimate</div>
+          <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">
+            Estimate
+          </div>
           {match && price !== null ? (
             <>
               <div className="mt-3 line-clamp-2 text-sm font-medium text-[var(--text-primary)]">
@@ -260,7 +268,9 @@ export function TryItNow() {
             <>
               <div className="mt-6 text-2xl text-[var(--text-secondary)]">No match</div>
               <p className="mt-2 text-sm text-[var(--text-tertiary)]">
-                Adjust quantity to fit available service ranges (try {sliderBounds.min.toLocaleString()} – {sliderBounds.max.toLocaleString()}), or pick another tier.
+                Adjust quantity to fit available service ranges (try{" "}
+                {sliderBounds.min.toLocaleString()} – {sliderBounds.max.toLocaleString()}), or pick
+                another tier.
               </p>
               <button
                 disabled

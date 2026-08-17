@@ -1,447 +1,435 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
-  }
+    PostgrestVersion: "14.5";
+  };
   public: {
     Tables: {
       categories: {
         Row: {
-          created_at: string
-          icon: string | null
-          id: string
-          name: string
-          slug: string
-          sort_order: number
-        }
+          created_at: string;
+          icon: string | null;
+          id: string;
+          name: string;
+          slug: string;
+          sort_order: number;
+        };
         Insert: {
-          created_at?: string
-          icon?: string | null
-          id?: string
-          name: string
-          slug: string
-          sort_order?: number
-        }
+          created_at?: string;
+          icon?: string | null;
+          id?: string;
+          name: string;
+          slug: string;
+          sort_order?: number;
+        };
         Update: {
-          created_at?: string
-          icon?: string | null
-          id?: string
-          name?: string
-          slug?: string
-          sort_order?: number
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          icon?: string | null;
+          id?: string;
+          name?: string;
+          slug?: string;
+          sort_order?: number;
+        };
+        Relationships: [];
+      };
       orders: {
         Row: {
-          charge: number | null
-          cost: number | null
-          created_at: string
-          id: string
-          is_test_order: boolean
-          link: string
-          price: number
-          provider_order_id: string | null
-          quantity: number
-          remains: number | null
-          service_id: string
-          smmflw_order_id: string | null
-          start_count: number | null
-          status: Database["public"]["Enums"]["order_status"]
-          updated_at: string
-          user_id: string
-        }
+          charge: number | null;
+          cost: number | null;
+          created_at: string;
+          id: string;
+          is_test_order: boolean;
+          link: string;
+          price: number;
+          provider_order_id: string | null;
+          quantity: number;
+          remains: number | null;
+          service_id: string;
+          smmflw_order_id: string | null;
+          start_count: number | null;
+          status: Database["public"]["Enums"]["order_status"];
+          updated_at: string;
+          user_id: string;
+        };
         Insert: {
-          charge?: number | null
-          cost?: number | null
-          created_at?: string
-          id?: string
-          is_test_order?: boolean
-          link: string
-          price: number
-          provider_order_id?: string | null
-          quantity: number
-          remains?: number | null
-          service_id: string
-          smmflw_order_id?: string | null
-          start_count?: number | null
-          status?: Database["public"]["Enums"]["order_status"]
-          updated_at?: string
-          user_id: string
-        }
+          charge?: number | null;
+          cost?: number | null;
+          created_at?: string;
+          id?: string;
+          is_test_order?: boolean;
+          link: string;
+          price: number;
+          provider_order_id?: string | null;
+          quantity: number;
+          remains?: number | null;
+          service_id: string;
+          smmflw_order_id?: string | null;
+          start_count?: number | null;
+          status?: Database["public"]["Enums"]["order_status"];
+          updated_at?: string;
+          user_id: string;
+        };
         Update: {
-          charge?: number | null
-          cost?: number | null
-          created_at?: string
-          id?: string
-          is_test_order?: boolean
-          link?: string
-          price?: number
-          provider_order_id?: string | null
-          quantity?: number
-          remains?: number | null
-          service_id?: string
-          smmflw_order_id?: string | null
-          start_count?: number | null
-          status?: Database["public"]["Enums"]["order_status"]
-          updated_at?: string
-          user_id?: string
-        }
+          charge?: number | null;
+          cost?: number | null;
+          created_at?: string;
+          id?: string;
+          is_test_order?: boolean;
+          link?: string;
+          price?: number;
+          provider_order_id?: string | null;
+          quantity?: number;
+          remains?: number | null;
+          service_id?: string;
+          smmflw_order_id?: string | null;
+          start_count?: number | null;
+          status?: Database["public"]["Enums"]["order_status"];
+          updated_at?: string;
+          user_id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "orders_service_id_fkey"
-            columns: ["service_id"]
-            isOneToOne: false
-            referencedRelation: "services"
-            referencedColumns: ["id"]
+            foreignKeyName: "orders_service_id_fkey";
+            columns: ["service_id"];
+            isOneToOne: false;
+            referencedRelation: "services";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       profiles: {
         Row: {
-          avatar_url: string | null
-          balance: number
-          created_at: string
-          display_name: string | null
-          id: string
-          updated_at: string
-          user_id: string
-        }
+          avatar_url: string | null;
+          balance: number;
+          created_at: string;
+          display_name: string | null;
+          id: string;
+          updated_at: string;
+          user_id: string;
+        };
         Insert: {
-          avatar_url?: string | null
-          balance?: number
-          created_at?: string
-          display_name?: string | null
-          id?: string
-          updated_at?: string
-          user_id: string
-        }
+          avatar_url?: string | null;
+          balance?: number;
+          created_at?: string;
+          display_name?: string | null;
+          id?: string;
+          updated_at?: string;
+          user_id: string;
+        };
         Update: {
-          avatar_url?: string | null
-          balance?: number
-          created_at?: string
-          display_name?: string | null
-          id?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
+          avatar_url?: string | null;
+          balance?: number;
+          created_at?: string;
+          display_name?: string | null;
+          id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       services: {
         Row: {
-          active: boolean
-          base_rate: number | null
-          category_id: string | null
-          created_at: string
-          description: string | null
-          display_name: string | null
-          display_order: number | null
-          display_tier: string | null
-          id: string
-          is_featured: boolean
-          marked_up_rate: number | null
-          max_quantity: number
-          min_quantity: number
-          name: string
-          order_count: number
-          platform: string
-          provider_service_id: string | null
-          rate_per_1000: number
-          service_type: string | null
-          smmflw_id: string | null
-          synced_at: string | null
-          tier: string | null
-          updated_at: string
-        }
+          active: boolean;
+          base_rate: number | null;
+          category_id: string | null;
+          created_at: string;
+          description: string | null;
+          display_name: string | null;
+          display_order: number | null;
+          display_tier: string | null;
+          id: string;
+          is_featured: boolean;
+          marked_up_rate: number | null;
+          max_quantity: number;
+          min_quantity: number;
+          name: string;
+          order_count: number;
+          platform: string;
+          provider_service_id: string | null;
+          rate_per_1000: number;
+          service_type: string | null;
+          smmflw_id: string | null;
+          synced_at: string | null;
+          tier: string | null;
+          updated_at: string;
+        };
         Insert: {
-          active?: boolean
-          base_rate?: number | null
-          category_id?: string | null
-          created_at?: string
-          description?: string | null
-          display_name?: string | null
-          display_order?: number | null
-          display_tier?: string | null
-          id?: string
-          is_featured?: boolean
-          marked_up_rate?: number | null
-          max_quantity?: number
-          min_quantity?: number
-          name: string
-          order_count?: number
-          platform: string
-          provider_service_id?: string | null
-          rate_per_1000: number
-          service_type?: string | null
-          smmflw_id?: string | null
-          synced_at?: string | null
-          tier?: string | null
-          updated_at?: string
-        }
+          active?: boolean;
+          base_rate?: number | null;
+          category_id?: string | null;
+          created_at?: string;
+          description?: string | null;
+          display_name?: string | null;
+          display_order?: number | null;
+          display_tier?: string | null;
+          id?: string;
+          is_featured?: boolean;
+          marked_up_rate?: number | null;
+          max_quantity?: number;
+          min_quantity?: number;
+          name: string;
+          order_count?: number;
+          platform: string;
+          provider_service_id?: string | null;
+          rate_per_1000: number;
+          service_type?: string | null;
+          smmflw_id?: string | null;
+          synced_at?: string | null;
+          tier?: string | null;
+          updated_at?: string;
+        };
         Update: {
-          active?: boolean
-          base_rate?: number | null
-          category_id?: string | null
-          created_at?: string
-          description?: string | null
-          display_name?: string | null
-          display_order?: number | null
-          display_tier?: string | null
-          id?: string
-          is_featured?: boolean
-          marked_up_rate?: number | null
-          max_quantity?: number
-          min_quantity?: number
-          name?: string
-          order_count?: number
-          platform?: string
-          provider_service_id?: string | null
-          rate_per_1000?: number
-          service_type?: string | null
-          smmflw_id?: string | null
-          synced_at?: string | null
-          tier?: string | null
-          updated_at?: string
-        }
+          active?: boolean;
+          base_rate?: number | null;
+          category_id?: string | null;
+          created_at?: string;
+          description?: string | null;
+          display_name?: string | null;
+          display_order?: number | null;
+          display_tier?: string | null;
+          id?: string;
+          is_featured?: boolean;
+          marked_up_rate?: number | null;
+          max_quantity?: number;
+          min_quantity?: number;
+          name?: string;
+          order_count?: number;
+          platform?: string;
+          provider_service_id?: string | null;
+          rate_per_1000?: number;
+          service_type?: string | null;
+          smmflw_id?: string | null;
+          synced_at?: string | null;
+          tier?: string | null;
+          updated_at?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "services_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "categories"
-            referencedColumns: ["id"]
+            foreignKeyName: "services_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: false;
+            referencedRelation: "categories";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       settings: {
         Row: {
-          fixed_fee: number
-          id: boolean
-          last_services_sync: string | null
-          markup_percentage: number
-          min_deposit: number
-          updated_at: string
-        }
+          fixed_fee: number;
+          id: boolean;
+          last_services_sync: string | null;
+          markup_percentage: number;
+          min_deposit: number;
+          updated_at: string;
+        };
         Insert: {
-          fixed_fee?: number
-          id?: boolean
-          last_services_sync?: string | null
-          markup_percentage?: number
-          min_deposit?: number
-          updated_at?: string
-        }
+          fixed_fee?: number;
+          id?: boolean;
+          last_services_sync?: string | null;
+          markup_percentage?: number;
+          min_deposit?: number;
+          updated_at?: string;
+        };
         Update: {
-          fixed_fee?: number
-          id?: boolean
-          last_services_sync?: string | null
-          markup_percentage?: number
-          min_deposit?: number
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          fixed_fee?: number;
+          id?: boolean;
+          last_services_sync?: string | null;
+          markup_percentage?: number;
+          min_deposit?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       transactions: {
         Row: {
-          amount: number
-          balance_after: number | null
-          created_at: string
-          description: string | null
-          id: string
-          ipn_payload: Json | null
-          pay_address: string | null
-          pay_amount: number | null
-          pay_currency: string | null
-          payment_id: string | null
-          payment_status: string | null
-          reference_id: string | null
-          status: Database["public"]["Enums"]["tx_status"]
-          type: Database["public"]["Enums"]["tx_type"]
-          user_id: string
-        }
+          amount: number;
+          balance_after: number | null;
+          created_at: string;
+          description: string | null;
+          id: string;
+          ipn_payload: Json | null;
+          pay_address: string | null;
+          pay_amount: number | null;
+          pay_currency: string | null;
+          payment_id: string | null;
+          payment_status: string | null;
+          reference_id: string | null;
+          status: Database["public"]["Enums"]["tx_status"];
+          type: Database["public"]["Enums"]["tx_type"];
+          user_id: string;
+        };
         Insert: {
-          amount: number
-          balance_after?: number | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          ipn_payload?: Json | null
-          pay_address?: string | null
-          pay_amount?: number | null
-          pay_currency?: string | null
-          payment_id?: string | null
-          payment_status?: string | null
-          reference_id?: string | null
-          status?: Database["public"]["Enums"]["tx_status"]
-          type: Database["public"]["Enums"]["tx_type"]
-          user_id: string
-        }
+          amount: number;
+          balance_after?: number | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          ipn_payload?: Json | null;
+          pay_address?: string | null;
+          pay_amount?: number | null;
+          pay_currency?: string | null;
+          payment_id?: string | null;
+          payment_status?: string | null;
+          reference_id?: string | null;
+          status?: Database["public"]["Enums"]["tx_status"];
+          type: Database["public"]["Enums"]["tx_type"];
+          user_id: string;
+        };
         Update: {
-          amount?: number
-          balance_after?: number | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          ipn_payload?: Json | null
-          pay_address?: string | null
-          pay_amount?: number | null
-          pay_currency?: string | null
-          payment_id?: string | null
-          payment_status?: string | null
-          reference_id?: string | null
-          status?: Database["public"]["Enums"]["tx_status"]
-          type?: Database["public"]["Enums"]["tx_type"]
-          user_id?: string
-        }
-        Relationships: []
-      }
+          amount?: number;
+          balance_after?: number | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          ipn_payload?: Json | null;
+          pay_address?: string | null;
+          pay_amount?: number | null;
+          pay_currency?: string | null;
+          payment_id?: string | null;
+          payment_status?: string | null;
+          reference_id?: string | null;
+          status?: Database["public"]["Enums"]["tx_status"];
+          type?: Database["public"]["Enums"]["tx_type"];
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       user_roles: {
         Row: {
-          created_at: string
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
+          created_at: string;
+          id: string;
+          role: Database["public"]["Enums"]["app_role"];
+          user_id: string;
+        };
         Insert: {
-          created_at?: string
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
+          created_at?: string;
+          id?: string;
+          role: Database["public"]["Enums"]["app_role"];
+          user_id: string;
+        };
         Update: {
-          created_at?: string
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          id?: string;
+          role?: Database["public"]["Enums"]["app_role"];
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       webhook_logs: {
         Row: {
-          action: string | null
-          amount_credited: number | null
-          created_at: string
-          error: string | null
-          headers: Json | null
-          id: string
-          is_test: boolean
-          method: string | null
-          parsed_payload: Json | null
-          payment_id: string | null
-          payment_status: string | null
-          raw_body: string | null
-          response_status: number | null
-          signature_reason: string | null
-          signature_valid: boolean | null
-          source: string
-          tx_id: string | null
-          tx_lookup_found: boolean | null
-        }
+          action: string | null;
+          amount_credited: number | null;
+          created_at: string;
+          error: string | null;
+          headers: Json | null;
+          id: string;
+          is_test: boolean;
+          method: string | null;
+          parsed_payload: Json | null;
+          payment_id: string | null;
+          payment_status: string | null;
+          raw_body: string | null;
+          response_status: number | null;
+          signature_reason: string | null;
+          signature_valid: boolean | null;
+          source: string;
+          tx_id: string | null;
+          tx_lookup_found: boolean | null;
+        };
         Insert: {
-          action?: string | null
-          amount_credited?: number | null
-          created_at?: string
-          error?: string | null
-          headers?: Json | null
-          id?: string
-          is_test?: boolean
-          method?: string | null
-          parsed_payload?: Json | null
-          payment_id?: string | null
-          payment_status?: string | null
-          raw_body?: string | null
-          response_status?: number | null
-          signature_reason?: string | null
-          signature_valid?: boolean | null
-          source?: string
-          tx_id?: string | null
-          tx_lookup_found?: boolean | null
-        }
+          action?: string | null;
+          amount_credited?: number | null;
+          created_at?: string;
+          error?: string | null;
+          headers?: Json | null;
+          id?: string;
+          is_test?: boolean;
+          method?: string | null;
+          parsed_payload?: Json | null;
+          payment_id?: string | null;
+          payment_status?: string | null;
+          raw_body?: string | null;
+          response_status?: number | null;
+          signature_reason?: string | null;
+          signature_valid?: boolean | null;
+          source?: string;
+          tx_id?: string | null;
+          tx_lookup_found?: boolean | null;
+        };
         Update: {
-          action?: string | null
-          amount_credited?: number | null
-          created_at?: string
-          error?: string | null
-          headers?: Json | null
-          id?: string
-          is_test?: boolean
-          method?: string | null
-          parsed_payload?: Json | null
-          payment_id?: string | null
-          payment_status?: string | null
-          raw_body?: string | null
-          response_status?: number | null
-          signature_reason?: string | null
-          signature_valid?: boolean | null
-          source?: string
-          tx_id?: string | null
-          tx_lookup_found?: boolean | null
-        }
-        Relationships: []
-      }
-    }
+          action?: string | null;
+          amount_credited?: number | null;
+          created_at?: string;
+          error?: string | null;
+          headers?: Json | null;
+          id?: string;
+          is_test?: boolean;
+          method?: string | null;
+          parsed_payload?: Json | null;
+          payment_id?: string | null;
+          payment_status?: string | null;
+          raw_body?: string | null;
+          response_status?: number | null;
+          signature_reason?: string | null;
+          signature_valid?: boolean | null;
+          source?: string;
+          tx_id?: string | null;
+          tx_lookup_found?: boolean | null;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
       has_role: {
         Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+          _role: Database["public"]["Enums"]["app_role"];
+          _user_id: string;
+        };
+        Returns: boolean;
+      };
       place_order_atomic:
         | {
             Args: {
-              _charge: number
-              _cost: number
-              _link: string
-              _quantity: number
-              _service_id: string
-            }
-            Returns: string
+              _charge: number;
+              _cost: number;
+              _link: string;
+              _quantity: number;
+              _service_id: string;
+            };
+            Returns: string;
           }
         | {
             Args: {
-              _charge: number
-              _cost: number
-              _is_test?: boolean
-              _link: string
-              _quantity: number
-              _service_id: string
-            }
-            Returns: string
-          }
-      recompute_service_tiers: { Args: never; Returns: undefined }
+              _charge: number;
+              _cost: number;
+              _is_test?: boolean;
+              _link: string;
+              _quantity: number;
+              _service_id: string;
+            };
+            Returns: string;
+          };
+      recompute_service_tiers: { Args: never; Returns: undefined };
       refund_order: {
-        Args: { _order_id: string; _reason?: string }
-        Returns: number
-      }
+        Args: { _order_id: string; _reason?: string };
+        Returns: number;
+      };
       refund_order_partial: {
-        Args: { _amount: number; _order_id: string; _reason?: string }
-        Returns: number
-      }
-    }
+        Args: { _amount: number; _order_id: string; _reason?: string };
+        Returns: number;
+      };
+    };
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user";
       order_status:
-        | "pending"
-        | "processing"
-        | "in_progress"
-        | "completed"
-        | "partial"
-        | "canceled"
-        | "failed"
-      tx_status: "pending" | "completed" | "failed"
+        "pending" | "processing" | "in_progress" | "completed" | "partial" | "canceled" | "failed";
+      tx_status: "pending" | "completed" | "failed";
       tx_type:
         | "deposit"
         | "order"
@@ -449,130 +437,124 @@ export type Database = {
         | "adjustment"
         | "order_debit"
         | "deposit_pending"
-        | "manual_etransfer"
-    }
+        | "manual_etransfer";
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    keyof DefaultSchema["CompositeTypes"] | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+    : never;
 
 export const Constants = {
   public: {
@@ -599,4 +581,4 @@ export const Constants = {
       ],
     },
   },
-} as const
+} as const;

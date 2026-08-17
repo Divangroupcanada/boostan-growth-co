@@ -34,8 +34,14 @@ function LoginPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <div className="glow-orb animate-float-slow" style={{ top: -160, left: -120, background: "var(--primary)" }} />
-      <div className="glow-orb animate-float-med" style={{ bottom: -160, right: -120, background: "var(--primary-glow)", opacity: .35 }} />
+      <div
+        className="glow-orb animate-float-slow"
+        style={{ top: -160, left: -120, background: "var(--primary)" }}
+      />
+      <div
+        className="glow-orb animate-float-med"
+        style={{ bottom: -160, right: -120, background: "var(--primary-glow)", opacity: 0.35 }}
+      />
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-6 py-12">
         <Link to="/" className="mb-10 flex items-center gap-2">
@@ -50,19 +56,39 @@ function LoginPage() {
           <p className="mt-1 text-sm text-foreground-muted">Sign in to your panel.</p>
 
           <form onSubmit={onSubmit} className="mt-7 space-y-4">
-            <Field label="Email" type="email" value={email} onChange={setEmail} placeholder="you@email.com" />
-            <Field label="Password" type="password" value={password} onChange={setPassword} placeholder="••••••••" />
+            <Field
+              label="Email"
+              type="email"
+              value={email}
+              onChange={setEmail}
+              placeholder="you@email.com"
+            />
+            <Field
+              label="Password"
+              type="password"
+              value={password}
+              onChange={setPassword}
+              placeholder="••••••••"
+            />
             <button
               disabled={loading}
               className="btn-gradient mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm disabled:opacity-60"
             >
-              {loading ? "Signing in…" : <>Sign in <ArrowRight className="h-4 w-4" /></>}
+              {loading ? (
+                "Signing in…"
+              ) : (
+                <>
+                  Sign in <ArrowRight className="h-4 w-4" />
+                </>
+              )}
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-foreground-muted">
             New to Boostan?{" "}
-            <Link to="/signup" className="text-foreground hover:underline">Create account</Link>
+            <Link to="/signup" className="text-foreground hover:underline">
+              Create account
+            </Link>
           </p>
         </div>
       </div>
@@ -70,8 +96,18 @@ function LoginPage() {
   );
 }
 
-function Field({ label, type, value, onChange, placeholder }: {
-  label: string; type: string; value: string; onChange: (v: string) => void; placeholder?: string;
+function Field({
+  label,
+  type,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  type: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
 }) {
   return (
     <label className="block">

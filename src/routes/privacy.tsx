@@ -5,9 +5,15 @@ export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
       { title: "Privacy Policy — Boostan" },
-      { name: "description", content: "How Boostan collects, uses, and protects your information." },
+      {
+        name: "description",
+        content: "How Boostan collects, uses, and protects your information.",
+      },
       { property: "og:title", content: "Privacy Policy — Boostan" },
-      { property: "og:description", content: "How Boostan collects, uses, and protects your information." },
+      {
+        property: "og:description",
+        content: "How Boostan collects, uses, and protects your information.",
+      },
     ],
   }),
   component: PrivacyPage,
@@ -39,7 +45,10 @@ function PrivacyPage() {
 
       <h3>Payment Information</h3>
       <ul>
-        <li>Cryptocurrency wallet addresses used for deposits (visible on public blockchains, not personally identifying)</li>
+        <li>
+          Cryptocurrency wallet addresses used for deposits (visible on public blockchains, not
+          personally identifying)
+        </li>
         <li>E-transfer transaction references (when applicable)</li>
         <li>Payment timestamps and amounts</li>
         <li>
@@ -77,10 +86,12 @@ function PrivacyPage() {
           transaction details
         </li>
         <li>
-          <strong>Cloud infrastructure providers</strong> — Supabase, Vercel, and similar
-          platforms host the Service and may access data as part of their services
+          <strong>Cloud infrastructure providers</strong> — Supabase, Vercel, and similar platforms
+          host the Service and may access data as part of their services
         </li>
-        <li><strong>Legal authorities</strong> — when required by valid legal process</li>
+        <li>
+          <strong>Legal authorities</strong> — when required by valid legal process
+        </li>
       </ul>
       <p>We do NOT:</p>
       <ul>
@@ -91,14 +102,17 @@ function PrivacyPage() {
 
       <h2>5. Data Retention</h2>
       <ul>
-        <li>Account and order data: retained for the life of the account plus 7 years for tax and audit purposes</li>
+        <li>
+          Account and order data: retained for the life of the account plus 7 years for tax and
+          audit purposes
+        </li>
         <li>Webhook logs and security events: retained for 90 days</li>
         <li>Inactive accounts (no activity for 24 months) may be archived or deleted</li>
       </ul>
       <p>
         You may request account deletion by emailing{" "}
-        <a href="mailto:hello@boostan.co">hello@boostan.co</a>. Some information may be retained
-        for legal compliance.
+        <a href="mailto:hello@boostan.co">hello@boostan.co</a>. Some information may be retained for
+        legal compliance.
       </p>
 
       <h2>6. Security</h2>
@@ -110,7 +124,10 @@ function PrivacyPage() {
         <li>HMAC signature verification on webhook callbacks</li>
         <li>Regular security audits</li>
       </ul>
-      <p>No system is 100% secure. You agree to use the Service with awareness of inherent online risks.</p>
+      <p>
+        No system is 100% secure. You agree to use the Service with awareness of inherent online
+        risks.
+      </p>
 
       <h2>7. Your Rights</h2>
       <p>Depending on your jurisdiction, you may have the right to:</p>
@@ -122,8 +139,7 @@ function PrivacyPage() {
         <li>File a complaint with your local data protection authority</li>
       </ul>
       <p>
-        To exercise these rights, contact{" "}
-        <a href="mailto:hello@boostan.co">hello@boostan.co</a>.
+        To exercise these rights, contact <a href="mailto:hello@boostan.co">hello@boostan.co</a>.
       </p>
 
       <h2>8. Cookies</h2>
@@ -133,7 +149,10 @@ function PrivacyPage() {
         <li>Security (CSRF protection)</li>
         <li>Optional analytics (only if you consent)</li>
       </ul>
-      <p>You can disable cookies in your browser, but the Service may not function correctly without them.</p>
+      <p>
+        You can disable cookies in your browser, but the Service may not function correctly without
+        them.
+      </p>
 
       <h2>9. International Data Transfers</h2>
       <p>
@@ -151,8 +170,8 @@ function PrivacyPage() {
 
       <h2>11. Changes to This Policy</h2>
       <p>
-        We may update this Privacy Policy. Material changes will be communicated to active users
-        via the registered email address.
+        We may update this Privacy Policy. Material changes will be communicated to active users via
+        the registered email address.
       </p>
 
       <h2>12. Contact</h2>

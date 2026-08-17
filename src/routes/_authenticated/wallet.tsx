@@ -4,7 +4,15 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useEffect, useState } from "react";
-import { Plus, ArrowDownRight, ArrowUpRight, Bitcoin, Mail, Clock, ExternalLink } from "lucide-react";
+import {
+  Plus,
+  ArrowDownRight,
+  ArrowUpRight,
+  Bitcoin,
+  Mail,
+  Clock,
+  ExternalLink,
+} from "lucide-react";
 import { toast } from "sonner";
 import { createDeposit, markManualEtransfer } from "@/lib/nowpayments.functions";
 
@@ -36,9 +44,12 @@ function WalletPage() {
   // Show toast on redirect from NOWPayments
   useEffect(() => {
     if (status === "success") {
-      toast.success("Payment received! Balance updates within 1–2 minutes once confirmed on-chain.", {
-        duration: 8000,
-      });
+      toast.success(
+        "Payment received! Balance updates within 1–2 minutes once confirmed on-chain.",
+        {
+          duration: 8000,
+        },
+      );
     } else if (status === "cancel") {
       toast.info("Payment cancelled. You can try again any time.");
     }
@@ -47,7 +58,11 @@ function WalletPage() {
   const { data: settings } = useQuery({
     queryKey: ["settings-min"],
     queryFn: async () => {
-      const { data } = await supabase.from("settings").select("min_deposit").eq("id", true).maybeSingle();
+      const { data } = await supabase
+        .from("settings")
+        .select("min_deposit")
+        .eq("id", true)
+        .maybeSingle();
       return data;
     },
   });
@@ -56,7 +71,11 @@ function WalletPage() {
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("balance").eq("user_id", user!.id).maybeSingle();
+      const { data } = await supabase
+        .from("profiles")
+        .select("balance")
+        .eq("user_id", user!.id)
+        .maybeSingle();
       return data;
     },
     enabled: !!user,
@@ -124,11 +143,25 @@ function WalletPage() {
 
       <div className="grid gap-5 lg:grid-cols-3">
         <div className="glass relative overflow-hidden rounded-2xl p-7 lg:col-span-1">
-          <div className="glow-orb" style={{ top: -120, right: -120, background: "var(--primary-glow)", opacity: .35, width: 280, height: 280 }} />
+          <div
+            className="glow-orb"
+            style={{
+              top: -120,
+              right: -120,
+              background: "var(--primary-glow)",
+              opacity: 0.35,
+              width: 280,
+              height: 280,
+            }}
+          />
           <div className="relative">
             <div className="text-xs text-foreground-muted">Available balance</div>
-            <div className="tabular gradient-text mt-2 text-5xl">${Number(profile?.balance ?? 0).toFixed(2)}</div>
-            <div className="mt-1 text-xs text-foreground-subtle">USD · auto-refreshes every 30s</div>
+            <div className="tabular gradient-text mt-2 text-5xl">
+              ${Number(profile?.balance ?? 0).toFixed(2)}
+            </div>
+            <div className="mt-1 text-xs text-foreground-subtle">
+              USD · auto-refreshes every 30s
+            </div>
           </div>
         </div>
 
@@ -137,7 +170,9 @@ function WalletPage() {
             <button
               onClick={() => setTab("crypto")}
               className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition ${
-                tab === "crypto" ? "bg-[var(--surface)] text-foreground" : "text-foreground-muted hover:text-foreground"
+                tab === "crypto"
+                  ? "bg-[var(--surface)] text-foreground"
+                  : "text-foreground-muted hover:text-foreground"
               }`}
             >
               <Bitcoin className="h-3.5 w-3.5" /> Crypto
@@ -145,7 +180,9 @@ function WalletPage() {
             <button
               onClick={() => setTab("etransfer")}
               className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition ${
-                tab === "etransfer" ? "bg-[var(--surface)] text-foreground" : "text-foreground-muted hover:text-foreground"
+                tab === "etransfer"
+                  ? "bg-[var(--surface)] text-foreground"
+                  : "text-foreground-muted hover:text-foreground"
               }`}
             >
               <Mail className="h-3.5 w-3.5" /> E-transfer (Canada)
@@ -165,7 +202,9 @@ function WalletPage() {
                     key={p}
                     onClick={() => setAmount(p)}
                     className={`rounded-lg px-4 py-2 text-sm transition ${
-                      amount === p ? "gradient-bg text-white" : "glass text-foreground-muted hover:text-foreground"
+                      amount === p
+                        ? "gradient-bg text-white"
+                        : "glass text-foreground-muted hover:text-foreground"
                     }`}
                   >
                     ${p}
@@ -185,11 +224,13 @@ function WalletPage() {
                 disabled={loading || amount < minDeposit}
                 className="btn-gradient mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm disabled:opacity-50"
               >
-                <Plus className="h-4 w-4" /> {loading ? "Creating invoice…" : `Pay $${amount.toFixed(2)} with crypto`}
+                <Plus className="h-4 w-4" />{" "}
+                {loading ? "Creating invoice…" : `Pay $${amount.toFixed(2)} with crypto`}
                 <ExternalLink className="h-3.5 w-3.5" />
               </button>
               <p className="mt-3 text-xs text-foreground-subtle">
-                Minimum deposit ${minDeposit.toFixed(2)}. Balance is credited automatically once on-chain confirmation completes.
+                Minimum deposit ${minDeposit.toFixed(2)}. Balance is credited automatically once
+                on-chain confirmation completes.
               </p>
             </>
           )}
@@ -198,8 +239,15 @@ function WalletPage() {
             <>
               <h2 className="text-lg">E-transfer (Canada)</h2>
               <ol className="mt-3 space-y-2 text-sm text-foreground-muted">
-                <li>1. Send your deposit to <span className="text-foreground">balamchi.shahab@gmail.com</span> (Interac e-transfer).</li>
-                <li>2. Use auto-deposit, or password: <code className="rounded bg-[var(--surface)] px-1.5 py-0.5">BOOSTAN</code></li>
+                <li>
+                  1. Send your deposit to{" "}
+                  <span className="text-foreground">balamchi.shahab@gmail.com</span> (Interac
+                  e-transfer).
+                </li>
+                <li>
+                  2. Use auto-deposit, or password:{" "}
+                  <code className="rounded bg-[var(--surface)] px-1.5 py-0.5">BOOSTAN</code>
+                </li>
                 <li>3. Include your registered email in the message.</li>
                 <li>4. Funds credited within 4 hours during business hours.</li>
               </ol>
@@ -244,13 +292,20 @@ function WalletPage() {
             </thead>
             <tbody>
               {(txs ?? []).length === 0 && (
-                <tr><td colSpan={5} className="px-6 py-16 text-center text-foreground-muted">No transactions yet.</td></tr>
+                <tr>
+                  <td colSpan={5} className="px-6 py-16 text-center text-foreground-muted">
+                    No transactions yet.
+                  </td>
+                </tr>
               )}
               {(txs ?? []).map((t: any) => {
                 const positive = Number(t.amount) > 0;
                 const isPending = t.type === "deposit_pending" || t.type === "manual_etransfer";
                 return (
-                  <tr key={t.id} className="border-b border-[var(--border)] last:border-0 hover:bg-[var(--surface)]">
+                  <tr
+                    key={t.id}
+                    className="border-b border-[var(--border)] last:border-0 hover:bg-[var(--surface)]"
+                  >
                     <td className="px-6 py-4">
                       <span className="inline-flex items-center gap-1.5 capitalize">
                         {isPending ? (
@@ -265,12 +320,16 @@ function WalletPage() {
                     </td>
                     <td className="px-6 py-4 text-foreground-muted">{t.description ?? "—"}</td>
                     <td className={`tabular px-6 py-4 ${positive ? "text-[var(--success)]" : ""}`}>
-                      {Number(t.amount) === 0 ? "—" : `${positive ? "+" : ""}$${Math.abs(Number(t.amount)).toFixed(2)}`}
+                      {Number(t.amount) === 0
+                        ? "—"
+                        : `${positive ? "+" : ""}$${Math.abs(Number(t.amount)).toFixed(2)}`}
                     </td>
                     <td className="px-6 py-4 text-xs text-foreground-muted capitalize">
                       {isPending ? "⏳ pending" : t.status}
                     </td>
-                    <td className="px-6 py-4 text-xs text-foreground-muted">{new Date(t.created_at).toLocaleString()}</td>
+                    <td className="px-6 py-4 text-xs text-foreground-muted">
+                      {new Date(t.created_at).toLocaleString()}
+                    </td>
                   </tr>
                 );
               })}

@@ -123,7 +123,9 @@ function NewOrderWizard() {
     if (q && Number(q) > 0) setQty(Number(q));
     if (t && ["basic", "premium", "vip"].includes(t)) setTier(t);
     if (p && c && q && t) setStep(5); // Jump to link input
-    try { sessionStorage.removeItem("boostan:order-prefill"); } catch {}
+    try {
+      sessionStorage.removeItem("boostan:order-prefill");
+    } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preselectedService]);
 
@@ -164,9 +166,7 @@ function NewOrderWizard() {
   const sliderBounds = useMemo(() => {
     if (!platform || !category) return { min: 100, max: 25000 };
     const c = (services ?? []).filter(
-      (s: any) =>
-        s.platform === platform &&
-        inferCategory(s.display_name || s.name) === category,
+      (s: any) => s.platform === platform && inferCategory(s.display_name || s.name) === category,
     );
     if (!c.length) return { min: 100, max: 25000 };
     return {
@@ -213,14 +213,19 @@ function NewOrderWizard() {
           <div className="flex items-center justify-between gap-4">
             <div>
               <div className="text-xs uppercase tracking-wider text-[var(--text-tertiary)]">
-                {preselectedService.platform} · {tierLabel((preselectedService.tier ?? null) as Tier)}
+                {preselectedService.platform} ·{" "}
+                {tierLabel((preselectedService.tier ?? null) as Tier)}
               </div>
               <div className="mt-1 text-sm font-medium text-[var(--text-primary)]">
                 {preselectedService.display_name || preselectedService.name}
               </div>
               <div className="mt-1 text-xs text-[var(--text-tertiary)] tabular">
-                ${Number(preselectedService.marked_up_rate ?? preselectedService.rate_per_1000).toFixed(2)} / 1,000 ·{" "}
-                {preselectedService.min_quantity.toLocaleString()}–{preselectedService.max_quantity.toLocaleString()}
+                $
+                {Number(
+                  preselectedService.marked_up_rate ?? preselectedService.rate_per_1000,
+                ).toFixed(2)}{" "}
+                / 1,000 · {preselectedService.min_quantity.toLocaleString()}–
+                {preselectedService.max_quantity.toLocaleString()}
               </div>
             </div>
             <Link
@@ -252,14 +257,20 @@ function NewOrderWizard() {
               {PLATFORMS.map((p) => (
                 <button
                   key={p.key}
-                  onClick={() => { setPlatform(p.key); setCategory(""); setStep(2); }}
+                  onClick={() => {
+                    setPlatform(p.key);
+                    setCategory("");
+                    setStep(2);
+                  }}
                   className={`flex flex-col items-start gap-3 rounded-lg border p-5 text-left transition-colors duration-200 ${
                     platform === p.key
                       ? "border-[var(--accent)] bg-[var(--accent-subtle)]"
                       : "border-[var(--border-default)] hover:bg-[var(--bg-surface-2)]"
                   }`}
                 >
-                  <p.Icon className={`h-6 w-6 ${platform === p.key ? "text-[var(--accent)]" : "text-[var(--text-secondary)]"}`} />
+                  <p.Icon
+                    className={`h-6 w-6 ${platform === p.key ? "text-[var(--accent)]" : "text-[var(--text-secondary)]"}`}
+                  />
                   <div>
                     <div className="text-sm font-medium text-[var(--text-primary)]">{p.key}</div>
                     <div className="text-xs text-[var(--text-tertiary)]">{p.count} services</div>
@@ -274,7 +285,14 @@ function NewOrderWizard() {
           <StepBlock title="Choose a category">
             <div className="flex flex-wrap gap-2">
               {availableCategories.map((c) => (
-                <Chip key={c} active={c === category} onClick={() => { setCategory(c); setStep(3); }}>
+                <Chip
+                  key={c}
+                  active={c === category}
+                  onClick={() => {
+                    setCategory(c);
+                    setStep(3);
+                  }}
+                >
                   {c}
                 </Chip>
               ))}
@@ -322,7 +340,10 @@ function NewOrderWizard() {
               {(["basic", "premium", "vip"] as Tier[]).map((t) => (
                 <button
                   key={t}
-                  onClick={() => { setTier(t); setStep(5); }}
+                  onClick={() => {
+                    setTier(t);
+                    setStep(5);
+                  }}
                   title={TIER_DESCRIPTIONS[t]}
                   className={`flex items-center gap-1.5 rounded-md px-5 py-2 text-sm transition-colors duration-200 ${
                     t === tier
@@ -335,7 +356,9 @@ function NewOrderWizard() {
               ))}
             </div>
             {tier && (
-              <p className="mt-3 text-xs text-[var(--text-tertiary)]">{TIER_DESCRIPTIONS[tier as Tier]}</p>
+              <p className="mt-3 text-xs text-[var(--text-tertiary)]">
+                {TIER_DESCRIPTIONS[tier as Tier]}
+              </p>
             )}
           </StepBlock>
         )}
@@ -365,7 +388,11 @@ function NewOrderWizard() {
           <StepBlock title="Review your order">
             {!match ? (
               <p className="text-sm text-[var(--warning)]">
-                No service matches this combination. <button onClick={() => setStep(3)} className="underline">Adjust quantity</button>.
+                No service matches this combination.{" "}
+                <button onClick={() => setStep(3)} className="underline">
+                  Adjust quantity
+                </button>
+                .
               </p>
             ) : (
               <>
@@ -381,7 +408,9 @@ function NewOrderWizard() {
                     <Row label="Wallet balance" value={`$${balance.toFixed(2)}`} />
                     <div className="mt-2 flex items-center justify-between">
                       <span className="text-[var(--text-secondary)]">Total</span>
-                      <span className="tabular text-2xl text-[var(--text-primary)]">${price.toFixed(2)}</span>
+                      <span className="tabular text-2xl text-[var(--text-primary)]">
+                        ${price.toFixed(2)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -402,7 +431,8 @@ function NewOrderWizard() {
                       </span>
                     </div>
                     <p className="mt-1 text-xs text-foreground-muted">
-                      Wallet is debited and the order is recorded, but the SMMFLW provider is not called.
+                      Wallet is debited and the order is recorded, but the SMMFLW provider is not
+                      called.
                     </p>
                   </div>
                 </label>
@@ -412,15 +442,22 @@ function NewOrderWizard() {
                   onClick={submit}
                   className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-md bg-[var(--accent)] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  {submitting ? "Placing order…" : (
+                  {submitting ? (
+                    "Placing order…"
+                  ) : (
                     <>
-                      <Sparkles className="h-4 w-4" /> Place {testMode ? "test " : ""}order <ArrowRight className="h-4 w-4" />
+                      <Sparkles className="h-4 w-4" /> Place {testMode ? "test " : ""}order{" "}
+                      <ArrowRight className="h-4 w-4" />
                     </>
                   )}
                 </button>
                 {!canPay && match && balance < price && (
                   <p className="mt-3 text-center text-xs text-[var(--warning)]">
-                    Top up your wallet to continue. <Link to="/wallet" className="underline">Add funds</Link>.
+                    Top up your wallet to continue.{" "}
+                    <Link to="/wallet" className="underline">
+                      Add funds
+                    </Link>
+                    .
                   </p>
                 )}
               </>
@@ -437,7 +474,9 @@ function ProgressBar({ step, total }: { step: number; total: number }) {
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between text-xs text-[var(--text-tertiary)]">
-        <span>Step {step} of {total}</span>
+        <span>
+          Step {step} of {total}
+        </span>
         <span className="tabular">{Math.round(pct)}%</span>
       </div>
       <div className="h-1 w-full overflow-hidden rounded-full bg-[var(--bg-surface-2)]">
@@ -463,7 +502,9 @@ function Row({ label, value, mono }: { label: string; value: string; mono?: bool
   return (
     <div className="flex items-center justify-between gap-4 py-1 text-sm">
       <span className="text-[var(--text-tertiary)]">{label}</span>
-      <span className={`text-[var(--text-primary)] ${mono ? "font-mono text-xs" : ""} truncate`}>{value}</span>
+      <span className={`text-[var(--text-primary)] ${mono ? "font-mono text-xs" : ""} truncate`}>
+        {value}
+      </span>
     </div>
   );
 }
@@ -490,5 +531,3 @@ function Chip({
     </button>
   );
 }
-
-
