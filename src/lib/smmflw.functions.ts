@@ -61,7 +61,7 @@ export const syncServices = createServerFn({ method: "POST" })
     const rows: any[] = [];
 
     for (const s of services) {
-      const platform = detectPlatform(String(s.category ?? ""));
+      const platform = detectPlatform(s.category, s.name);
       if (!platform) continue; // only IG / TikTok / YT
       const baseRate = Number(s.rate);
       if (!Number.isFinite(baseRate)) continue;
@@ -73,7 +73,7 @@ export const syncServices = createServerFn({ method: "POST" })
         name: s.name,
         display_name: s.name,
         platform,
-        service_type: inferServiceType(s.name, String(s.category ?? "")),
+        service_type: inferServiceType(s.name, String(s.category ?? s.name ?? "")),
         base_rate: baseRate,
         marked_up_rate: marked,
         rate_per_1000: marked,

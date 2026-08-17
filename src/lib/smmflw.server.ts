@@ -13,7 +13,7 @@ export type SmmflwService = {
   service: string | number;
   name: string;
   type?: string;
-  category: string;
+  category?: string;
   rate: string | number;
   min: string | number;
   max: string | number;
@@ -53,10 +53,12 @@ export async function smmflwCall<T = unknown>(payload: SmmAction): Promise<T> {
   } catch {
     throw new Error(`SMMFLW non-JSON response: ${rawText.slice(0, 200)}`);
   }
-  if (!data || typeof data !== "object" || Array.isArray(data)) {
+  // `action=services` legitimately returns a top-level ARRAY; other actions
+  // return an object. Only reject responses that are neither.
+  if (!data || typeof data !== "object") {
     throw new Error(`SMMFLW unexpected response for ${payload.action}: ${rawText.slice(0, 200)}`);
   }
-  if (data && typeof data === "object" && "error" in data && data.error) {
+  if (!Array.isArray(data) && "error" in data && data.error) {
     throw new Error(`SMMFLW error: ${String(data.error)}`);
   }
   return data as T;
@@ -96,8 +98,11 @@ export function pickDisplayTier(rate: number): "Starter" | "Pro" | "Premium" {
 }
 
 // Detect platform from SMMFLW category string.
-export function detectPlatform(category: string): string | null {
-  const c = category.toLowerCase();
+export function detectPlatform(...sources: Array<string | undefined>): string | null {
+  // Providers differ: some return a `category` field, others (smmflw) omit it
+  // entirely and only encode the platform in the service name. Match against
+  // whatever we were given so neither shape silently yields zero services.
+  const c = sources.filter(Boolean).join(" ").toLowerCase();
   if (c.includes("instagram")) return "Instagram";
   if (c.includes("tiktok")) return "TikTok";
   if (c.includes("youtube")) return "YouTube";
