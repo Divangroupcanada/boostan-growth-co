@@ -243,6 +243,54 @@ export type Database = {
         };
         Relationships: [];
       };
+      support_tickets: {
+        Row: {
+          admin_reply: string | null;
+          auto_detail: Json | null;
+          auto_response: string | null;
+          created_at: string;
+          id: string;
+          kind: Database["public"]["Enums"]["ticket_kind"];
+          message: string | null;
+          order_id: string | null;
+          refunded_amount: number | null;
+          resolved_at: string | null;
+          state: Database["public"]["Enums"]["ticket_state"];
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          admin_reply?: string | null;
+          auto_detail?: Json | null;
+          auto_response?: string | null;
+          created_at?: string;
+          id?: string;
+          kind: Database["public"]["Enums"]["ticket_kind"];
+          message?: string | null;
+          order_id?: string | null;
+          refunded_amount?: number | null;
+          resolved_at?: string | null;
+          state?: Database["public"]["Enums"]["ticket_state"];
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          admin_reply?: string | null;
+          auto_detail?: Json | null;
+          auto_response?: string | null;
+          created_at?: string;
+          id?: string;
+          kind?: Database["public"]["Enums"]["ticket_kind"];
+          message?: string | null;
+          order_id?: string | null;
+          refunded_amount?: number | null;
+          resolved_at?: string | null;
+          state?: Database["public"]["Enums"]["ticket_state"];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       transactions: {
         Row: {
           amount: number;
@@ -429,6 +477,9 @@ export type Database = {
       app_role: "admin" | "user";
       order_status:
         "pending" | "processing" | "in_progress" | "completed" | "partial" | "canceled" | "failed";
+      ticket_kind:
+        "order_status" | "not_delivered" | "partial" | "cancel_request" | "payment" | "other";
+      ticket_state: "auto_resolved" | "open" | "answered" | "closed";
       tx_status: "pending" | "completed" | "failed";
       tx_type:
         | "deposit"

@@ -12,6 +12,7 @@ import {
   Sprout,
   Code2,
   Shield,
+  LifeBuoy,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -25,6 +26,7 @@ const NAV = [
   { to: "/new-order", label: "New order", icon: ShoppingBag },
   { to: "/orders", label: "Orders", icon: ListOrdered },
   { to: "/wallet", label: "Wallet", icon: Wallet },
+  { to: "/support", label: "Support", icon: LifeBuoy },
   { to: "/api-keys", label: "API", icon: Code2 },
 ] as const;
 

@@ -23,6 +23,7 @@ import { Route as AuthenticatedApiKeysRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedNewOrderRouteImport } from './routes/_authenticated/new-order'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
+import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
 import { Route as AuthenticatedWalletRouteImport } from './routes/_authenticated/wallet'
 import { Route as BuySlugRouteImport } from './routes/buy.$slug'
 import { Route as ApiCronSyncOrdersRouteImport } from './routes/api/cron/sync-orders'
@@ -97,6 +98,11 @@ const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
   path: '/orders',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedWalletRoute = AuthenticatedWalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
@@ -133,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/new-order': typeof AuthenticatedNewOrderRoute
   '/orders': typeof AuthenticatedOrdersRoute
+  '/support': typeof AuthenticatedSupportRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/buy/$slug': typeof BuySlugRoute
   '/api/cron/sync-orders': typeof ApiCronSyncOrdersRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/new-order': typeof AuthenticatedNewOrderRoute
   '/orders': typeof AuthenticatedOrdersRoute
+  '/support': typeof AuthenticatedSupportRoute
   '/wallet': typeof AuthenticatedWalletRoute
   '/buy/$slug': typeof BuySlugRoute
   '/api/cron/sync-orders': typeof ApiCronSyncOrdersRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/new-order': typeof AuthenticatedNewOrderRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
+  '/_authenticated/support': typeof AuthenticatedSupportRoute
   '/_authenticated/wallet': typeof AuthenticatedWalletRoute
   '/buy/$slug': typeof BuySlugRoute
   '/api/cron/sync-orders': typeof ApiCronSyncOrdersRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/new-order'
     | '/orders'
+    | '/support'
     | '/wallet'
     | '/buy/$slug'
     | '/api/cron/sync-orders'
@@ -213,6 +223,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/new-order'
     | '/orders'
+    | '/support'
     | '/wallet'
     | '/buy/$slug'
     | '/api/cron/sync-orders'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/new-order'
     | '/_authenticated/orders'
+    | '/_authenticated/support'
     | '/_authenticated/wallet'
     | '/buy/$slug'
     | '/api/cron/sync-orders'
@@ -354,6 +366,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrdersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/support': {
+      id: '/_authenticated/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof AuthenticatedSupportRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/wallet': {
       id: '/_authenticated/wallet'
       path: '/wallet'
@@ -391,6 +410,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedNewOrderRoute: typeof AuthenticatedNewOrderRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
+  AuthenticatedSupportRoute: typeof AuthenticatedSupportRoute
   AuthenticatedWalletRoute: typeof AuthenticatedWalletRoute
 }
 
@@ -400,6 +420,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedNewOrderRoute: AuthenticatedNewOrderRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
+  AuthenticatedSupportRoute: AuthenticatedSupportRoute,
   AuthenticatedWalletRoute: AuthenticatedWalletRoute,
 }
 
