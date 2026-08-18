@@ -54,9 +54,16 @@ function AboutPage() {
 
       <h2>Who we are</h2>
       <p>
-        Boostan is founded and operated by Shahab Balamchi, a Toronto-based marketing professional
-        with experience running social media for clinics, restaurants, real estate offices, and
-        creative brands across Toronto, Montreal, Dubai, and Los Angeles.
+        Boostan is an independently operated social media marketing panel based in Ontario, Canada.
+        We are a reseller: orders placed here are fulfilled by an upstream provider, and we add a
+        fixed markup that is already included in every price shown on the site.
+      </p>
+      <p>
+        We say that plainly because most panels don't. The common complaint about this industry is
+        that a service under-delivers, the advertised refill never materialises, and support stops
+        replying. We built the opposite: undelivered orders are refunded to your balance
+        automatically, partial deliveries are refunded for the undelivered share, and order status
+        is re-checked every fifteen minutes without anyone having to ask.
       </p>
       <p>
         The platform was built in-house using modern infrastructure (Supabase, Vercel, NOWPayments)

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { BUSINESS } from "@/lib/business";
 import { LegalLayout } from "@/components/legal-layout";
 
 export const Route = createFileRoute("/terms")({
@@ -18,7 +19,7 @@ function TermsPage() {
     <LegalLayout title="Terms of Service" updated="May 11, 2026">
       <h2>1. Agreement to Terms</h2>
       <p>
-        By accessing or using Boostan ("the Service"), operated by Shahab Balamchi as a sole
+        By accessing or using Boostan ("the Service"), operated by {BUSINESS.legalName} as a sole
         proprietor based in Ontario, Canada ("we", "us", "our"), you ("the User") agree to be bound
         by these Terms of Service. If you do not agree, do not use the Service.
       </p>
@@ -125,14 +126,15 @@ function TermsPage() {
       <h2>9. Intellectual Property</h2>
       <p>
         All content on Boostan (excluding User-provided content like target URLs) is the property of
-        Shahab Balamchi or its licensors and protected under applicable intellectual property law.
-        You may not copy, reproduce, or use Boostan branding, design, or content without permission.
+        {BUSINESS.legalName} or its licensors and protected under applicable intellectual property
+        law. You may not copy, reproduce, or use Boostan branding, design, or content without
+        permission.
       </p>
 
       <h2>10. Limitation of Liability</h2>
       <p>
-        To the maximum extent permitted by law, Boostan, Shahab Balamchi, and any affiliates are not
-        liable for:
+        To the maximum extent permitted by law, {BUSINESS.brand}, {BUSINESS.legalName}, and any
+        affiliates are not liable for:
       </p>
       <ul>
         <li>Indirect, incidental, special, or consequential damages</li>
@@ -150,9 +152,9 @@ function TermsPage() {
 
       <h2>11. Indemnification</h2>
       <p>
-        You agree to indemnify and hold harmless Boostan, Shahab Balamchi, and affiliates from any
-        claims, damages, or expenses arising from your use of the Service or violation of these
-        Terms.
+        You agree to indemnify and hold harmless {BUSINESS.brand}, {BUSINESS.legalName}, and
+        affiliates from any claims, damages, or expenses arising from your use of the Service or
+        violation of these Terms.
       </p>
 
       <h2>12. Changes to Terms</h2>

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { BUSINESS } from "@/lib/business";
 import { LegalLayout } from "@/components/legal-layout";
 
 export const Route = createFileRoute("/privacy")({
@@ -24,7 +25,8 @@ function PrivacyPage() {
     <LegalLayout title="Privacy Policy" updated="May 11, 2026">
       <h2>1. Introduction</h2>
       <p>
-        This Privacy Policy describes how Boostan ("we", "us", "our"), operated by Shahab Balamchi
+        This Privacy Policy describes how Boostan ("we", "us", "our"), operated by{" "}
+        {BUSINESS.legalName}
         in Ontario, Canada, collects, uses, and protects information when you use the Service.
       </p>
 

@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { BUSINESS } from "@/lib/business";
 import { useEffect, useState } from "react";
 import {
   Plus,
@@ -241,7 +242,7 @@ function WalletPage() {
               <ol className="mt-3 space-y-2 text-sm text-foreground-muted">
                 <li>
                   1. Send your deposit to{" "}
-                  <span className="text-foreground">balamchi.shahab@gmail.com</span> (Interac
+                  <span className="text-foreground">{BUSINESS.etransferEmail}</span> (Interac
                   e-transfer).
                 </li>
                 <li>
