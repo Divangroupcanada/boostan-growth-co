@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, Check, Info } from "lucide-react";
 import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa6";
 import { supabase } from "@/integrations/supabase/client";
+import { orderPrice } from "@/lib/pricing";
 import {
   type Tier,
   type Category,
@@ -98,7 +99,7 @@ export function TryItNow() {
     return inRange.reduce((a, b) => (a.marked_up_rate <= b.marked_up_rate ? a : b));
   }, [all, platform, category, tier, qty]);
 
-  const price = match ? (match.marked_up_rate * qty) / 1000 : null;
+  const price = match ? orderPrice(match.marked_up_rate, qty) : null;
 
   // Quantity slider bounds: from cheapest min to most-expensive max for the category+platform
   const sliderBounds = useMemo(() => {

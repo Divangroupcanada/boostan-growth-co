@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { orderPrice } from "@/lib/pricing";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { attachSupabaseAuth } from "./auth-client-middleware";
@@ -139,7 +140,7 @@ export const placeOrder = createServerFn({ method: "POST" })
 
     const rate = Number(service.marked_up_rate ?? service.rate_per_1000);
     const baseRate = Number(service.base_rate ?? rate);
-    const charge = Math.round(((rate * data.quantity) / 1000) * 100) / 100;
+    const charge = orderPrice(rate, data.quantity);
     const cost = Math.round(((baseRate * data.quantity) / 1000) * 100) / 100;
 
     // Atomic balance debit + order insert + transaction (uses auth.uid()).

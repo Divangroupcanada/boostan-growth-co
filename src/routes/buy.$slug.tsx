@@ -4,6 +4,7 @@ import { Check, ShieldCheck, Zap, Lock } from "lucide-react";
 import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa6";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, localizeDigits } from "@/lib/i18n";
+import { orderPrice } from "@/lib/pricing";
 
 /**
  * Per-service landing pages: /buy/instagram-followers, /buy/tiktok-views, ...
@@ -195,7 +196,7 @@ function BuyPage() {
     if (!rows?.length) return null;
     const fit = rows.find((r) => qty >= r.min_quantity && qty <= r.max_quantity);
     if (!fit) return null;
-    return (Number(fit.marked_up_rate) * qty) / 1000;
+    return orderPrice(Number(fit.marked_up_rate), qty);
   };
 
   const available = offer.quantities.filter((q) => priceFor(q) !== null);

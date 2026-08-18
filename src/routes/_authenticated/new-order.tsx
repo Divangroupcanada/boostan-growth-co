@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { orderPrice } from "@/lib/pricing";
 import { placeOrder } from "@/lib/smmflw.functions";
 import { useAuth } from "@/lib/auth";
 import { useEffect, useMemo, useState } from "react";
@@ -176,7 +177,7 @@ function NewOrderWizard() {
   }, [services, platform, category]);
 
   const rate = match ? Number(match.marked_up_rate) : 0;
-  const price = match ? (rate * qty) / 1000 : 0;
+  const price = match ? orderPrice(rate, qty) : 0;
   const balance = Number(profile?.balance ?? 0);
   const canPay = !!match && balance >= price;
 
