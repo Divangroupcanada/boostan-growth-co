@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useRouterState } from "@tanstack/react-router";
 
 /**
  * Bilingual layer (English / Farsi) with RTL.
@@ -153,25 +154,39 @@ type I18nValue = {
 const I18nContext = createContext<I18nValue | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  // Always start at "en" so server and first client render agree; the stored
-  // preference is applied in an effect to avoid a hydration mismatch.
-  const [locale, setLocaleState] = useState<Locale>("en");
+  // The URL is the source of truth. /fa/... is rewritten to ...?lang=fa by
+  // vercel.json, and this reads that marker during SSR — so Farsi pages are
+  // rendered as Farsi on the server and can actually be indexed. Deriving it
+  // from the location also means server and first client render agree, so
+  // there's no hydration mismatch to work around.
+  const urlLocale = useRouterState({
+    select: (s) => ((s.location.search as Record<string, unknown>)?.lang === "fa" ? "fa" : "en"),
+  }) as Locale;
+
+  const [locale, setLocaleState] = useState<Locale>(urlLocale);
+
+  // Keep state in step when navigating between locale trees.
+  useEffect(() => {
+    setLocaleState(urlLocale);
+  }, [urlLocale]);
 
   useEffect(() => {
+    // A stored or browser preference only applies on the un-prefixed tree;
+    // an explicit /fa/ URL must always win.
+    if (urlLocale === "fa") return;
     try {
       const saved = localStorage.getItem(STORAGE_KEY) as Locale | null;
       if (saved === "en" || saved === "fa") {
         setLocaleState(saved);
         return;
       }
-      // No stored choice: offer Farsi to Persian-language browsers.
       if (navigator.language?.toLowerCase().startsWith("fa")) {
         setLocaleState("fa");
       }
     } catch {
-      // storage unavailable (SSR / private mode) — keep the default
+      // storage unavailable (private mode) — keep the URL-derived locale
     }
-  }, []);
+  }, [urlLocale]);
 
   const dir = locale === "fa" ? "rtl" : "ltr";
 

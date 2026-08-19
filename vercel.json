@@ -5,5 +5,19 @@
       "path": "/api/cron/sync-orders",
       "schedule": "*/15 * * * *"
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/fa",
+      "destination": "/?lang=fa"
+    },
+    {
+      "source": "/fa/",
+      "destination": "/?lang=fa"
+    },
+    {
+      "source": "/fa/:path*",
+      "destination": "/:path*?lang=fa"
+    }
   ]
 }

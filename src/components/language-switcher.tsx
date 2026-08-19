@@ -1,3 +1,4 @@
+import { useRouterState } from "@tanstack/react-router";
 import { LOCALES, useI18n } from "@/lib/i18n";
 
 /**
@@ -6,6 +7,19 @@ import { LOCALES, useI18n } from "@/lib/i18n";
  */
 export function LanguageSwitcher({ className = "" }: { className?: string }) {
   const { locale, setLocale, t } = useI18n();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  // Switching language changes the URL, not just component state: /fa/<path>
+  // and /<path> are two indexable documents and the address bar has to agree
+  // with which one you're reading. A full navigation also lets the server
+  // render the new locale rather than swapping strings client-side.
+  const go = (code: string) => {
+    setLocale(code as typeof locale);
+    if (typeof window === "undefined") return;
+    const bare = pathname.replace(/^\/fa(?=\/|$)/, "") || "/";
+    const next = code === "fa" ? (bare === "/" ? "/fa" : `/fa${bare}`) : bare;
+    if (next !== pathname) window.location.assign(next + window.location.hash);
+  };
 
   return (
     <div
@@ -19,7 +33,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
           <button
             key={l.code}
             type="button"
-            onClick={() => setLocale(l.code)}
+            onClick={() => go(l.code)}
             aria-pressed={active}
             lang={l.code}
             className={[

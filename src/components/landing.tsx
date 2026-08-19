@@ -52,6 +52,7 @@ export function Landing() {
 
 /* ---------------- NAV ---------------- */
 function Nav() {
+  const { t } = useI18n();
   const [solid, setSolid] = useState(false);
   useEffect(() => {
     const onScroll = () => setSolid(window.scrollY > 80);
@@ -83,16 +84,16 @@ function Nav() {
             params={{ slug: "instagram-followers" }}
             className="transition-colors hover:text-[var(--text-primary)]"
           >
-            Services
+            {t("nav.services")}
           </Link>
-          <a href="#pricing" className="hover:text-[var(--text-primary)] transition-colors">
-            Pricing
+          <a href="#pricing" className="transition-colors hover:text-[var(--text-primary)]">
+            {t("nav.pricing")}
           </a>
-          <a href="#faq" className="hover:text-[var(--text-primary)] transition-colors">
-            FAQ
+          <a href="#faq" className="transition-colors hover:text-[var(--text-primary)]">
+            {t("nav.faq")}
           </a>
-          <a href="#about" className="hover:text-[var(--text-primary)] transition-colors">
-            About
+          <a href="#about" className="transition-colors hover:text-[var(--text-primary)]">
+            {t("how.eyebrow")}
           </a>
         </nav>
         <div className="flex items-center gap-2">
@@ -100,14 +101,14 @@ function Nav() {
             to="/login"
             className="hidden rounded-md px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] sm:inline-block"
           >
-            Sign in
+            {t("nav.signin")}
           </Link>
           <LanguageSwitcher />
           <Link
             to="/signup"
             className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent-foreground)] transition-colors hover:bg-[var(--accent-hover)]"
           >
-            Get started
+            {t("nav.start")}
           </Link>
         </div>
       </div>

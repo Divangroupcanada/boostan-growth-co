@@ -104,6 +104,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "alternate", hrefLang: "en", href: "https://boostan.co/" },
+      { rel: "alternate", hrefLang: "fa", href: "https://boostan.co/fa" },
+      { rel: "alternate", hrefLang: "x-default", href: "https://boostan.co/" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
