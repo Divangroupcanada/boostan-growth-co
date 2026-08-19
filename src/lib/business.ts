@@ -19,12 +19,8 @@ export const BUSINESS = {
   /** Consumer-facing brand. */
   brand: "Boostan",
 
-  /**
-   * Legal operator shown in Terms and Privacy.
-   * TODO: replace with the incorporated entity once registered, e.g.
-   * "0000000 Ontario Inc. o/a Boostan".
-   */
-  legalName: "Boostan",
+  /** Incorporated operator named in Terms and Privacy. */
+  legalName: "Boostan Digital Marketing Corp.",
 
   /** Jurisdiction whose law governs the Terms. */
   jurisdiction: "Ontario, Canada",

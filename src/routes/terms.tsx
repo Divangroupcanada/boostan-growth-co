@@ -19,9 +19,9 @@ function TermsPage() {
     <LegalLayout title="Terms of Service" updated="May 11, 2026">
       <h2>1. Agreement to Terms</h2>
       <p>
-        By accessing or using Boostan ("the Service"), operated by {BUSINESS.legalName} as a sole
-        proprietor based in Ontario, Canada ("we", "us", "our"), you ("the User") agree to be bound
-        by these Terms of Service. If you do not agree, do not use the Service.
+        By accessing or using {BUSINESS.brand} ("the Service"), operated by {BUSINESS.legalName}, a
+        corporation registered in {BUSINESS.jurisdiction} ("we", "us", "our"), you ("the User")
+        agree to be bound by these Terms of Service. If you do not agree, do not use the Service.
       </p>
 
       <h2>2. Description of Service</h2>
